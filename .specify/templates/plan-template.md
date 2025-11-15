@@ -31,7 +31,20 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Verify compliance with constitution principles**:
+
+- [ ] **Monorepo Architecture**: Feature fits within monorepo structure with appropriate package organization (packages/{domain}-frt and packages/{domain}-srv with base/ folders)
+- [ ] **Specification-Driven**: This plan follows specification workflow (spec.md exists with user stories, requirements, and success criteria)
+- [ ] **Bilingual Documentation**: All documentation will be provided in English (primary) and Russian (exact copy)
+- [ ] **Technology Stack**: Uses mandatory stack (Nuxt 3, TypeScript, PNPM, Supabase, Passport.js, MUI)
+- [ ] **Incremental Development**: User stories are prioritized P1-P3+ with independent testability
+- [ ] **Reference Alignment**: Concept follows universo-platformo-react patterns but uses Nuxt best practices (not copying React code)
+
+**Violations requiring justification** (document in Complexity Tracking section if any):
+- Technology deviations from mandatory stack
+- Missing bilingual documentation
+- Dependencies between user stories that break independence
+- Database access without abstraction layer
 
 ## Project Structure
 
