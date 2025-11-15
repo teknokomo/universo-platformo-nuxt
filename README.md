@@ -281,6 +281,40 @@ Per project guidelines, we actively monitor [universo-platformo-react](https://g
 - Better architectural patterns (to adapt, not copy)
 - Feature prioritization decisions
 
+### GitHub Labels
+
+The repository uses a structured labeling system for issues and pull requests:
+
+**Type Labels** (Required for all issues/PRs):
+
+- `type:feature` - New functionality or capabilities
+- `type:bug` - Something isn't working correctly
+- `type:docs` - Documentation improvements or additions
+- `type:refactor` - Code restructuring without changing functionality
+- `type:chore` - Maintenance tasks, dependency updates, etc.
+
+**Area Labels** (Applied as relevant):
+
+- `area:infrastructure` - Repository setup, build systems, deployment
+- `area:clusters` - Clusters feature domain
+- `area:metaverses` - Metaverses feature domain
+- `area:auth` - Authentication and authorization
+- Additional area labels added as features are implemented
+
+**Priority Labels** (Optional, inherited from Issue when applicable):
+
+- `priority:P1` - MVP, must have for initial release
+- `priority:P2` - Important, should have soon
+- `priority:P3` - Nice to have, can be deferred
+
+**Status Labels** (Optional, for workflow management):
+
+- `status:blocked` - Cannot proceed due to external dependency
+- `status:in-progress` - Currently being worked on
+- `status:review` - Awaiting code review
+
+For complete labeling guidelines, see [.github/instructions/github-labels.md](./.github/instructions/github-labels.md).
+
 ## 📚 Documentation & Governance
 
 ### Project Constitution
