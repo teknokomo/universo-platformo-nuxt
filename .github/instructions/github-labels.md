@@ -20,13 +20,15 @@ applyTo: '**'
 ## Labels
 
 Apply labels according to `.github/instructions/github-labels.md`:
+
 - **Type label**: Required (bug/feature/enhancement/documentation/refactor/maintenance)
 - **Area labels**: Include all relevant areas (frontend/backend/build/testing/i18n)
 - **Priority labels**: Optional (inherited from linked Issue)
 
 ### Default GitHub Labels
+
 - `bug` - Something isn't working
-- `documentation` - Improvements or additions to documentation  
+- `documentation` - Improvements or additions to documentation
 - `duplicate` - This issue or pull request already exists
 - `enhancement` - New feature or request
 - `help wanted` - Extra attention is needed
@@ -35,6 +37,7 @@ Apply labels according to `.github/instructions/github-labels.md`:
 - `wontfix` - This will not be worked on
 
 ### Project-Specific Labels
+
 - `architecture` - Concerns to project architecture
 - `backend` - Concerns the backend functionality
 - `colyseus` - Colyseus framework related
@@ -58,6 +61,7 @@ Apply labels according to `.github/instructions/github-labels.md`:
 **CURRENT LIMITATION**: GitHub MCP server does not yet support label management tools.
 
 **WORKAROUND**: Use direct GitHub API call via bash:
+
 ```bash
 curl -H "Accept: application/vnd.github.v3+json" \
      https://api.github.com/repos/teknokomo/universo-platformo-nuxt/labels
@@ -68,45 +72,54 @@ This will return JSON with all repository labels including name, color, and desc
 **Alternative**: If API call fails, use the hardcoded label list below as fallback.
 
 **API Response Processing**:
+
 - The API returns JSON array with objects containing: `name`, `color`, `description`
 - Extract the `name` field from each object to get available label names
 - Example parsing: `curl ... | jq -r '.[].name'` (if jq is available)
 - Or manually parse the JSON response to extract label names
 
 ### Step 2: Select Appropriate Labels
+
 **For Issues:**
+
 1. **Include appropriate Type label** (look for enhancement/feature/bug/documentation patterns)
 2. **Include relevant Project Area labels** (look for platformo/mmoomm/web/repository/releases patterns)
 3. **Include relevant Technical Area labels** (look for frontend/backend/i18n/publication/multiplayer patterns)
 4. **Add specific labels** for frameworks or special cases (look for colyseus, architecture, etc.)
 
 **For Pull Requests:**
+
 1. **Include Type label** matching the work performed
-2. **Include Area labels** for affected parts of the codebase  
+2. **Include Area labels** for affected parts of the codebase
 3. **Keep labels minimal** - only the most relevant ones
 
 ### Step 3: Validate Selection
+
 - Ensure all selected labels actually exist in the fetched repository labels
 - Do not use labels that don't exist in the repository
 
 ## Examples
 
 ### New Feature Issue
+
 ```
 Labels: feature, platformo, frontend, backend
 ```
 
 ### Documentation Update Issue
+
 ```
 Labels: documentation, repository
 ```
 
 ### Enhancement Issue
+
 ```
 Labels: enhancement, platformo, frontend
 ```
 
 ### Multiplayer Feature Issue
+
 ```
 Labels: feature, platformo, backend, multiplayer, colyseus
 ```

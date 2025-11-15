@@ -17,20 +17,21 @@ This plan establishes the foundational infrastructure for Universo Platformo Nux
 **Testing**: Vitest (standard for Nuxt/Vite ecosystem)  
 **Target Platform**: Modern web browsers (last 2 versions), Node.js server-side  
 **Project Type**: Fullstack monorepo - packages separated into `-frt` (frontend) and `-srv` (server/backend)  
-**Performance Goals**: 
+**Performance Goals**:
+
 - Package installation < 2 minutes on standard dev machine
 - Type checking completes < 30 seconds for initial setup
 - Documentation readable within 5 minutes (SC-001)
-**Constraints**: 
+  **Constraints**:
 - Bilingual documentation (English/Russian) is NON-NEGOTIABLE
 - All packages must have `base/` folder for future implementations
 - No `docs/` directory (will be separate repository)
 - No AI agent config files unless explicitly requested
-**Scale/Scope**: Initial setup (no user-facing features), foundation for future 10+ packages
+  **Scale/Scope**: Initial setup (no user-facing features), foundation for future 10+ packages
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **Verify compliance with constitution principles**:
 
@@ -93,7 +94,7 @@ packages/{domain}-frt/   # Frontend packages
 │   └── pages/
 └── README.md
 
-packages/{domain}-srv/   # Backend/server packages  
+packages/{domain}-srv/   # Backend/server packages
 ├── base/                # Base implementation
 │   ├── package.json
 │   ├── api/
@@ -102,7 +103,7 @@ packages/{domain}-srv/   # Backend/server packages
 └── README.md
 ```
 
-**Structure Decision**: 
+**Structure Decision**:
 
 This feature establishes a **fullstack monorepo** structure using PNPM workspaces. The root directory contains configuration files and bilingual documentation. The `packages/` directory is created but empty initially - it will house future feature packages following the `-frt` (frontend) and `-srv` (server) naming convention. Each package will have a `base/` folder to support future multiple implementations (as per Principle I of the constitution).
 
@@ -146,6 +147,7 @@ This is the minimal setup required before any feature development can begin. Fut
    - Translate all text content, keep technical terms in English where appropriate
 
 **Success Criteria**:
+
 - SC-001: Developer can understand project within 5 minutes
 - SC-004: English and Russian READMEs have same line count ±2
 - SC-005: All required configuration files present
@@ -188,6 +190,7 @@ This is the minimal setup required before any feature development can begin. Fut
    - Verify dependency resolution across workspaces
 
 **Success Criteria**:
+
 - SC-002: Package installation completes within 2 minutes
 - SC-006: New package creation takes less than 10 minutes (documented process)
 - SC-010: Packages directory visible and properly configured
@@ -237,6 +240,7 @@ This is the minimal setup required before any feature development can begin. Fut
    - Verify all configuration files are formatted correctly
 
 **Success Criteria**:
+
 - SC-003: All source code passes static type checking with zero errors
 - SC-008: Code quality checks complete with zero errors
 - Type resolution works across package boundaries (once packages exist)
@@ -276,6 +280,7 @@ This is the minimal setup required before any feature development can begin. Fut
    - Provide examples of proper label usage
 
 **Success Criteria**:
+
 - SC-007: At least 8 properly configured issue labels
 
 **Estimated Effort**: 2-3 hours
@@ -303,57 +308,71 @@ Phase 3: GitHub Organization (P3)      → Verify: SC-007
 ## Edge Cases & Mitigation
 
 ### 1. Package Creation Without base/ Folder
+
 **Issue**: Developer creates package without following base/ convention (Edge Case #1 from spec)  
 **Impact**: Future multiple implementations blocked  
-**Mitigation**: 
+**Mitigation**:
+
 - Document base/ requirement prominently in README
 - Include in package creation guide
 - Add to PR review checklist
 
 ### 2. Frontend-Only or Backend-Only Packages
+
 **Issue**: Some features may only need frontend or backend, not both (Edge Case #2 from spec)  
 **Impact**: Potential confusion about when to split packages  
 **Mitigation**:
+
 - Document in README: "If feature needs only one, create only that package"
 - Examples: `packages/ui-components-frt/` (no -srv needed)
 - Still require base/ folder even for single-side packages
 
 ### 3. Workspace Naming Conflicts
+
 **Issue**: New workspace conflicts with existing package name (Edge Case #3 from spec)  
 **Impact**: PNPM workspace resolution failure  
 **Mitigation**:
+
 - Document naming convention: `{domain}-{frt|srv}`
 - Check existing packages before creating new ones
 - PNPM will error if duplicate, preventing silent conflicts
 
 ### 4. Partial Documentation Updates
+
 **Issue**: English documentation updated but Russian not synchronized (Edge Case #4 from spec)  
 **Impact**: Violates NON-NEGOTIABLE bilingual requirement  
 **Mitigation**:
+
 - Document in README: "Always update both versions together"
 - Add to PR checklist: "English and Russian docs both updated"
 - Future: Consider automated line count verification
 
 ### 5. Missing PNPM Installation
+
 **Issue**: Developer doesn't have PNPM installed (Edge Case #5 from spec)  
 **Impact**: Cannot run project  
 **Mitigation**:
+
 - Document PNPM installation in README prerequisites
 - Provide installation command: `npm install -g pnpm`
 - Include version requirement: PNPM 8.x+
 
 ### 6. React Pattern Copying Temptation
+
 **Issue**: Developer copies React code directly instead of implementing Nuxt patterns  
 **Impact**: Poor implementation, violates Principle VI  
 **Mitigation**:
+
 - README explicitly states: "Use React repo as CONCEPT only, not code to copy"
 - Link to constitution Principle VI
 - Code review focus on Nuxt best practices
 
 ### 7. Direct Database Access in Business Logic
+
 **Issue**: Future developers might add Supabase calls directly in components/services  
 **Impact**: Violates Technology Stack Requirements (line 132 of constitution)  
 **Mitigation**:
+
 - Document abstraction layer requirement in README
 - Note: "All database access must go through abstraction layer"
 - Include in future code review checklists
@@ -485,6 +504,7 @@ None. This is the first feature and has no dependencies on other features.
 ### Monitoring universo-platformo-react
 
 As per Principle VI and original requirement 6, actively monitor the React repository for:
+
 - New features to implement in this Nuxt version
 - Improvements to the three-entity pattern
 - Better architectural patterns (to adapt, not copy)

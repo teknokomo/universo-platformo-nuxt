@@ -16,6 +16,7 @@
 ## Path Conventions
 
 This feature establishes the repository root structure:
+
 - Root configuration files: `/package.json`, `/tsconfig.json`, etc.
 - Root documentation: `/README.md`, `/README-RU.md`
 - Packages directory: `/packages/` (initially empty)
@@ -615,6 +616,7 @@ Phase 1: US1 (P1) - Foundation ✓
 ### Parallel Opportunities
 
 After Phase 1 completes, these can run in parallel (if multiple developers):
+
 - Phase 2 (US2) - One developer works on monorepo setup
 - Phase 3 (US4) - Another developer works on TypeScript configuration
 - Phase 4 (US3) - Another developer works on GitHub labels
@@ -642,6 +644,7 @@ Tasks marked [P] within each phase can run in parallel.
 ### Incremental Delivery
 
 Each phase represents a deliverable milestone:
+
 - **After Phase 1**: Repository has documentation, can be read and understood
 - **After Phase 2**: Repository has workspace, packages can be added
 - **After Phase 3**: Repository has type checking, code quality enforced

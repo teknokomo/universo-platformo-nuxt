@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Initialize Universo Platformo Nuxt project with monorepo structure, PNPM, TypeScript, Supabase, and documentation setup"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Repository Foundation Setup (Priority: P1)
 
@@ -79,7 +79,7 @@ A developer can write TypeScript code with proper type checking, linting, and fo
 - How does the documentation update process work when only one language version is modified?
 - What happens if PNPM is not installed on a developer's machine?
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -110,7 +110,7 @@ This feature primarily deals with repository structure and configuration, not us
 - **Workspace**: A PNPM workspace entry representing a package or group of packages in the monorepo
 - **Documentation Set**: Paired English/Russian documentation files maintaining identical structure
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
@@ -125,7 +125,7 @@ This feature primarily deals with repository structure and configuration, not us
 - **SC-009**: Documentation clearly distinguishes between conceptual references and implementation requirements
 - **SC-010**: The packages directory structure is visible and properly configured for future package additions
 
-## Assumptions *(mandatory)*
+## Assumptions _(mandatory)_
 
 - Developers working on this project have basic familiarity with Nuxt.js and TypeScript
 - PNPM version 8.x or higher will be used for package management
