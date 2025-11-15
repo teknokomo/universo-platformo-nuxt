@@ -1,0 +1,6 @@
+# PNPM Workspace Configuration
+# This file defines the monorepo structure for Universo Platformo Nuxt
+# All packages are organized under the packages/ directory
+
+packages:
+  - 'packages/*'

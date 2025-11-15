@@ -1,0 +1,45 @@
+{
+  "name": "universo-platformo-nuxt",
+  "version": "0.1.0",
+  "description": "Universo Platformo - Nuxt.js fullstack implementation with TypeScript",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "install:all": "pnpm install",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules",
+    "typecheck": "nuxi typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "quality": "pnpm typecheck && pnpm lint && pnpm format:check"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@types/node": "^20.11.16",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "nuxt": "^3.10.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "universo",
+    "platformo",
+    "nuxt",
+    "typescript",
+    "monorepo",
+    "fullstack"
+  ],
+  "author": "Universo Platformo Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

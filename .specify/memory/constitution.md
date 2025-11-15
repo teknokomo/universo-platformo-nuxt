@@ -15,7 +15,7 @@ Removed Sections: N/A
 
 Templates Status:
   ✅ .specify/templates/plan-template.md - Constitution Check section aligned
-  ✅ .specify/templates/spec-template.md - Requirements section aligned  
+  ✅ .specify/templates/spec-template.md - Requirements section aligned
   ✅ .specify/templates/tasks-template.md - Task categorization aligned
   ⚠ Command templates - No command templates directory exists yet
 
@@ -31,6 +31,7 @@ Follow-up TODOs: None - all placeholders resolved
 **Rule**: All packages MUST reside in a single repository managed by PNPM workspaces.
 
 **Requirements**:
+
 - Packages are organized in `packages/` directory
 - Frontend packages use `-frt` suffix (e.g., `packages/clusters-frt`)
 - Backend packages use `-srv` suffix (e.g., `packages/clusters-srv`)
@@ -45,6 +46,7 @@ Follow-up TODOs: None - all placeholders resolved
 **Rule**: Every feature MUST begin with complete specification documentation before implementation starts.
 
 **Requirements**:
+
 - Features are documented in `.specify/` directory structure
 - Specifications MUST include: user stories with priorities, functional requirements, success criteria
 - Implementation plans MUST reference specifications
@@ -59,6 +61,7 @@ Follow-up TODOs: None - all placeholders resolved
 **Rule**: ALL documentation MUST be provided in both English and Russian with identical structure and content.
 
 **Requirements**:
+
 - English is the primary language and MUST be created first
 - Russian version MUST be created immediately after
 - Both versions MUST have the same number of lines, same sections, same structure
@@ -74,6 +77,7 @@ Follow-up TODOs: None - all placeholders resolved
 **Rule**: Core technology stack decisions are binding across all packages unless explicitly justified.
 
 **Mandatory Technologies**:
+
 - **Framework**: Nuxt.js (fullstack) with TypeScript
 - **Package Manager**: PNPM with workspace protocol
 - **Database**: Supabase (primary), with abstraction layer for future database support
@@ -88,6 +92,7 @@ Follow-up TODOs: None - all placeholders resolved
 **Rule**: Features MUST be developed incrementally with independent, testable user stories prioritized from P1 (MVP) to P3+.
 
 **Requirements**:
+
 - Each user story MUST be independently implementable and testable
 - P1 user stories define the Minimum Viable Product (MVP)
 - Higher priority stories (P1) MUST be completed before lower priority (P2, P3)
@@ -102,6 +107,7 @@ Follow-up TODOs: None - all placeholders resolved
 **Rule**: Universo Platformo React serves as the conceptual reference but NOT as code to copy.
 
 **Guidelines**:
+
 - Follow the CONCEPT and STRUCTURE from universo-platformo-react repository
 - Implement using Nuxt/TypeScript best practices, NOT by copying React patterns
 - DO NOT replicate legacy code, unfinished features, or implementation flaws from React version
@@ -134,10 +140,12 @@ Follow-up TODOs: None - all placeholders resolved
 ### Package Structure
 
 Each functional domain requiring both frontend and backend MUST be split into separate packages:
+
 - `packages/{domain}-frt/base/` - Frontend implementation
 - `packages/{domain}-srv/base/` - Backend implementation
 
 Examples:
+
 - `packages/clusters-frt/base/` and `packages/clusters-srv/base/`
 - `packages/metaverses-frt/base/` and `packages/metaverses-srv/base/`
 
@@ -171,6 +179,7 @@ Examples:
 ### Specification Workflow
 
 Before implementing any feature:
+
 1. Create detailed specification in `.specify/specs/{###-feature-name}/`
 2. Write `spec.md` with user stories, requirements, success criteria
 3. Create `plan.md` with technical approach and architecture

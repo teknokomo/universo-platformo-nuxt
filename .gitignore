@@ -21,6 +21,8 @@
 ## build
 **/dist
 **/build
+**/.nuxt
+**/.output
 
 ## temp
 **/tmp
@@ -31,6 +33,9 @@
 
 # misc
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
 
 ## env
 .env.local
@@ -38,6 +43,8 @@
 .env.test.local
 .env.production.local
 .env
+.env.*
+!.env.example
 
 ## turbo
 .turbo

@@ -8,9 +8,10 @@ In our GitHub repository, we create Issues with the main text in English, and al
 
 Create the text for Issues using this template, the text of the Issue should be written in the future tense, as if this text is being written for work that has yet to be completed. Always output the generated issue text in a markdown code block.
 
-**IMPORTANT:** 
+**IMPORTANT:**
+
 1. **Always include Russian translation** - Every Issue must have both English and Russian versions of the content
-2. **Use exact spoiler tag** - Always use exactly `<summary>In Russian</summary>` for the spoiler tag. 
+2. **Use exact spoiler tag** - Always use exactly `<summary>In Russian</summary>` for the spoiler tag.
    - ✅ **CORRECT**: `<summary>In Russian</summary>`
    - ❌ **INCORRECT**: `<summary>🇷🇺 Описание на русском</summary>`
    - Do not use variations like "На русском языке", "Russian version", "🇷🇺 Описание на русском", or any other text

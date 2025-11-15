@@ -9,6 +9,7 @@ When creating Pull Requests, follow these formatting and content guidelines to m
 ## PR Title Format
 
 **ALWAYS** start the PR title with the GitHub issue number it closes:
+
 ```
 GH123 Update menu items Documentation, Chat Flows, Agent Flows
 ```
@@ -19,7 +20,8 @@ Format: `GH{issue_number} {descriptive_title}`
 
 Create PR descriptions using this template structure. Write the main content in English with Russian translation in a spoiler section.
 
-**IMPORTANT:** 
+**IMPORTANT:**
+
 1. **Always include Russian translation** - Every PR must have both English and Russian versions of the content
 2. **Use exact spoiler tag** - Always use exactly `<summary>In Russian</summary>` for the spoiler tag.
    - ✅ **CORRECT**: `<summary>In Russian</summary>`
@@ -93,18 +95,21 @@ This section includes supplementary work completed as part of this PR:
 ## Content Guidelines
 
 ### Main Description
+
 - Focus on **what was implemented** and **why**
 - Use present tense (describing completed work)
 - Be specific about the functionality added or changed
 - Include technical details relevant for reviewers
 
 ### Changes Made Section
+
 - List specific files or components modified
 - Highlight important architectural decisions
 - Mention any breaking changes or migration requirements
 - Include performance implications if relevant
 
 ### Additional Work Section
+
 - **Always include this section** in PR descriptions
 - List supplementary work that supports the main changes:
   - Documentation updates (README files, code comments)
@@ -116,6 +121,7 @@ This section includes supplementary work completed as part of this PR:
   - Code formatting or linting fixes
 
 ### Testing Section
+
 - Include testing checklist
 - Mention specific test scenarios covered
 - Note any manual testing performed
@@ -124,6 +130,7 @@ This section includes supplementary work completed as part of this PR:
 ## Labels
 
 Apply labels according to `.github/instructions/github-labels.md`:
+
 - **Type label**: Required (bug/feature/enhancement/documentation/refactor/maintenance)
 - **Area labels**: Include all relevant areas (frontend/backend/build/testing/i18n)
 - **Priority labels**: Optional (inherited from linked Issue)
@@ -135,6 +142,7 @@ Always include `Fixes #123` (or `Closes #123`) in the PR description to automati
 ## Examples
 
 ### Feature Implementation PR
+
 ```
 Title: GH45 Add user authentication system
 
@@ -142,6 +150,7 @@ Labels: type: feature, area: backend, area: frontend
 ```
 
 ### Bug Fix PR
+
 ```
 Title: GH67 Fix camera rotation jitter in 3D viewer
 
@@ -149,6 +158,7 @@ Labels: type: bug, area: frontend
 ```
 
 ### Documentation Update PR
+
 ```
 Title: GH89 Update installation guide and API documentation
 
