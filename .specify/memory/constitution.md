@@ -1,25 +1,26 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 0.0.0 → 1.0.0
-Rationale: Initial constitution ratification - establishes foundational governance for Universo Platformo Nuxt
+Version Change: 1.0.0 → 1.0.1
+Rationale: Patch amendment - clarifications to existing principles based on deep specification analysis
 
-Modified Principles: N/A (initial version)
-Added Sections:
-  - Core Principles (6 principles defined)
-  - Technology Stack Requirements
-  - Development Workflow
-  - Governance
+Modified Principles:
+  - Principle III (Bilingual Documentation): Added validation tooling clarification
+  - Principle VI (Reference Implementation): Clarified three-entity pattern as core architecture
+  - Technology Stack Requirements: Added Vitest testing framework
 
-Removed Sections: N/A
+Added Sections: None (clarifications only)
+Removed Sections: None
 
 Templates Status:
-  ✅ .specify/templates/plan-template.md - Constitution Check section aligned
-  ✅ .specify/templates/spec-template.md - Requirements section aligned
-  ✅ .specify/templates/tasks-template.md - Task categorization aligned
-  ⚠ Command templates - No command templates directory exists yet
+  ✅ All templates remain aligned
+  ✅ Specifications updated to reflect clarified requirements
 
-Follow-up TODOs: None - all placeholders resolved
+Follow-up TODOs: None
+
+Previous Version (1.0.0):
+  Ratified: 2025-11-15
+  Initial constitution ratification - establishes foundational governance
 -->
 
 # Universo Platformo Nuxt Constitution
@@ -69,8 +70,9 @@ Follow-up TODOs: None - all placeholders resolved
 - Issues and PRs use `<summary>In Russian</summary>` spoiler format (exact tag required)
 - All changes to English docs MUST be replicated in Russian docs
 - Follow `.github/instructions/i18n-docs.md` strictly
+- **Validation**: Automated tooling SHOULD be implemented to verify line count matching (±2 lines tolerance) and prevent non-compliant merges
 
-**Rationale**: Bilingual support ensures accessibility for both international and Russian-speaking team members and users, maintains equal information access, and supports the project's multinational nature.
+**Rationale**: Bilingual support ensures accessibility for both international and Russian-speaking team members and users, maintains equal information access, and supports the project's multinational nature. Automated validation reduces manual review burden and ensures consistent enforcement.
 
 ### IV. Technology Stack Consistency
 
@@ -115,8 +117,9 @@ Follow-up TODOs: None - all placeholders resolved
 - DO NOT create AI agent configuration files unless user explicitly requests them
 - DO monitor universo-platformo-react for new features to implement in this project
 - Key concepts to follow: package structure, entity relationships (Clusters/Domains/Resources pattern), incremental feature rollout
+- **Core Pattern**: The three-entity pattern (Clusters/Domains/Resources, Metaverses/Sections/Entities, etc.) is a foundational architectural concept that MUST be replicated across features, with documentation explaining its central role in the platform architecture
 
-**Rationale**: Learning from existing implementations accelerates development while avoiding technical debt transfer. Nuxt-specific best practices ensure optimal implementation for the chosen stack.
+**Rationale**: Learning from existing implementations accelerates development while avoiding technical debt transfer. Nuxt-specific best practices ensure optimal implementation for the chosen stack. The three-entity pattern provides consistency and predictability across the platform's feature set.
 
 ## Technology Stack Requirements
 
@@ -129,6 +132,7 @@ Follow-up TODOs: None - all placeholders resolved
 - **Authentication**: Passport.js with Supabase strategy
 - **UI Library**: Material UI (MUI)
 - **Type Checking**: TypeScript 5.x in strict mode
+- **Testing**: Vitest (Nuxt/Vite ecosystem standard)
 
 ### Database Strategy
 
@@ -227,4 +231,4 @@ This constitution supersedes all other development practices, guidelines, and co
 - Team members MAY propose amendments through normal GitHub Issue process
 - Historical versions MUST be preserved in git history
 
-**Version**: 1.0.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-15
+**Version**: 1.0.1 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-16
