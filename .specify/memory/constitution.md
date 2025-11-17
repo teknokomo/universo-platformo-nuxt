@@ -198,14 +198,14 @@ Previous Version (1.0.0):
 
 ```typescript
 // ✅ CORRECT: Repository pattern
-import { getDataSource } from './DataSource'
-import { User } from './entities/User'
+import { getDataSource } from './DataSource';
+import { User } from './entities/User';
 
-const userRepo = getDataSource().getRepository(User)
-const user = await userRepo.findOne({ where: { id: userId } })
+const userRepo = getDataSource().getRepository(User);
+const user = await userRepo.findOne({ where: { id: userId } });
 
 // ❌ FORBIDDEN: Direct SQL
-const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId])
+const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId]);
 ```
 
 **Rationale**: Repository pattern provides type safety, automatic RLS enforcement, easier testing through mocking, and database migration flexibility. Direct database access creates tight coupling and bypasses security policies.
@@ -236,13 +236,13 @@ const result = await connection.query('SELECT * FROM users WHERE id = $1', [user
 // Factory creates reusable guards
 const guards = createAccessGuards({
   entityType: 'metaverse',
-  roles: { owner: 4, admin: 3, editor: 2, member: 1 }
-})
+  roles: { owner: 4, admin: 3, editor: 2, member: 1 },
+});
 
 // Use in routes
 router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {
   // Handler logic
-})
+});
 ```
 
 **Rationale**: Centralized role system ensures consistent access control across all features, simplifies permission management, reduces security vulnerabilities through standardization, and makes authorization logic easy to test and audit.

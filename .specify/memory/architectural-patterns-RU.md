@@ -17,18 +17,19 @@
 
 ```typescript
 // ✅ ПРАВИЛЬНО: Паттерн Repository
-import { getDataSource } from './DataSource'
-import { User } from './entities/User'
+import { getDataSource } from './DataSource';
+import { User } from './entities/User';
 
-const userRepo = getDataSource().getRepository(User)
-const user = await userRepo.findOne({ where: { id: userId } })
-await userRepo.save(user)
+const userRepo = getDataSource().getRepository(User);
+const user = await userRepo.findOne({ where: { id: userId } });
+await userRepo.save(user);
 
 // ❌ ЗАПРЕЩЕНО: Прямой SQL
-const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId])
+const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId]);
 ```
 
 **Преимущества**:
+
 - Типобезопасность с TypeScript
 - Автоматическое применение Row Level Security (RLS)
 - Упрощенное тестирование через моки
@@ -36,6 +37,7 @@ const result = await connection.query('SELECT * FROM users WHERE id = $1', [user
 - Согласованная обработка ошибок
 
 **Обнаружение**:
+
 ```bash
 # Найти прямые SQL-запросы (антипаттерн)
 grep -r "query\(" packages/*/src --exclude-dir=migrations
@@ -52,43 +54,44 @@ grep -r "query\(" packages/*/src --exclude-dir=migrations
 ```typescript
 // Создать фабрику guards
 export const createAccessGuards = <TEntity>(config: {
-  entityType: string
-  rolePermissions: Record<string, number>
+  entityType: string;
+  rolePermissions: Record<string, number>;
 }) => {
   return {
     ensureAccess: (requiredRoles: string[]) => {
       return async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.user?.id
-        const entityId = req.params.id
-        
+        const userId = req.user?.id;
+        const entityId = req.params.id;
+
         // Проверить членство и роль
-        const membership = await getMembership(entityId, userId)
+        const membership = await getMembership(entityId, userId);
         if (!membership || !requiredRoles.includes(membership.role)) {
-          return res.status(403).json({ error: 'Insufficient permissions' })
+          return res.status(403).json({ error: 'Insufficient permissions' });
         }
-        
-        next()
-      }
+
+        next();
+      };
     },
-    
+
     assertNotOwner: (member: TEntity) => {
       if (member.role === 'owner') {
-        throw new Error('Cannot modify owner')
+        throw new Error('Cannot modify owner');
       }
-    }
-  }
-}
+    },
+  };
+};
 
 // Использование в маршрутах
 const guards = createAccessGuards({
   entityType: 'metaverse',
-  rolePermissions: { owner: 4, admin: 3, editor: 2, member: 1 }
-})
+  rolePermissions: { owner: 4, admin: 3, editor: 2, member: 1 },
+});
 
-router.patch('/:id', guards.ensureAccess(['editor', 'admin', 'owner']), handler)
+router.patch('/:id', guards.ensureAccess(['editor', 'admin', 'owner']), handler);
 ```
 
 **Преимущества**:
+
 - DRY (Don't Repeat Yourself)
 - Типобезопасная проверка разрешений
 - Согласованная обработка ошибок
@@ -104,31 +107,32 @@ router.patch('/:id', guards.ensureAccess(['editor', 'admin', 'owner']), handler)
 **Фабрика Entity Actions**:
 
 ```typescript
-import { createEntityActions } from '@universo/template-mui'
+import { createEntityActions } from '@universo/template-mui';
 
 // Для сущностей с полями name/description
 export default createEntityActions<Metaverse, MetaverseData>({
   i18nPrefix: 'metaverses',
   getInitialFormData: (entity) => ({
     initialName: entity.name,
-    initialDescription: entity.description
-  })
-})
+    initialDescription: entity.description,
+  }),
+});
 ```
 
 **Фабрика Member Actions**:
 
 ```typescript
-import { createMemberActions } from '@universo/template-mui'
+import { createMemberActions } from '@universo/template-mui';
 
 // Для управления участниками
 export default createMemberActions<MetaverseMember>({
   i18nPrefix: 'metaverses',
-  entityType: 'metaverse'
-})
+  entityType: 'metaverse',
+});
 ```
 
 **Преимущества**:
+
 - 130 строк → 11 строк (сокращение на 91%)
 - Согласованная обработка ошибок
 - Типобезопасность с дженериками
@@ -145,26 +149,20 @@ export default createMemberActions<MetaverseMember>({
 
 ```typescript
 export enum Role {
-  OWNER = 4,   // Полный контроль
-  ADMIN = 3,   // Административный доступ
-  EDITOR = 2,  // Редактирование контента
-  MEMBER = 1,  // Ограниченный доступ
-  GUEST = 0    // Только чтение (если применимо)
+  OWNER = 4, // Полный контроль
+  ADMIN = 3, // Административный доступ
+  EDITOR = 2, // Редактирование контента
+  MEMBER = 1, // Ограниченный доступ
+  GUEST = 0, // Только чтение (если применимо)
 }
 
-export const hasRequiredRole = (
-  userRole: Role,
-  requiredRole: Role
-): boolean => {
-  return userRole >= requiredRole
-}
+export const hasRequiredRole = (userRole: Role, requiredRole: Role): boolean => {
+  return userRole >= requiredRole;
+};
 
-export const canManageRole = (
-  managerRole: Role,
-  targetRole: Role
-): boolean => {
-  return managerRole > targetRole
-}
+export const canManageRole = (managerRole: Role, targetRole: Role): boolean => {
+  return managerRole > targetRole;
+};
 ```
 
 **Использование**:
@@ -172,12 +170,12 @@ export const canManageRole = (
 ```typescript
 // Проверить, может ли пользователь выполнить действие
 if (!hasRequiredRole(user.role, Role.EDITOR)) {
-  throw new Error('Insufficient permissions')
+  throw new Error('Insufficient permissions');
 }
 
 // Проверить, может ли пользователь управлять другим участником
 if (!canManageRole(user.role, member.role)) {
-  throw new Error('Cannot manage users with equal or higher role')
+  throw new Error('Cannot manage users with equal or higher role');
 }
 ```
 
@@ -191,23 +189,24 @@ if (!canManageRole(user.role, member.role)) {
 
 ```typescript
 // В пакете @universo/i18n
-import { getInstance, registerNamespace } from '@universo/i18n'
-import metaversesEn from './en.json'
-import metaversesRu from './ru.json'
+import { getInstance, registerNamespace } from '@universo/i18n';
+import metaversesEn from './en.json';
+import metaversesRu from './ru.json';
 
 // Зарегистрировать пространство имен один раз
-getInstance()
+getInstance();
 registerNamespace('metaverses', {
   en: metaversesEn,
-  ru: metaversesRu
-})
+  ru: metaversesRu,
+});
 
 // В компонентах
-const { t } = useTranslation('metaverses')
-const title = t('members.editTitle')
+const { t } = useTranslation('metaverses');
+const title = t('members.editTitle');
 ```
 
 **Преимущества**:
+
 - Единый источник истины
 - Предотвращает дублирование регистраций
 - Изоляция пространств имен
@@ -215,6 +214,7 @@ const title = t('members.editTitle')
 - Упрощенное тестирование
 
 **Обнаружение**:
+
 ```bash
 # Найти прямые вызовы i18next.use() (антипаттерн)
 grep -r "i18next.use" packages/*/src
@@ -229,17 +229,17 @@ grep -r "i18next.use" packages/*/src
 **Схема Backend**:
 
 ```typescript
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const paginationSchema = z.object({
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(10),
   search: z.string().optional(),
   sortBy: z.string().optional(),
-  sortOrder: z.enum(['asc', 'desc']).default('desc')
-})
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+});
 
-export type PaginationParams = z.infer<typeof paginationSchema>
+export type PaginationParams = z.infer<typeof paginationSchema>;
 ```
 
 **Хук Frontend**:
@@ -248,11 +248,12 @@ export type PaginationParams = z.infer<typeof paginationSchema>
 const { data, isLoading } = usePaginated<MetaverseListItem>({
   queryKey: ['metaverses', filters],
   queryFn: ({ pageParam }) => fetchMetaverses(pageParam),
-  initialPageParam: { page: 1, limit: 10 }
-})
+  initialPageParam: { page: 1, limit: 10 },
+});
 ```
 
 **Преимущества**:
+
 - Принцип DRY
 - Согласованный UX
 - Типобезопасность
@@ -276,16 +277,17 @@ const { data, isLoading } = usePaginated<MetaverseListItem>({
 ```typescript
 // Убедиться, что у пользователя есть доступ
 const userId = await ensureAccess(req, res, entityId, {
-  roles: ['editor', 'admin', 'owner']
-})
-if (!userId) return // Ответ уже отправлен
+  roles: ['editor', 'admin', 'owner'],
+});
+if (!userId) return; // Ответ уже отправлен
 
 // Продолжить с операцией репозитория
-const repo = getDataSource().getRepository(Entity)
-const entity = await repo.findOne({ where: { id: entityId } })
+const repo = getDataSource().getRepository(Entity);
+const entity = await repo.findOne({ where: { id: entityId } });
 ```
 
 **Преимущества**:
+
 - Эшелонированная защита
 - Понятные сообщения об ошибках
 - Производительность (кеширование)
@@ -315,6 +317,7 @@ GET /api/v1/metaverses/:id/entities
 ```
 
 **Преимущества**:
+
 - Полное разделение данных
 - Поддержка мультитенантности
 - Четкие границы владения
@@ -336,8 +339,8 @@ export const metaverseKeys = {
   lists: () => [...metaverseKeys.all, 'list'] as const,
   list: (filters: string) => [...metaverseKeys.lists(), { filters }] as const,
   details: () => [...metaverseKeys.all, 'detail'] as const,
-  detail: (id: string) => [...metaverseKeys.details(), id] as const
-}
+  detail: (id: string) => [...metaverseKeys.details(), id] as const,
+};
 ```
 
 **Использование**:
@@ -346,16 +349,16 @@ export const metaverseKeys = {
 // Декларативный (автоматическая загрузка при монтировании)
 const { data, isLoading } = useQuery({
   queryKey: metaverseKeys.detail(id),
-  queryFn: () => fetchMetaverse(id)
-})
+  queryFn: () => fetchMetaverse(id),
+});
 
 // Императивный (ручной запуск)
 const handleClick = async () => {
   const data = await queryClient.fetchQuery({
     queryKey: metaverseKeys.detail(id),
-    queryFn: () => fetchMetaverse(id)
-  })
-}
+    queryFn: () => fetchMetaverse(id),
+  });
+};
 ```
 
 ---
@@ -372,15 +375,16 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     // Замокать тяжелые зависимости
-    setupFiles: ['./setupTests.ts']
-  }
-})
+    setupFiles: ['./setupTests.ts'],
+  },
+});
 
 // setupTests.ts
-vi.mock('rehype-mathjax', () => ({ default: () => () => {} }))
+vi.mock('rehype-mathjax', () => ({ default: () => () => {} }));
 ```
 
 **Производительность**:
+
 - jsdom: 2-5с инициализация
 - happy-dom: 566мс инициализация
 
@@ -406,6 +410,7 @@ vi.mock('rehype-mathjax', () => ({ default: () => () => {} }))
 **Почему**: Родительское приложение разрешает зависимости; Vite импортирует исходный код напрямую.
 
 **Обнаружение**:
+
 ```bash
 # Найти пакеты только с исходным кодом с неправильными deps
 find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
@@ -419,11 +424,13 @@ find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
 **Правило**: Согласованные, описательные имена миграций без устаревших ссылок.
 
 **Формат**:
+
 - `AddEntityNameAndLinked.ts` - Добавление новых сущностей со связями
 - `CreateSchemaName.ts` - Создание новой схемы базы данных
 - БЕЗ упоминаний "Flowise" в новых миграциях
 
 **Примеры**:
+
 ```typescript
 // ✅ ХОРОШО
 export class AddUniksAndLinked1234567890 implements MigrationInterface {}
@@ -446,12 +453,12 @@ export class FlowiseMetaverses1234567891 implements MigrationInterface {}
 // Слушать события
 socket.on('entity:updated', (data) => {
   // Инвалидировать затронутые запросы
-  queryClient.invalidateQueries(entityKeys.detail(data.id))
-  queryClient.invalidateQueries(entityKeys.lists())
-})
+  queryClient.invalidateQueries(entityKeys.detail(data.id));
+  queryClient.invalidateQueries(entityKeys.lists());
+});
 
 // Используется в чат-сообщениях, совместной работе в реальном времени
-queryClient.invalidateQueries(messageKeys.all)
+queryClient.invalidateQueries(messageKeys.all);
 ```
 
 ---
@@ -469,8 +476,8 @@ export default defineConfig({
   format: ['cjs', 'esm'],
   dts: true,
   treeshake: true,
-  platform: 'neutral'
-})
+  platform: 'neutral',
+});
 ```
 
 **Package Exports**:
@@ -498,23 +505,23 @@ export default defineConfig({
 
 ```typescript
 // ПЛОХО
-const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId])
+const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId]);
 
 // ХОРОШО
-const repo = getDataSource().getRepository(User)
-const user = await repo.findOne({ where: { id: userId } })
+const repo = getDataSource().getRepository(User);
+const user = await repo.findOne({ where: { id: userId } });
 ```
 
 ### ❌ Прямой Клиент Supabase в Бизнес-Логике
 
 ```typescript
 // ПЛОХО
-import { supabaseClient } from './supabase'
-const { data } = await supabaseClient.from('users').select('*')
+import { supabaseClient } from './supabase';
+const { data } = await supabaseClient.from('users').select('*');
 
 // ХОРОШО
-const repo = getDataSource().getRepository(User)
-const users = await repo.find()
+const repo = getDataSource().getRepository(User);
+const users = await repo.find();
 ```
 
 ### ❌ useEffect() для Загрузки Данных
@@ -522,14 +529,14 @@ const users = await repo.find()
 ```typescript
 // ПЛОХО
 useEffect(() => {
-  fetch('/api/data').then(res => setData(res))
-}, [])
+  fetch('/api/data').then((res) => setData(res));
+}, []);
 
 // ХОРОШО
 const { data } = useQuery({
   queryKey: ['data'],
-  queryFn: () => fetchData()
-})
+  queryFn: () => fetchData(),
+});
 ```
 
 ### ❌ Пакеты с Исходным Кодом с Dependencies

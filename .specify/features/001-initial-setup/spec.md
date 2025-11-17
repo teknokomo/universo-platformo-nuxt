@@ -195,7 +195,7 @@ This feature primarily deals with repository structure and configuration, not us
 - The repository will eventually contain multiple packages but starts with just the base structure
 - Future packages will follow similar patterns to those in Universo Platformo React but with Nuxt-appropriate implementations
 - The project constitution (.specify/memory/constitution.md) has been ratified and supersedes all other development guidelines
-- GitHub workflow instruction files (.github/instructions/*.md) exist and provide the authoritative guidance for issues, PRs, and labels
+- GitHub workflow instruction files (.github/instructions/\*.md) exist and provide the authoritative guidance for issues, PRs, and labels
 - TypeScript strict mode is non-negotiable and will be enforced in all code
 - The three-entity pattern (Clusters/Domains/Resources) will be the foundational architectural template for future features
 - All developers will follow the specification-driven development workflow (.specify/ directory structure)

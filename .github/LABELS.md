@@ -8,26 +8,26 @@ This document provides the recommended label structure for the Universo Platform
 
 These labels classify the nature of the work.
 
-| Label Name | Color | Description |
-|------------|-------|-------------|
-| `type:feature` | `#0e8a16` (green) | New functionality or capabilities |
-| `type:bug` | `#d73a4a` (red) | Something isn't working correctly |
-| `type:docs` | `#0075ca` (blue) | Documentation improvements or additions |
-| `type:refactor` | `#fbca04` (yellow) | Code restructuring without changing functionality |
-| `type:chore` | `#fef2c0` (light yellow) | Maintenance tasks, dependency updates, etc. |
+| Label Name      | Color                    | Description                                       |
+| --------------- | ------------------------ | ------------------------------------------------- |
+| `type:feature`  | `#0e8a16` (green)        | New functionality or capabilities                 |
+| `type:bug`      | `#d73a4a` (red)          | Something isn't working correctly                 |
+| `type:docs`     | `#0075ca` (blue)         | Documentation improvements or additions           |
+| `type:refactor` | `#fbca04` (yellow)       | Code restructuring without changing functionality |
+| `type:chore`    | `#fef2c0` (light yellow) | Maintenance tasks, dependency updates, etc.       |
 
 ### Area Labels (Applied as Relevant)
 
 These labels indicate which part of the project is affected.
 
-| Label Name | Color | Description |
-|------------|-------|-------------|
+| Label Name            | Color              | Description                                 |
+| --------------------- | ------------------ | ------------------------------------------- |
 | `area:infrastructure` | `#d4c5f9` (purple) | Repository setup, build systems, deployment |
-| `area:clusters` | `#d4c5f9` (purple) | Clusters feature domain |
-| `area:metaverses` | `#d4c5f9` (purple) | Metaverses feature domain |
-| `area:auth` | `#d4c5f9` (purple) | Authentication and authorization |
-| `area:database` | `#d4c5f9` (purple) | Database operations and migrations |
-| `area:ui` | `#d4c5f9` (purple) | User interface and components |
+| `area:clusters`       | `#d4c5f9` (purple) | Clusters feature domain                     |
+| `area:metaverses`     | `#d4c5f9` (purple) | Metaverses feature domain                   |
+| `area:auth`           | `#d4c5f9` (purple) | Authentication and authorization            |
+| `area:database`       | `#d4c5f9` (purple) | Database operations and migrations          |
+| `area:ui`             | `#d4c5f9` (purple) | User interface and components               |
 
 **Note**: Additional area labels will be added as new features are implemented.
 
@@ -35,21 +35,21 @@ These labels indicate which part of the project is affected.
 
 These labels indicate the importance and urgency of the work.
 
-| Label Name | Color | Description |
-|------------|-------|-------------|
-| `priority:P1` | `#b60205` (dark red) | MVP - Must have for initial release |
-| `priority:P2` | `#ff9800` (orange) | Important - Should have soon |
-| `priority:P3` | `#fef2c0` (light yellow) | Nice to have - Can be deferred |
+| Label Name    | Color                    | Description                         |
+| ------------- | ------------------------ | ----------------------------------- |
+| `priority:P1` | `#b60205` (dark red)     | MVP - Must have for initial release |
+| `priority:P2` | `#ff9800` (orange)       | Important - Should have soon        |
+| `priority:P3` | `#fef2c0` (light yellow) | Nice to have - Can be deferred      |
 
 ### Status Labels (Optional)
 
 These labels track workflow state.
 
-| Label Name | Color | Description |
-|------------|-------|-------------|
-| `status:blocked` | `#e99695` (light red) | Cannot proceed due to external dependency |
-| `status:in-progress` | `#c2e0c6` (light green) | Currently being worked on |
-| `status:review` | `#bfdadc` (light blue) | Awaiting code review |
+| Label Name           | Color                   | Description                               |
+| -------------------- | ----------------------- | ----------------------------------------- |
+| `status:blocked`     | `#e99695` (light red)   | Cannot proceed due to external dependency |
+| `status:in-progress` | `#c2e0c6` (light green) | Currently being worked on                 |
+| `status:review`      | `#bfdadc` (light blue)  | Awaiting code review                      |
 
 ### Default GitHub Labels (Keep These)
 
@@ -69,23 +69,27 @@ GitHub provides several default labels that should be retained:
 ### For Issues
 
 Every issue should have:
+
 1. **One type label** (type:feature, type:bug, type:docs, etc.)
 2. **At least one area label** (area:infrastructure, area:clusters, etc.)
 3. **Optional priority label** (priority:P1, priority:P2, priority:P3)
 4. **Optional status label** as the issue progresses
 
 **Example**:
+
 - Issue: "Add user authentication system"
 - Labels: `type:feature`, `area:auth`, `area:infrastructure`, `priority:P1`
 
 ### For Pull Requests
 
 Pull requests should inherit labels from their linked issues, plus:
+
 1. **Type label** matching the work performed
 2. **Area labels** for affected parts of the codebase
 3. **Status labels** as needed during review
 
 **Example**:
+
 - PR: "GH45 Implement user authentication system"
 - Labels: `type:feature`, `area:auth`, `area:infrastructure`, `status:review`
 
