@@ -52,7 +52,7 @@ Universo Platformo Nuxt — это полнофункциональная реа
 | Маршрутизация    | React Router               | Файловая маршрутизация               |
 | Система типов    | TypeScript                 | TypeScript (строгий режим)           |
 | Менеджер пакетов | PNPM                       | PNPM                                 |
-| UI-библиотека    | Material UI (React)        | Material UI (MUI)                    |
+| UI-библиотека    | Material UI (React)        | Vuetify 3 (Vue Material Design)      |
 
 ### Архитектурный подход
 
@@ -70,7 +70,7 @@ Universo Platformo Nuxt — это полнофункциональная реа
 - **Менеджер пакетов**: [PNPM 8.x+](https://pnpm.io/) - Быстрый, эффективно использующий дисковое пространство
 - **База данных**: [Supabase](https://supabase.com/) - На основе PostgreSQL с возможностями realtime
 - **Аутентификация**: [Passport.js](https://www.passportjs.org/) - С коннектором для Supabase
-- **UI-библиотека**: [Material UI (MUI)](https://mui.com/) - Комплексная библиотека компонентов
+- **UI-библиотека**: [Vuetify 3](https://vuetifyjs.com/) - Фреймворк компонентов Material Design для Vue
 
 ### Качество кода
 

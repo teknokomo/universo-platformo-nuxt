@@ -52,7 +52,7 @@ This project is conceptually based on [universo-platformo-react](https://github.
 | Routing         | React Router                | File-based routing              |
 | Type System     | TypeScript                  | TypeScript (strict mode)        |
 | Package Manager | PNPM                        | PNPM                            |
-| UI Library      | Material UI (React)         | Material UI (MUI)               |
+| UI Library      | Material UI (React)         | Vuetify 3 (Vue Material Design) |
 
 ### Architecture Approach
 
@@ -70,7 +70,7 @@ This project is conceptually based on [universo-platformo-react](https://github.
 - **Package Manager**: [PNPM 8.x+](https://pnpm.io/) - Fast, disk space efficient
 - **Database**: [Supabase](https://supabase.com/) - PostgreSQL-based with realtime capabilities
 - **Authentication**: [Passport.js](https://www.passportjs.org/) - With Supabase connector
-- **UI Library**: [Material UI (MUI)](https://mui.com/) - Comprehensive component library
+- **UI Library**: [Vuetify 3](https://vuetifyjs.com/) - Material Design component framework for Vue
 
 ### Code Quality
 
