@@ -17,18 +17,19 @@
 
 ```typescript
 // ✅ CORRECT: Repository pattern
-import { getDataSource } from './DataSource'
-import { User } from './entities/User'
+import { getDataSource } from './DataSource';
+import { User } from './entities/User';
 
-const userRepo = getDataSource().getRepository(User)
-const user = await userRepo.findOne({ where: { id: userId } })
-await userRepo.save(user)
+const userRepo = getDataSource().getRepository(User);
+const user = await userRepo.findOne({ where: { id: userId } });
+await userRepo.save(user);
 
 // ❌ FORBIDDEN: Direct SQL
-const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId])
+const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId]);
 ```
 
 **Benefits**:
+
 - Type safety with TypeScript
 - Automatic Row Level Security (RLS) enforcement
 - Easier testing through mocking
@@ -36,6 +37,7 @@ const result = await connection.query('SELECT * FROM users WHERE id = $1', [user
 - Consistent error handling
 
 **Detection**:
+
 ```bash
 # Find direct SQL queries (antipattern)
 grep -r "query\(" packages/*/src --exclude-dir=migrations
@@ -52,43 +54,44 @@ grep -r "query\(" packages/*/src --exclude-dir=migrations
 ```typescript
 // Create guards factory
 export const createAccessGuards = <TEntity>(config: {
-  entityType: string
-  rolePermissions: Record<string, number>
+  entityType: string;
+  rolePermissions: Record<string, number>;
 }) => {
   return {
     ensureAccess: (requiredRoles: string[]) => {
       return async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.user?.id
-        const entityId = req.params.id
-        
+        const userId = req.user?.id;
+        const entityId = req.params.id;
+
         // Check membership and role
-        const membership = await getMembership(entityId, userId)
+        const membership = await getMembership(entityId, userId);
         if (!membership || !requiredRoles.includes(membership.role)) {
-          return res.status(403).json({ error: 'Insufficient permissions' })
+          return res.status(403).json({ error: 'Insufficient permissions' });
         }
-        
-        next()
-      }
+
+        next();
+      };
     },
-    
+
     assertNotOwner: (member: TEntity) => {
       if (member.role === 'owner') {
-        throw new Error('Cannot modify owner')
+        throw new Error('Cannot modify owner');
       }
-    }
-  }
-}
+    },
+  };
+};
 
 // Usage in routes
 const guards = createAccessGuards({
   entityType: 'metaverse',
-  rolePermissions: { owner: 4, admin: 3, editor: 2, member: 1 }
-})
+  rolePermissions: { owner: 4, admin: 3, editor: 2, member: 1 },
+});
 
-router.patch('/:id', guards.ensureAccess(['editor', 'admin', 'owner']), handler)
+router.patch('/:id', guards.ensureAccess(['editor', 'admin', 'owner']), handler);
 ```
 
 **Benefits**:
+
 - DRY (Don't Repeat Yourself)
 - Type-safe permission checking
 - Consistent error handling
@@ -104,31 +107,32 @@ router.patch('/:id', guards.ensureAccess(['editor', 'admin', 'owner']), handler)
 **Entity Actions Factory**:
 
 ```typescript
-import { createEntityActions } from '@universo/template-mui'
+import { createEntityActions } from '@universo/template-mui';
 
 // For entities with name/description fields
 export default createEntityActions<Metaverse, MetaverseData>({
   i18nPrefix: 'metaverses',
   getInitialFormData: (entity) => ({
     initialName: entity.name,
-    initialDescription: entity.description
-  })
-})
+    initialDescription: entity.description,
+  }),
+});
 ```
 
 **Member Actions Factory**:
 
 ```typescript
-import { createMemberActions } from '@universo/template-mui'
+import { createMemberActions } from '@universo/template-mui';
 
 // For member management
 export default createMemberActions<MetaverseMember>({
   i18nPrefix: 'metaverses',
-  entityType: 'metaverse'
-})
+  entityType: 'metaverse',
+});
 ```
 
 **Benefits**:
+
 - 130 lines → 11 lines (91% reduction)
 - Consistent error handling
 - Type-safe with generics
@@ -145,26 +149,20 @@ export default createMemberActions<MetaverseMember>({
 
 ```typescript
 export enum Role {
-  OWNER = 4,   // Full control
-  ADMIN = 3,   // Administrative access
-  EDITOR = 2,  // Content editing
-  MEMBER = 1,  // Limited access
-  GUEST = 0    // Read-only (if applicable)
+  OWNER = 4, // Full control
+  ADMIN = 3, // Administrative access
+  EDITOR = 2, // Content editing
+  MEMBER = 1, // Limited access
+  GUEST = 0, // Read-only (if applicable)
 }
 
-export const hasRequiredRole = (
-  userRole: Role,
-  requiredRole: Role
-): boolean => {
-  return userRole >= requiredRole
-}
+export const hasRequiredRole = (userRole: Role, requiredRole: Role): boolean => {
+  return userRole >= requiredRole;
+};
 
-export const canManageRole = (
-  managerRole: Role,
-  targetRole: Role
-): boolean => {
-  return managerRole > targetRole
-}
+export const canManageRole = (managerRole: Role, targetRole: Role): boolean => {
+  return managerRole > targetRole;
+};
 ```
 
 **Usage**:
@@ -172,12 +170,12 @@ export const canManageRole = (
 ```typescript
 // Check if user can perform action
 if (!hasRequiredRole(user.role, Role.EDITOR)) {
-  throw new Error('Insufficient permissions')
+  throw new Error('Insufficient permissions');
 }
 
 // Check if user can manage another member
 if (!canManageRole(user.role, member.role)) {
-  throw new Error('Cannot manage users with equal or higher role')
+  throw new Error('Cannot manage users with equal or higher role');
 }
 ```
 
@@ -191,23 +189,24 @@ if (!canManageRole(user.role, member.role)) {
 
 ```typescript
 // In @universo/i18n package
-import { getInstance, registerNamespace } from '@universo/i18n'
-import metaversesEn from './en.json'
-import metaversesRu from './ru.json'
+import { getInstance, registerNamespace } from '@universo/i18n';
+import metaversesEn from './en.json';
+import metaversesRu from './ru.json';
 
 // Register namespace once
-getInstance()
+getInstance();
 registerNamespace('metaverses', {
   en: metaversesEn,
-  ru: metaversesRu
-})
+  ru: metaversesRu,
+});
 
 // In components
-const { t } = useTranslation('metaverses')
-const title = t('members.editTitle')
+const { t } = useTranslation('metaverses');
+const title = t('members.editTitle');
 ```
 
 **Benefits**:
+
 - Single source of truth
 - Prevents duplicate registrations
 - Namespace isolation
@@ -215,6 +214,7 @@ const title = t('members.editTitle')
 - Easier testing
 
 **Detection**:
+
 ```bash
 # Find direct i18next.use() calls (antipattern)
 grep -r "i18next.use" packages/*/src
@@ -229,17 +229,17 @@ grep -r "i18next.use" packages/*/src
 **Backend Schema**:
 
 ```typescript
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const paginationSchema = z.object({
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(10),
   search: z.string().optional(),
   sortBy: z.string().optional(),
-  sortOrder: z.enum(['asc', 'desc']).default('desc')
-})
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+});
 
-export type PaginationParams = z.infer<typeof paginationSchema>
+export type PaginationParams = z.infer<typeof paginationSchema>;
 ```
 
 **Frontend Hook**:
@@ -248,11 +248,12 @@ export type PaginationParams = z.infer<typeof paginationSchema>
 const { data, isLoading } = usePaginated<MetaverseListItem>({
   queryKey: ['metaverses', filters],
   queryFn: ({ pageParam }) => fetchMetaverses(pageParam),
-  initialPageParam: { page: 1, limit: 10 }
-})
+  initialPageParam: { page: 1, limit: 10 },
+});
 ```
 
 **Benefits**:
+
 - DRY principle
 - Consistent UX
 - Type-safe
@@ -276,16 +277,17 @@ const { data, isLoading } = usePaginated<MetaverseListItem>({
 ```typescript
 // Ensure user has access
 const userId = await ensureAccess(req, res, entityId, {
-  roles: ['editor', 'admin', 'owner']
-})
-if (!userId) return // Response already sent
+  roles: ['editor', 'admin', 'owner'],
+});
+if (!userId) return; // Response already sent
 
 // Proceed with repository operation
-const repo = getDataSource().getRepository(Entity)
-const entity = await repo.findOne({ where: { id: entityId } })
+const repo = getDataSource().getRepository(Entity);
+const entity = await repo.findOne({ where: { id: entityId } });
 ```
 
 **Benefits**:
+
 - Defense in depth
 - Clear error messages
 - Performance (caching)
@@ -315,6 +317,7 @@ GET /api/v1/metaverses/:id/entities
 ```
 
 **Benefits**:
+
 - Complete data separation
 - Multi-tenant support
 - Clear ownership boundaries
@@ -336,8 +339,8 @@ export const metaverseKeys = {
   lists: () => [...metaverseKeys.all, 'list'] as const,
   list: (filters: string) => [...metaverseKeys.lists(), { filters }] as const,
   details: () => [...metaverseKeys.all, 'detail'] as const,
-  detail: (id: string) => [...metaverseKeys.details(), id] as const
-}
+  detail: (id: string) => [...metaverseKeys.details(), id] as const,
+};
 ```
 
 **Usage**:
@@ -346,16 +349,16 @@ export const metaverseKeys = {
 // Declarative (auto-fetch on mount)
 const { data, isLoading } = useQuery({
   queryKey: metaverseKeys.detail(id),
-  queryFn: () => fetchMetaverse(id)
-})
+  queryFn: () => fetchMetaverse(id),
+});
 
 // Imperative (manual trigger)
 const handleClick = async () => {
   const data = await queryClient.fetchQuery({
     queryKey: metaverseKeys.detail(id),
-    queryFn: () => fetchMetaverse(id)
-  })
-}
+    queryFn: () => fetchMetaverse(id),
+  });
+};
 ```
 
 ---
@@ -372,15 +375,16 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     // Mock heavy dependencies
-    setupFiles: ['./setupTests.ts']
-  }
-})
+    setupFiles: ['./setupTests.ts'],
+  },
+});
 
 // setupTests.ts
-vi.mock('rehype-mathjax', () => ({ default: () => () => {} }))
+vi.mock('rehype-mathjax', () => ({ default: () => () => {} }));
 ```
 
 **Performance**:
+
 - jsdom: 2-5s initialization
 - happy-dom: 566ms initialization
 
@@ -406,6 +410,7 @@ vi.mock('rehype-mathjax', () => ({ default: () => () => {} }))
 **Why**: Parent app resolves dependencies; Vite imports source directly.
 
 **Detection**:
+
 ```bash
 # Find source-only packages with wrong deps
 find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
@@ -419,11 +424,13 @@ find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
 **Rule**: Consistent, descriptive migration names without legacy references.
 
 **Format**:
+
 - `AddEntityNameAndLinked.ts` - Adding new entities with relationships
 - `CreateSchemaName.ts` - Creating new database schema
 - NO "Flowise" mentions in new migrations
 
 **Examples**:
+
 ```typescript
 // ✅ GOOD
 export class AddUniksAndLinked1234567890 implements MigrationInterface {}
@@ -446,12 +453,12 @@ export class FlowiseMetaverses1234567891 implements MigrationInterface {}
 // Listen to events
 socket.on('entity:updated', (data) => {
   // Invalidate affected queries
-  queryClient.invalidateQueries(entityKeys.detail(data.id))
-  queryClient.invalidateQueries(entityKeys.lists())
-})
+  queryClient.invalidateQueries(entityKeys.detail(data.id));
+  queryClient.invalidateQueries(entityKeys.lists());
+});
 
 // Used in chat messages, real-time collaboration
-queryClient.invalidateQueries(messageKeys.all)
+queryClient.invalidateQueries(messageKeys.all);
 ```
 
 ---
@@ -469,8 +476,8 @@ export default defineConfig({
   format: ['cjs', 'esm'],
   dts: true,
   treeshake: true,
-  platform: 'neutral'
-})
+  platform: 'neutral',
+});
 ```
 
 **Package Exports**:
@@ -498,23 +505,23 @@ export default defineConfig({
 
 ```typescript
 // BAD
-const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId])
+const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId]);
 
 // GOOD
-const repo = getDataSource().getRepository(User)
-const user = await repo.findOne({ where: { id: userId } })
+const repo = getDataSource().getRepository(User);
+const user = await repo.findOne({ where: { id: userId } });
 ```
 
 ### ❌ Direct Supabase Client in Business Logic
 
 ```typescript
 // BAD
-import { supabaseClient } from './supabase'
-const { data } = await supabaseClient.from('users').select('*')
+import { supabaseClient } from './supabase';
+const { data } = await supabaseClient.from('users').select('*');
 
 // GOOD
-const repo = getDataSource().getRepository(User)
-const users = await repo.find()
+const repo = getDataSource().getRepository(User);
+const users = await repo.find();
 ```
 
 ### ❌ useEffect() for Data Fetching
@@ -522,14 +529,14 @@ const users = await repo.find()
 ```typescript
 // BAD
 useEffect(() => {
-  fetch('/api/data').then(res => setData(res))
-}, [])
+  fetch('/api/data').then((res) => setData(res));
+}, []);
 
 // GOOD
 const { data } = useQuery({
   queryKey: ['data'],
-  queryFn: () => fetchData()
-})
+  queryFn: () => fetchData(),
+});
 ```
 
 ### ❌ Source Packages with Dependencies

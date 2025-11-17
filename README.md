@@ -350,6 +350,7 @@ Detailed architectural patterns adopted from Universo Platformo React:
 - **Universal List Pattern**: Reusable list components with backend pagination
 - **RLS Integration**: Row Level Security with application-level validation
 - **Data Isolation**: Three-tier isolation with junction tables
+
 6. **Reference Alignment**: Follow React concept, implement with Nuxt best practices
 
 ### Specifications
