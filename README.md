@@ -328,6 +328,28 @@ This project follows strict governance principles defined in [.specify/memory/co
 3. **Bilingual Documentation**: All docs in English and Russian (NON-NEGOTIABLE)
 4. **Technology Stack Consistency**: Core technologies are binding across packages
 5. **Incremental Development**: Features built with independent, testable user stories (P1→P2→P3)
+6. **Reference Implementation Alignment**: Learn from React version without copying code
+7. **Utility Package Organization**: Shared code in centralized utility packages
+8. **Repository Pattern Enforcement**: All database access via TypeORM repositories
+9. **Universal Role System**: Consistent role hierarchy across all features
+
+### Architectural Patterns
+
+Detailed architectural patterns adopted from Universo Platformo React:
+
+- **English**: [.specify/memory/architectural-patterns.md](./.specify/memory/architectural-patterns.md)
+- **Russian**: [.specify/memory/architectural-patterns-RU.md](./.specify/memory/architectural-patterns-RU.md)
+
+**Key patterns:**
+
+- **Repository Pattern**: All database operations via TypeORM (no direct SQL)
+- **Guards Pattern**: Centralized permission checking with factory functions
+- **Factory Functions**: Reusable action generators reducing code duplication by 90%+
+- **Universal Role System**: owner > admin > editor > member > guest
+- **i18n Architecture**: Centralized namespace registration
+- **Universal List Pattern**: Reusable list components with backend pagination
+- **RLS Integration**: Row Level Security with application-level validation
+- **Data Isolation**: Three-tier isolation with junction tables
 6. **Reference Alignment**: Follow React concept, implement with Nuxt best practices
 
 ### Specifications
