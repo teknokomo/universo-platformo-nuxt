@@ -1,22 +1,34 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.0.0 → 1.0.1
-Rationale: Patch amendment - clarifications to existing principles based on deep specification analysis
+Version Change: 1.0.1 → 1.1.0
+Rationale: Minor version - added new architectural principles from React repository analysis
 
 Modified Principles:
-  - Principle III (Bilingual Documentation): Added validation tooling clarification
-  - Principle VI (Reference Implementation): Clarified three-entity pattern as core architecture
-  - Technology Stack Requirements: Added Vitest testing framework
+  - Principle I (Monorepo): Added utility package conventions
+  - Principle VI (Reference Implementation): Added specific patterns to adopt
+  - Technology Stack Requirements: Added build system, testing details, repository pattern
 
-Added Sections: None (clarifications only)
+Added Sections:
+  - Principle VII: Utility Package Organization
+  - Principle VIII: Repository Pattern Enforcement (Database Abstraction)
+  - Principle IX: Universal Role System
+  - Architectural Patterns (detailed section)
+
 Removed Sections: None
 
 Templates Status:
   ✅ All templates remain aligned
-  ✅ Specifications updated to reflect clarified requirements
+  ✅ Specifications updated to reflect new architectural patterns
 
-Follow-up TODOs: None
+Follow-up TODOs:
+  - Create detailed architectural patterns document
+  - Add anti-patterns documentation
+  - Update package templates with new conventions
+
+Previous Version (1.0.1):
+  Ratified: 2025-11-16
+  Patch amendment - clarifications to existing principles
 
 Previous Version (1.0.0):
   Ratified: 2025-11-15
@@ -34,13 +46,21 @@ Previous Version (1.0.0):
 **Requirements**:
 
 - Packages are organized in `packages/` directory
-- Frontend packages use `-frt` suffix (e.g., `packages/clusters-frt`)
-- Backend packages use `-srv` suffix (e.g., `packages/clusters-srv`)
+- **Feature packages** use `-frt` suffix for frontend (e.g., `packages/clusters-frt`)
+- **Feature packages** use `-srv` suffix for backend (e.g., `packages/clusters-srv`)
+- **Utility packages** without suffixes for shared code (e.g., `packages/universo-types`, `packages/universo-utils`)
+- **Template packages** without suffixes for reusable templates (e.g., `packages/template-mmoomm`)
 - Each package MUST contain a `base/` root folder to support future multiple implementations
 - Shared dependencies are managed through workspace protocol
 - All packages are independently buildable and testable
 
-**Rationale**: Monorepo structure enables code sharing, consistent tooling, atomic cross-package changes, and simplified dependency management while maintaining clear separation between frontend and backend concerns.
+**Package Types**:
+
+- **Feature Packages**: Domain-specific functionality requiring frontend and/or backend (`*-frt`, `*-srv`)
+- **Utility Packages**: Shared code without domain logic (`@universo/types`, `@universo/utils`, `@universo/api-client`, `@universo/i18n`)
+- **Template Packages**: Reusable component templates (`template-*`)
+
+**Rationale**: Monorepo structure enables code sharing, consistent tooling, atomic cross-package changes, and simplified dependency management while maintaining clear separation between frontend, backend, and shared concerns.
 
 ### II. Specification-Driven Development
 
@@ -119,7 +139,113 @@ Previous Version (1.0.0):
 - Key concepts to follow: package structure, entity relationships (Clusters/Domains/Resources pattern), incremental feature rollout
 - **Core Pattern**: The three-entity pattern (Clusters/Domains/Resources, Metaverses/Sections/Entities, etc.) is a foundational architectural concept that MUST be replicated across features, with documentation explaining its central role in the platform architecture
 
+**Architectural Patterns to Adopt**:
+
+- **Repository Pattern**: All database operations via TypeORM repositories (never direct SQL)
+- **Guards Pattern**: Centralized permission checking with factory functions
+- **Factory Functions**: Reusable action generators for CRUD operations
+- **Universal Role System**: Hierarchy (owner > admin > editor > member > guest)
+- **i18n Architecture**: Centralized namespace registration pattern
+- **Universal List Pattern**: Reusable list components with backend pagination
+- **Data Isolation Pattern**: Three-tier isolation with junction tables
+- **RLS Integration**: Row Level Security with application-level validation
+
+**Anti-Patterns to Avoid**:
+
+- NO direct database queries (use Repository pattern)
+- NO direct Supabase client usage in business logic (use abstraction layer)
+- NO useEffect() for data fetching (use TanStack Query or Nuxt equivalents)
+- NO source-only packages with dependencies (use peerDependencies)
+
 **Rationale**: Learning from existing implementations accelerates development while avoiding technical debt transfer. Nuxt-specific best practices ensure optimal implementation for the chosen stack. The three-entity pattern provides consistency and predictability across the platform's feature set.
+
+### VII. Utility Package Organization
+
+**Rule**: Shared code MUST be organized into utility packages without `-frt` or `-srv` suffixes.
+
+**Required Utility Packages**:
+
+- **@universo/types**: Centralized TypeScript type definitions and interfaces
+- **@universo/utils**: Common utility functions and helpers
+- **@universo/api-client**: Shared API client library for backend communication
+- **@universo/i18n**: Internationalization configuration and namespace management
+- **@universo/template-mui** (or equivalent): Shared UI components and templates
+
+**Requirements**:
+
+- Utility packages MUST NOT contain domain-specific business logic
+- Package names MUST use `@universo/` scope
+- All types shared across packages MUST be defined in `@universo/types`
+- Utility packages SHOULD use peerDependencies for framework dependencies
+- Each utility package MUST have bilingual documentation
+
+**Rationale**: Centralized utility packages prevent code duplication, ensure consistent behavior across features, simplify dependency management, and provide a single source of truth for shared functionality.
+
+### VIII. Repository Pattern Enforcement (Database Abstraction)
+
+**Rule**: ALL database operations MUST go through the Repository pattern. Direct database access in business logic is FORBIDDEN.
+
+**Requirements**:
+
+- Use TypeORM repositories: `getDataSource().getRepository(Entity)`
+- Repository methods: `find()`, `findOne()`, `save()`, `delete()`, etc.
+- User context MUST be propagated for Row Level Security (RLS)
+- Direct SQL queries are FORBIDDEN except in migrations
+- Business logic MUST NOT import database clients directly
+- Abstraction layer MUST support future database migrations
+
+**Database Access Pattern**:
+
+```typescript
+// ✅ CORRECT: Repository pattern
+import { getDataSource } from './DataSource'
+import { User } from './entities/User'
+
+const userRepo = getDataSource().getRepository(User)
+const user = await userRepo.findOne({ where: { id: userId } })
+
+// ❌ FORBIDDEN: Direct SQL
+const result = await connection.query('SELECT * FROM users WHERE id = $1', [userId])
+```
+
+**Rationale**: Repository pattern provides type safety, automatic RLS enforcement, easier testing through mocking, and database migration flexibility. Direct database access creates tight coupling and bypasses security policies.
+
+### IX. Universal Role System
+
+**Rule**: All access control MUST use a centralized role hierarchy and permission checking system.
+
+**Role Hierarchy** (highest to lowest):
+
+1. **owner** (4): Full control, can delete entity, manage all members
+2. **admin** (3): Administrative access, can manage most settings and members
+3. **editor** (2): Can edit content but not manage members or critical settings
+4. **member** (1): Read access with limited write permissions
+5. **guest** (0): Read-only access (if applicable)
+
+**Requirements**:
+
+- Role types MUST be centralized in `@universo/types`
+- Permission checking MUST use Guards pattern with factory functions
+- Role hierarchy MUST be enforced: higher roles inherit lower role permissions
+- Permission utilities: `hasRequiredRole()`, `canManageRole()`, `ensureAccess()`
+- Each entity type SHOULD have `createAccessGuards()` factory for permission checks
+
+**Guards Pattern**:
+
+```typescript
+// Factory creates reusable guards
+const guards = createAccessGuards({
+  entityType: 'metaverse',
+  roles: { owner: 4, admin: 3, editor: 2, member: 1 }
+})
+
+// Use in routes
+router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {
+  // Handler logic
+})
+```
+
+**Rationale**: Centralized role system ensures consistent access control across all features, simplifies permission management, reduces security vulnerabilities through standardization, and makes authorization logic easy to test and audit.
 
 ## Technology Stack Requirements
 
@@ -132,14 +258,19 @@ Previous Version (1.0.0):
 - **Authentication**: Passport.js with Supabase strategy
 - **UI Library**: Material UI (MUI)
 - **Type Checking**: TypeScript 5.x in strict mode
-- **Testing**: Vitest (Nuxt/Vite ecosystem standard)
+- **Testing**: Vitest with happy-dom environment (4-9x faster than jsdom)
+- **Build System**: Nuxt's native build system (or tsdown for utility packages)
+- **Data Fetching**: TanStack Query (Vue Query) or Nuxt composables
+- **i18n**: Vue I18n or Nuxt i18n module with centralized namespace registration
 
 ### Database Strategy
 
 - Primary: Supabase with Row Level Security (RLS)
-- Architecture MUST use abstraction layer (repository pattern or similar) to enable future database migrations
+- Architecture MUST use abstraction layer (Repository pattern) to enable future database migrations
 - Direct database access in business logic is FORBIDDEN - use abstraction layer
 - Schema migrations MUST be version controlled
+- TypeORM for entity definitions and repository pattern
+- Migration naming convention: `AddEntityNameAndLinked` or `CreateSchemaName` (no "Flowise" mentions)
 
 ### Package Structure
 
@@ -148,10 +279,27 @@ Each functional domain requiring both frontend and backend MUST be split into se
 - `packages/{domain}-frt/base/` - Frontend implementation
 - `packages/{domain}-srv/base/` - Backend implementation
 
+Utility packages without domain logic use no suffix:
+
+- `packages/universo-types/base/` - Type definitions
+- `packages/universo-utils/base/` - Utility functions
+- `packages/universo-api-client/base/` - API client library
+- `packages/universo-i18n/base/` - i18n configuration
+- `packages/template-{name}/base/` - Reusable templates
+
 Examples:
 
-- `packages/clusters-frt/base/` and `packages/clusters-srv/base/`
-- `packages/metaverses-frt/base/` and `packages/metaverses-srv/base/`
+- `packages/clusters-frt/base/` and `packages/clusters-srv/base/` (feature packages)
+- `packages/metaverses-frt/base/` and `packages/metaverses-srv/base/` (feature packages)
+- `packages/universo-types/base/` (utility package - no suffix)
+
+### Build System Standards
+
+- **Dual Format**: Packages SHOULD support both CJS and ESM when consumed by different systems
+- **Source-Only Packages**: Packages with source code only (no dist) MUST use peerDependencies
+- **Type Declarations**: All packages MUST generate TypeScript declarations (.d.ts)
+- **Tree-Shaking**: Build configuration SHOULD support tree-shaking for optimal bundle size
+- **Build Tool**: tsdown, Nuxt's build system, or Vite depending on package type
 
 ### Code Quality Standards
 
@@ -231,4 +379,4 @@ This constitution supersedes all other development practices, guidelines, and co
 - Team members MAY propose amendments through normal GitHub Issue process
 - Historical versions MUST be preserved in git history
 
-**Version**: 1.0.1 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-16
+**Version**: 1.1.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-17
