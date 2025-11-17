@@ -132,7 +132,7 @@ A developer or reviewer can automatically validate that bilingual documentation 
 - **FR-011**: README files MUST explain the key differences from React implementation (Nuxt-based, different patterns)
 - **FR-012**: Documentation MUST note that Supabase is the initial database with plans for multi-database support
 - **FR-013**: Documentation MUST reference the intention to use Passport.js for authentication with Supabase connector
-- **FR-014**: Documentation MUST reference the intention to use Material UI (MUI) for components
+- **FR-014**: Documentation MUST reference the intention to use Vuetify 3 (Vue Material Design) for UI components
 - **FR-015**: Repository setup MUST NOT include a docs/ directory (will be in separate repository)
 - **FR-016**: Repository MUST include package.json with necessary scripts for development, build, and testing
 - **FR-017**: All documentation files MUST be created first in English, then translated to Russian with identical line count and structure

@@ -12,9 +12,9 @@ This plan establishes the foundational infrastructure for Universo Platformo Nux
 **Language/Version**: TypeScript 5.x with strict mode, Node.js LTS 18.x+  
 **Primary Framework**: Nuxt 3.x (fullstack framework)  
 **Package Manager**: PNPM 8.x+ with workspace protocol  
-**Primary Dependencies**: Material UI (MUI), Passport.js, Supabase client  
+**Primary Dependencies**: Vuetify 3 (Material Design for Vue), Passport.js, @nuxtjs/supabase  
 **Storage**: Supabase (PostgreSQL-based) with abstraction layer planned for future  
-**Testing**: Vitest (standard for Nuxt/Vite ecosystem)  
+**Testing**: Vitest with @nuxt/test-utils (Nuxt-aware testing environment)  
 **Target Platform**: Modern web browsers (last 2 versions), Node.js server-side  
 **Project Type**: Fullstack monorepo - packages separated into `-frt` (frontend) and `-srv` (server/backend)  
 **Performance Goals**:
@@ -38,7 +38,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 - [x] **Monorepo Architecture**: Feature establishes the monorepo foundation with PNPM workspaces, `packages/` directory structure, and conventions for `-frt`/`-srv` packages with `base/` folders
 - [x] **Specification-Driven**: This plan follows specification workflow (spec.md exists with 4 user stories, 18 functional requirements, and 10 measurable success criteria)
 - [x] **Bilingual Documentation**: All documentation will be provided in English (primary) and Russian (exact copy with same line count ±2) - FR-001, FR-009, FR-017
-- [x] **Technology Stack**: Establishes mandatory stack infrastructure (Nuxt 3, TypeScript, PNPM, preparation for Supabase, Passport.js, MUI)
+- [x] **Technology Stack**: Establishes mandatory stack infrastructure (Nuxt 3, TypeScript, PNPM, preparation for Supabase, Passport.js, Vuetify 3)
 - [x] **Incremental Development**: User stories are prioritized P1-P2-P3 with independent testability; P1 (repository foundation) must be completed first
 - [x] **Reference Alignment**: Conceptually follows universo-platformo-react structure (monorepo, package naming, three-entity pattern) without copying React code or legacy issues
 
@@ -65,7 +65,8 @@ All constitution principles are fully compliant for this feature. No technology 
 /
 ├── package.json         # Workspace root, scripts, shared dependencies
 ├── pnpm-workspace.yaml  # PNPM workspace configuration
-├── tsconfig.json        # Base TypeScript configuration
+├── .npmrc               # PNPM configuration (shamefully-hoist for Nuxt)
+├── tsconfig.json        # Base TypeScript configuration (strict mode)
 ├── .gitignore           # Git ignore rules for Node.js/TypeScript/Nuxt
 ├── .eslintrc.js         # ESLint configuration
 ├── .prettierrc          # Prettier configuration
@@ -79,10 +80,12 @@ All constitution principles are fully compliant for this feature. No technology 
 │
 └── .specify/            # Specification framework (already exists)
     ├── memory/
-    │   └── constitution.md
+    │   ├── constitution.md
+    │   └── architectural-patterns.md
     ├── templates/
     ├── features/
     │   └── 001-initial-setup/  # This feature
+    │       └── research.md     # Best practices research
     └── reports/
 
 # Future package structure (documented, not implemented in initial setup)
@@ -101,11 +104,23 @@ packages/{domain}-srv/   # Backend/server packages
 │   ├── models/
 │   └── services/
 └── README.md
+
+packages/@universo/      # Shared utility packages (with scope)
+└── types/              # Shared TypeScript types
+    ├── package.json
+    └── index.ts
 ```
 
 **Structure Decision**:
 
-This feature establishes a **fullstack monorepo** structure using PNPM workspaces. The root directory contains configuration files and bilingual documentation. The `packages/` directory is created but empty initially - it will house future feature packages following the `-frt` (frontend) and `-srv` (server) naming convention. Each package will have a `base/` folder to support future multiple implementations (as per Principle I of the constitution).
+This feature establishes a **fullstack monorepo** structure using PNPM workspaces based on industry best practices from research (see `research.md`). The root directory contains configuration files and bilingual documentation. The `packages/` directory is created but empty initially - it will house future feature packages following the `-frt` (frontend) and `-srv` (server) naming convention. Each package will have a `base/` folder to support future multiple implementations (as per Principle I of the constitution).
+
+**Key Research Findings Applied**:
+- **.npmrc with shamefully-hoist=true**: Required for Nuxt's auto-import system to work correctly with PNPM
+- **Vuetify 3**: Vue-native Material Design library (not React's Material UI)
+- **@nuxtjs/supabase module**: Official Nuxt integration for Supabase with composables
+- **Vitest + @nuxt/test-utils**: Nuxt-aware testing environment
+- **TypeScript strict mode**: Non-negotiable, enforced globally
 
 This is the minimal setup required before any feature development can begin. Future features (starting with Clusters) will add packages to the `packages/` directory.
 
@@ -120,6 +135,7 @@ This is the minimal setup required before any feature development can begin. Fut
 1. **Root Configuration Files**
    - Create `package.json` with workspace configuration
    - Create `pnpm-workspace.yaml` defining workspace packages
+   - Create `.npmrc` with `shamefully-hoist=true` (required for Nuxt compatibility)
    - Configure scripts: `dev`, `build`, `typecheck`, `lint`, `format`
    - Set up shared dependencies at root level
 
@@ -133,7 +149,7 @@ This is the minimal setup required before any feature development can begin. Fut
      - Project purpose and description
      - Relationship to universo-platformo-react (conceptual reference)
      - Key differences (Nuxt vs React, fullstack approach)
-     - Technology stack overview (Nuxt, TypeScript, PNPM, Supabase, Passport.js, MUI)
+     - Technology stack overview (Nuxt, TypeScript, PNPM, Supabase, Passport.js, Vuetify 3)
      - Repository structure explanation
      - Getting started guide (installation, development)
      - Future roadmap (three-entity pattern: Clusters/Domains/Resources)
@@ -168,6 +184,11 @@ This is the minimal setup required before any feature development can begin. Fut
      ```yaml
      packages:
        - 'packages/*'
+     ```
+   - Configure `.npmrc` for Nuxt compatibility:
+     ```
+     shamefully-hoist=true
+     strict-peer-dependencies=true
      ```
    - Set up workspace protocol in package.json
    - Configure shared dependencies and dev dependencies
@@ -497,7 +518,7 @@ None. This is the first feature and has no dependencies on other features.
    - Initial setup only documents intention
 
 4. **UI Component Library**
-   - Material UI (MUI) integration
+   - Vuetify 3 integration (Material Design for Vue)
    - First feature with UI will establish patterns
    - Initial setup only documents intention
 

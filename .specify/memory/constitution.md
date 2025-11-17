@@ -114,7 +114,7 @@ Previous Version (1.0.0):
 - **Package Manager**: PNPM with workspace protocol
 - **Database**: Supabase (primary), with abstraction layer for future database support
 - **Authentication**: Passport.js with Supabase connector
-- **UI Framework**: Material UI (MUI library)
+- **UI Framework**: Vuetify 3 (Vue Material Design component framework)
 - **Type System**: TypeScript strict mode enabled
 
 **Rationale**: Consistent technology choices reduce cognitive load, enable code reuse, simplify onboarding, and ensure team expertise is focused rather than fragmented.
@@ -316,7 +316,7 @@ REDIS_URL=rediss://:password@redis.example.com:6380 # TLS (recommended)
 - **Package Manager**: PNPM 8.x or higher
 - **Database**: Supabase (PostgreSQL-based)
 - **Authentication**: Passport.js with Supabase strategy
-- **UI Library**: Material UI (MUI)
+- **UI Library**: Vuetify 3 (Material Design for Vue)
 - **Type Checking**: TypeScript 5.x in strict mode
 - **Testing**: Vitest with happy-dom environment (4-9x faster than jsdom)
 - **Build System**: Nuxt's native build system (or tsdown for utility packages)
