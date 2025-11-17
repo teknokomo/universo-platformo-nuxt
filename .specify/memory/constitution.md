@@ -1,30 +1,35 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.0.1 → 1.1.0
-Rationale: Minor version - added new architectural principles from React repository analysis
+Version Change: 1.1.0 → 1.2.0
+Rationale: Minor version - added Rate Limiting principle and enhanced Build System guidance from React repository deep analysis
 
 Modified Principles:
-  - Principle I (Monorepo): Added utility package conventions
-  - Principle VI (Reference Implementation): Added specific patterns to adopt
-  - Technology Stack Requirements: Added build system, testing details, repository pattern
+  - Principle I (Monorepo): Added explicit package naming convention with scope rules
+  - Build System Standards: Added decision matrix for package-specific build tools
+  - Technology Stack Requirements: Added rate limiting to core stack
 
 Added Sections:
-  - Principle VII: Utility Package Organization
-  - Principle VIII: Repository Pattern Enforcement (Database Abstraction)
-  - Principle IX: Universal Role System
-  - Architectural Patterns (detailed section)
+  - Principle X: Rate Limiting for Production Security (NEW)
+  - Build Tool Decision Matrix in Build System Standards
+  - Enhanced package naming conventions with scope prefixes
 
 Removed Sections: None
 
 Templates Status:
   ✅ All templates remain aligned
-  ✅ Specifications updated to reflect new architectural patterns
+  ✅ Specifications should be updated to include rate limiting considerations
+  ⚠️ Package creation templates need build system guidance
 
 Follow-up TODOs:
-  - Create detailed architectural patterns document
-  - Add anti-patterns documentation
-  - Update package templates with new conventions
+  - Add rate limiting implementation to @universo/utils package
+  - Create package creation templates with build system examples
+  - Update initial setup plan to include rate limiting infrastructure
+  - Document Nuxt-specific middleware patterns for rate limiting
+
+Previous Version (1.1.0):
+  Ratified: 2025-11-17
+  Minor version - added new architectural principles from React repository analysis
 
 Previous Version (1.0.1):
   Ratified: 2025-11-16
@@ -56,11 +61,16 @@ Previous Version (1.0.0):
 
 **Package Types**:
 
-- **Feature Packages**: Domain-specific functionality requiring frontend and/or backend (`*-frt`, `*-srv`)
-- **Utility Packages**: Shared code without domain logic (`@universo/types`, `@universo/utils`, `@universo/api-client`, `@universo/i18n`)
-- **Template Packages**: Reusable component templates (`template-*`)
+- **Feature Packages**: Domain-specific functionality requiring frontend and/or backend (`*-frt`, `*-srv` - NO scope prefix)
+- **Utility Packages**: Shared code without domain logic (`@universo/types`, `@universo/utils`, `@universo/api-client`, `@universo/i18n` - WITH `@universo/` scope)
+- **Template Packages**: Reusable component templates (`template-*` - NO scope prefix)
 
-**Rationale**: Monorepo structure enables code sharing, consistent tooling, atomic cross-package changes, and simplified dependency management while maintaining clear separation between frontend, backend, and shared concerns.
+**Package Naming Convention**:
+- Feature packages: `{domain}-frt` / `{domain}-srv` (e.g., `clusters-frt`, `clusters-srv`)
+- Utility packages: `@universo/{function}` (e.g., `@universo/types`, `@universo/utils`)
+- Template packages: `template-{name}` (e.g., `template-mmoomm`, `template-quiz`)
+
+**Rationale**: Monorepo structure enables code sharing, consistent tooling, atomic cross-package changes, and simplified dependency management while maintaining clear separation between frontend, backend, and shared concerns. Consistent naming with scope prefixes prevents package name conflicts and clearly identifies package purpose.
 
 ### II. Specification-Driven Development
 
@@ -247,6 +257,56 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {
 
 **Rationale**: Centralized role system ensures consistent access control across all features, simplifies permission management, reduces security vulnerabilities through standardization, and makes authorization logic easy to test and audit.
 
+### X. Rate Limiting for Production Security
+
+**Rule**: All public-facing API endpoints MUST implement rate limiting to prevent abuse and ensure service availability.
+
+**Requirements**:
+
+- Rate limiting MUST be implemented using `@universo/utils/rate-limiting` package
+- Production deployments MUST use Redis-based distributed rate limiting
+- Development environments MAY use in-memory rate limiting
+- Rate limits SHOULD be configurable via environment variables
+- Critical endpoints (auth, data modification) MUST have stricter limits
+- Rate limit responses MUST return standard HTTP 429 (Too Many Requests) status
+
+**Implementation Pattern (Nuxt)**:
+
+```typescript
+// Server middleware: server/middleware/rate-limit.ts
+import { defineEventHandler } from 'h3'
+import { createRateLimiter } from '@universo/utils/rate-limiting'
+
+const limiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  redisUrl: process.env.REDIS_URL // Falls back to memory store if not set
+})
+
+export default defineEventHandler(async (event) => {
+  await limiter(event)
+})
+```
+
+**Production Setup**:
+```bash
+# Environment variables
+REDIS_URL=redis://:password@redis.example.com:6379  # Basic auth
+REDIS_URL=rediss://:password@redis.example.com:6380 # TLS (recommended)
+```
+
+**Configuration Options**:
+
+- `windowMs`: Time window for rate limit (milliseconds)
+- `max`: Maximum requests per window per IP
+- `redisUrl`: Redis connection string (optional, falls back to memory)
+- `skipSuccessfulRequests`: Don't count successful requests
+- `skipFailedRequests`: Don't count failed requests
+
+**Multi-Instance Support**: Redis store automatically shares rate limit counters across multiple server instances (Docker, Kubernetes, PM2 cluster mode).
+
+**Rationale**: Rate limiting prevents denial-of-service attacks, ensures fair resource allocation, protects backend services from overload, and is essential for production-grade applications. Redis-based solution supports horizontal scaling and multi-instance deployments.
+
 ## Technology Stack Requirements
 
 ### Core Stack
@@ -262,6 +322,7 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {
 - **Build System**: Nuxt's native build system (or tsdown for utility packages)
 - **Data Fetching**: TanStack Query (Vue Query) or Nuxt composables
 - **i18n**: Vue I18n or Nuxt i18n module with centralized namespace registration
+- **Rate Limiting**: Redis-based distributed rate limiting for production deployments
 
 ### Database Strategy
 
@@ -295,11 +356,25 @@ Examples:
 
 ### Build System Standards
 
-- **Dual Format**: Packages SHOULD support both CJS and ESM when consumed by different systems
+- **Package-Specific Build Tools**:
+  - **Nuxt Packages** (full-stack apps): Use Nuxt's native build system
+  - **Server Utility Packages**: Use tsdown for dual CJS/ESM output
+  - **Frontend Utility Packages**: Use Vite library mode
+  - **Template Packages**: Source-only (no build step, use peerDependencies)
+- **Dual Format**: Built packages SHOULD support both CJS and ESM when consumed by different systems
 - **Source-Only Packages**: Packages with source code only (no dist) MUST use peerDependencies
 - **Type Declarations**: All packages MUST generate TypeScript declarations (.d.ts)
 - **Tree-Shaking**: Build configuration SHOULD support tree-shaking for optimal bundle size
-- **Build Tool**: tsdown, Nuxt's build system, or Vite depending on package type
+
+**Build Tool Decision Matrix**:
+```
+Package Type          → Build Tool
+─────────────────────────────────────
+Nuxt app packages     → Nuxt build
+Server utilities      → tsdown
+Frontend utilities    → Vite library mode
+Template packages     → None (source-only)
+```
 
 ### Code Quality Standards
 
@@ -379,4 +454,4 @@ This constitution supersedes all other development practices, guidelines, and co
 - Team members MAY propose amendments through normal GitHub Issue process
 - Historical versions MUST be preserved in git history
 
-**Version**: 1.1.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-17
+**Version**: 1.2.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-17

@@ -325,9 +325,84 @@ GET /api/v1/metaverses/:id/entities
 
 ---
 
+### 9. Rate Limiting Architecture (CRITICAL FOR PRODUCTION)
+
+**Rule**: All production deployments MUST implement distributed rate limiting to prevent abuse and ensure service availability.
+
+**Implementation**:
+
+```typescript
+// Nuxt server middleware: server/middleware/rate-limit.ts
+import { defineEventHandler } from 'h3'
+import { createRateLimiter } from '@universo/utils/rate-limiting'
+
+const limiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  redisUrl: process.env.REDIS_URL // Falls back to memory store if not set
+})
+
+export default defineEventHandler(async (event) => {
+  await limiter(event)
+  // Continue to route handler
+})
+```
+
+**Endpoint-Specific Limits**:
+
+```typescript
+// More restrictive limits for auth endpoints
+// server/api/auth/login.post.ts
+import { defineEventHandler } from 'h3'
+import { createRateLimiter } from '@universo/utils/rate-limiting'
+
+const authLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // Only 5 login attempts per 15 minutes
+  redisUrl: process.env.REDIS_URL
+})
+
+export default defineEventHandler(async (event) => {
+  await authLimiter(event)
+  // Handle login
+})
+```
+
+**Production Setup**:
+
+```bash
+# Environment variables
+REDIS_URL=redis://:password@redis.example.com:6379  # Basic auth
+REDIS_URL=rediss://:password@redis.example.com:6380 # TLS (recommended)
+```
+
+**Multi-Instance Support**:
+- Redis store shares rate limit counters across all server instances
+- Works with Docker, Kubernetes, PM2 cluster mode
+- Automatic reconnection and error handling
+- Event-driven connection pattern (no polling)
+
+**Benefits**:
+
+- Prevents denial-of-service attacks
+- Ensures fair resource allocation
+- Protects backend services from overload
+- Supports horizontal scaling
+- Production-ready with automatic failover
+
+**Detection**:
+
+```bash
+# Find endpoints without rate limiting
+grep -r "defineEventHandler" server/api --exclude-dir=node_modules | \
+  grep -v "createRateLimiter"
+```
+
+---
+
 ## Secondary Patterns
 
-### 9. TanStack Query Pattern (Vue Query)
+### 10. TanStack Query Pattern (Vue Query)
 
 **Rule**: Declarative `useQuery()` in components, imperative `fetchQuery()` in handlers.
 
@@ -363,7 +438,7 @@ const handleClick = async () => {
 
 ---
 
-### 10. Testing Environment Pattern
+### 11. Testing Environment Pattern
 
 **Rule**: Use happy-dom for 4-9x faster tests vs jsdom.
 
@@ -390,7 +465,7 @@ vi.mock('rehype-mathjax', () => ({ default: () => () => {} }));
 
 ---
 
-### 11. Source-Only Package Pattern
+### 12. Source-Only Package Pattern
 
 **Rule**: Packages with source code only (no dist) MUST use peerDependencies.
 
@@ -419,7 +494,7 @@ find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
 
 ---
 
-### 12. Migration Naming Convention
+### 13. Migration Naming Convention
 
 **Rule**: Consistent, descriptive migration names without legacy references.
 
@@ -443,7 +518,7 @@ export class FlowiseMetaverses1234567891 implements MigrationInterface {}
 
 ---
 
-### 13. Event-Driven Data Loading
+### 14. Event-Driven Data Loading
 
 **Rule**: Listen to server events and invalidate queries for real-time updates.
 
@@ -463,7 +538,7 @@ queryClient.invalidateQueries(messageKeys.all);
 
 ---
 
-### 14. Dual Build System
+### 15. Dual Build System
 
 **Rule**: Support both CJS and ESM for maximum compatibility.
 
