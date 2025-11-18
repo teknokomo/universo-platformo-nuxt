@@ -115,16 +115,25 @@ All feature packages follow a consistent structure:
 
 - **Frontend Packages**: Use `-frt` suffix (e.g., `packages/clusters-frt`)
 - **Backend Packages**: Use `-srv` suffix (e.g., `packages/clusters-srv`)
+- **Utility Packages**: Use `@universo/` scope (e.g., `@universo/types`, `@universo/utils`)
 - **Base Folder**: Every package contains a `base/` root folder to support future multiple implementations
 - **Separation**: Frontend and backend are separate packages when both are needed
 - **Single-Side Packages**: If a feature only needs frontend or backend, create only that package
+
+**⚠️ CRITICAL: ALL feature code MUST be in packages**
+
+- ❌ **FORBIDDEN**: Creating feature code in root directories (`src/`, `components/`, `pages/`, `server/`)
+- ✅ **REQUIRED**: All functionality implemented within `packages/` directory
+- ✅ **ALLOWED**: Only configuration files, documentation, and minimal bootstrapping in root
+
+This strict requirement ensures packages can be extracted to separate repositories in the future.
 
 **Example package structures:**
 
 ```
 packages/clusters-frt/base/   # Frontend: Cluster management UI
 packages/clusters-srv/base/   # Backend: Cluster API and business logic
-packages/ui-components-frt/base/  # Frontend-only: Shared UI components (no -srv needed)
+packages/@universo/types/base/  # Shared: TypeScript type definitions
 ```
 
 ## 🏗 Three-Entity Pattern

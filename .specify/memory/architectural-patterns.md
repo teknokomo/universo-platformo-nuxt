@@ -9,6 +9,103 @@
 
 ## Core Patterns (CRITICAL)
 
+### 0. Package-Based Modularity (STRICTEST ENFORCEMENT)
+
+**Rule**: ALL functional code MUST be implemented within packages in the `packages/` directory. Non-package implementations are STRICTLY FORBIDDEN.
+
+**Implementation Structure**:
+
+```text
+✅ CORRECT: Package-based implementation
+packages/
+├── clusters-frt/base/          # Frontend for Clusters feature
+│   ├── package.json
+│   ├── src/
+│   │   ├── components/         # Cluster UI components
+│   │   ├── composables/        # Cluster-specific composables
+│   │   ├── pages/              # Cluster pages
+│   │   └── index.ts            # Package exports
+│   └── README.md
+├── clusters-srv/base/          # Backend for Clusters feature
+│   ├── package.json
+│   ├── src/
+│   │   ├── api/                # Cluster API routes
+│   │   ├── services/           # Cluster business logic
+│   │   ├── entities/           # Cluster TypeORM entities
+│   │   └── index.ts            # Package exports
+│   └── README.md
+└── @universo/types/base/       # Shared types
+    ├── package.json
+    └── src/index.ts
+
+❌ FORBIDDEN: Root-level implementation
+src/
+├── components/                 # ❌ No root-level components!
+├── pages/                      # ❌ No root-level pages!
+└── server/                     # ❌ No root-level server code!
+app.vue                         # ❌ Only minimal bootstrap allowed!
+```
+
+**Decision Matrix for Code Placement**:
+
+| Code Type                    | Placement                          | Allowed in Root? |
+|------------------------------|-------------------------------------|------------------|
+| Feature UI components        | `packages/{domain}-frt/base/src/`  | ❌ NO           |
+| Feature API routes           | `packages/{domain}-srv/base/src/`  | ❌ NO           |
+| Feature business logic       | `packages/{domain}-srv/base/src/`  | ❌ NO           |
+| Shared types                 | `packages/@universo/types/base/`   | ❌ NO           |
+| Shared utilities             | `packages/@universo/utils/base/`   | ❌ NO           |
+| Configuration files          | Root directory                      | ✅ YES          |
+| Minimal app bootstrap        | Root `app.vue` (loads packages)     | ✅ YES (minimal)|
+| Build/deployment scripts     | Root directory                      | ✅ YES          |
+| Documentation                | Root `README.md`                    | ✅ YES          |
+
+**Package Extraction Readiness Checklist**:
+
+For each package to be extraction-ready:
+- [ ] All dependencies explicitly declared in package.json
+- [ ] No imports from outside the package (except workspace deps)
+- [ ] Independent build and test scripts
+- [ ] Bilingual README with setup instructions
+- [ ] Clear public API defined in exports
+- [ ] Version number and changelog maintained
+
+**Benefits**:
+
+- **Future-proof**: Packages can be extracted to separate repos
+- **Modularity**: Clear boundaries and ownership
+- **Reusability**: Packages can be shared across projects
+- **Testability**: Each package independently testable
+- **Maintainability**: Changes isolated to specific packages
+- **Scalability**: Teams can work on different packages in parallel
+
+**Detection of Violations**:
+
+```bash
+# Find non-package code (should return empty or config files only)
+find . -maxdepth 2 -name "*.vue" -o -name "*.ts" | grep -v node_modules | grep -v packages
+
+# Verify all feature code is in packages
+find packages -type d -name "base" | wc -l  # Should match feature count
+
+# Check for forbidden root directories
+[ -d "src" ] && echo "❌ VIOLATION: Root src/ directory exists"
+[ -d "components" ] && echo "❌ VIOLATION: Root components/ directory exists"
+[ -d "pages" ] && echo "❌ VIOLATION: Root pages/ directory exists"
+```
+
+**Migration Path** (if violations found):
+
+1. Identify all non-package code
+2. Create appropriate package structure (`{domain}-frt` or `{domain}-srv`)
+3. Move code to package's `base/src/` directory
+4. Update imports to use package references
+5. Add package to `pnpm-workspace.yaml`
+6. Verify build and tests pass
+7. Remove old root-level directories
+
+---
+
 ### 1. Repository Pattern for Database Access
 
 **Rule**: ALL database operations MUST go through TypeORM repositories. Direct SQL queries are FORBIDDEN.

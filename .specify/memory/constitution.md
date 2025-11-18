@@ -1,31 +1,35 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.1.0 → 1.2.0
-Rationale: Minor version - added Rate Limiting principle and enhanced Build System guidance from React repository deep analysis
+Version Change: 1.2.0 → 1.3.0
+Rationale: Minor version - strengthened modular architecture enforcement with explicit prohibitions against non-package implementations
 
 Modified Principles:
-  - Principle I (Monorepo): Added explicit package naming convention with scope rules
-  - Build System Standards: Added decision matrix for package-specific build tools
-  - Technology Stack Requirements: Added rate limiting to core stack
+  - Principle I (Monorepo): Added CRITICAL PROHIBITION section forbidding non-package implementations
+  - Principle I (Monorepo): Added explicit migration strategy for future package extraction
+  - Principle I (Monorepo): Strengthened enforcement language throughout
 
 Added Sections:
-  - Principle X: Rate Limiting for Production Security (NEW)
-  - Build Tool Decision Matrix in Build System Standards
-  - Enhanced package naming conventions with scope prefixes
+  - CRITICAL PROHIBITION: Non-Package Implementations section under Principle I
+  - Future Repository Separation Strategy under Principle I
+  - Package extraction requirements and guidelines
 
 Removed Sections: None
 
 Templates Status:
   ✅ All templates remain aligned
-  ✅ Specifications should be updated to include rate limiting considerations
-  ⚠️ Package creation templates need build system guidance
+  ⚠️ Implementation plans MUST verify all features are package-based
+  ⚠️ Code reviews MUST reject non-package implementations
 
 Follow-up TODOs:
-  - Add rate limiting implementation to @universo/utils package
-  - Create package creation templates with build system examples
-  - Update initial setup plan to include rate limiting infrastructure
-  - Document Nuxt-specific middleware patterns for rate limiting
+  - Update all implementation plans to explicitly verify package placement
+  - Add automated checks to prevent code outside packages/ directory
+  - Document package extraction workflow for future repository separation
+  - Create package creation wizard/script to enforce structure
+
+Previous Version (1.2.0):
+  Ratified: 2025-11-17
+  Minor version - added Rate Limiting principle and enhanced Build System guidance from React repository deep analysis
 
 Previous Version (1.1.0):
   Ratified: 2025-11-17
@@ -44,20 +48,42 @@ Previous Version (1.0.0):
 
 ## Core Principles
 
-### I. Monorepo Architecture with PNPM
+### I. Monorepo Architecture with PNPM (CRITICAL - STRICTLY ENFORCED)
 
-**Rule**: All packages MUST reside in a single repository managed by PNPM workspaces.
+**Rule**: All packages MUST reside in a single repository managed by PNPM workspaces. ALL functional code MUST be implemented within packages in the `packages/` directory.
+
+**CRITICAL PROHIBITION: Non-Package Implementations**
+
+**FORBIDDEN**: Implementing ANY feature functionality outside of the `packages/` directory structure is **STRICTLY PROHIBITED**.
+
+The following are **EXPLICITLY FORBIDDEN**:
+- ❌ Creating feature code in project root directories (e.g., `src/`, `components/`, `pages/`, `server/`)
+- ❌ Implementing business logic outside of packages
+- ❌ Creating non-modular monolithic implementations
+- ❌ Direct implementation in `app.vue`, `nuxt.config.ts`, or root-level application files (except for minimal bootstrapping/configuration)
+- ❌ Bypassing package structure "for convenience" or "rapid prototyping"
+
+**ALLOWED** root-level files (exceptions to package requirement):
+- ✅ Configuration files only: `nuxt.config.ts`, `tsconfig.json`, `.eslintrc.js`, etc.
+- ✅ Workspace management: `package.json`, `pnpm-workspace.yaml`
+- ✅ Documentation: `README.md`, `README-RU.md`
+- ✅ Build/deployment scripts and tooling configuration
+- ✅ Minimal application bootstrapping that loads packages (launcher functionality)
+
+**Justification**: This project is designed for **future modularization** where individual packages will be extracted into separate repositories. Any code implemented outside of packages will **block repository separation** and violate the core architectural principle. Non-compliance makes the codebase **unmaintainable** and **impossible to modularize**.
 
 **Requirements**:
 
+- **ALL functional code** MUST be in `packages/` directory
 - Packages are organized in `packages/` directory
 - **Feature packages** use `-frt` suffix for frontend (e.g., `packages/clusters-frt`)
 - **Feature packages** use `-srv` suffix for backend (e.g., `packages/clusters-srv`)
-- **Utility packages** without suffixes for shared code (e.g., `packages/universo-types`, `packages/universo-utils`)
-- **Template packages** without suffixes for reusable templates (e.g., `packages/template-mmoomm`)
+- **Utility packages** use `@universo/` scope for shared code (e.g., `@universo/types`, `@universo/utils`)
+- **Template packages** use `template-` prefix for reusable templates (e.g., `template-mmoomm`)
 - Each package MUST contain a `base/` root folder to support future multiple implementations
 - Shared dependencies are managed through workspace protocol
 - All packages are independently buildable and testable
+- Each package MUST be designed for potential extraction to a separate repository
 
 **Package Types**:
 
@@ -70,7 +96,28 @@ Previous Version (1.0.0):
 - Utility packages: `@universo/{function}` (e.g., `@universo/types`, `@universo/utils`)
 - Template packages: `template-{name}` (e.g., `template-mmoomm`, `template-quiz`)
 
-**Rationale**: Monorepo structure enables code sharing, consistent tooling, atomic cross-package changes, and simplified dependency management while maintaining clear separation between frontend, backend, and shared concerns. Consistent naming with scope prefixes prevents package name conflicts and clearly identifies package purpose.
+**Future Repository Separation Strategy**:
+
+This monorepo is designed as a **temporary unified workspace**. As the project matures:
+1. Individual packages will be **extracted to separate repositories**
+2. Only essential launcher/bootstrapping packages will remain in this repository
+3. Each extracted package must be independently deployable and maintainable
+4. Package dependencies will be managed through proper versioning and npm/git references
+
+**Enforcement**:
+- Code reviews MUST reject any implementation outside `packages/` directory
+- Implementation plans MUST explicitly state which package(s) will contain the feature
+- Pull requests MUST include verification that all code is properly packaged
+- Automated checks SHOULD be implemented to prevent non-package code commits
+
+**Rationale**: Modular architecture is **NON-NEGOTIABLE** for this project. The monorepo is a workspace strategy, not a destination. Each package must be self-contained and extractable to enable:
+- Independent deployment and scaling
+- Clear ownership boundaries
+- Technology stack evolution per package
+- Selective feature adoption by other projects
+- Simplified testing and maintenance
+
+Consistent naming with scope prefixes prevents package name conflicts and clearly identifies package purpose.
 
 ### II. Specification-Driven Development
 
@@ -454,4 +501,4 @@ This constitution supersedes all other development practices, guidelines, and co
 - Team members MAY propose amendments through normal GitHub Issue process
 - Historical versions MUST be preserved in git history
 
-**Version**: 1.2.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-17
+**Version**: 1.3.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-17
