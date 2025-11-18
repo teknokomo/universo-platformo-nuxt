@@ -745,7 +745,7 @@ const { data } = useQuery({
 
 ## Nuxt Best Practices (REQUIRED)
 
-### 14. Nuxt Package Integration Pattern
+### 22. Nuxt Package Integration Pattern
 
 **Rule**: Packages MUST integrate with Nuxt using Nuxt Layers or explicit exports.
 
@@ -806,7 +806,7 @@ done
 
 ---
 
-### 15. Server API Route Organization Pattern
+### 23. Server API Route Organization Pattern
 
 **Rule**: Server routes MUST be organized by feature within package `server/` directories.
 
@@ -877,7 +877,7 @@ export default defineEventHandler(async (event) => {
 
 ---
 
-### 16. Composables Pattern
+### 24. Composables Pattern
 
 **Rule**: Reusable logic MUST be extracted into composables following Vue best practices.
 
@@ -979,7 +979,7 @@ export const useClusterForm = (initialData?: Partial<Cluster>) => {
 
 ---
 
-### 17. Type-Safe API Client Pattern
+### 25. Type-Safe API Client Pattern
 
 **Rule**: Frontend-Backend communication MUST use shared types and type-safe clients.
 
@@ -1066,7 +1066,7 @@ export const useClusters = () => {
 
 ---
 
-### 18. SSR-Safe Composables Pattern
+### 26. SSR-Safe Composables Pattern
 
 **Rule**: Composables MUST handle SSR correctly using lifecycle hooks.
 
@@ -1136,7 +1136,7 @@ export const useClusterDetail = (id: string) => {
 
 ---
 
-### 19. Middleware Pattern
+### 27. Middleware Pattern
 
 **Rule**: Authentication and authorization MUST use Nuxt middleware.
 
@@ -1214,7 +1214,7 @@ definePageMeta({
 
 ---
 
-### 20. Nuxt Layers for Package Sharing
+### 28. Nuxt Layers for Package Sharing
 
 **Rule**: Frontend packages SHOULD expose Nuxt Layers for component/composable sharing.
 
@@ -1275,7 +1275,7 @@ export default defineNuxtConfig({
 
 ---
 
-### 21. TypeScript Configuration in Monorepo
+### 29. TypeScript Configuration in Monorepo
 
 **Rule**: Use TypeScript project references for better type checking and build performance.
 
