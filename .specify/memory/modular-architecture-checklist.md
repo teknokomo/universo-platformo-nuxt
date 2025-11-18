@@ -87,6 +87,23 @@ find . -maxdepth 2 -name "*.vue" -o -name "*.ts" | grep -v node_modules | grep -
 - [ ] Rate limiting implemented where needed
 - [ ] Universal role system followed
 
+### 6.1. Nuxt-Specific Pattern Compliance
+
+- [ ] Frontend packages use Nuxt Layers or explicit exports for integration
+- [ ] Server routes are properly organized in `server/api/` within packages
+- [ ] Composables follow Vue Composition API best practices (use `use*` prefix)
+- [ ] Shared types package (`@universo/types`) used for API contracts
+- [ ] Type-safe API client pattern followed (Zod schemas + TypeScript types)
+- [ ] SSR-safe code patterns used (onMounted for browser-only, process.client guards)
+- [ ] Server middleware for authentication/authorization implemented correctly
+- [ ] Route middleware for page protection defined properly
+- [ ] Server routes include request validation (Zod schemas)
+- [ ] Server routes include error handling (createError)
+- [ ] Data fetching uses `useAsyncData` or `useFetch` for SSR compatibility
+- [ ] No direct localStorage/sessionStorage access without SSR guards
+- [ ] TypeScript configuration includes workspace awareness
+- [ ] Package exports are properly configured for Nuxt auto-imports
+
 ---
 
 ## Post-Implementation Validation

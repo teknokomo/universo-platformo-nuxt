@@ -735,20 +735,617 @@ const { data } = useQuery({
 
 ### Adapt for Nuxt/Vue
 
-1. **TanStack Query** → Use Vue Query or Nuxt composables
-2. **React Hooks** → Vue Composition API composables
+1. **TanStack Query** → Use `@tanstack/vue-query` or Nuxt composables with `useFetch`/`useAsyncData`
+2. **React Hooks** → Vue Composition API composables (use `use*` prefix)
 3. **React StrictMode** → Vue DevTools strict mode
-4. **React Router** → Nuxt file-based routing
-5. **Express Routes** → Nuxt server routes
+4. **React Router** → Nuxt file-based routing with `pages/` directory
+5. **Express Routes** → Nuxt server routes in `server/api/` directory
 
-### Nuxt Patterns to Add
+---
 
-1. **Server Routes**: Use `server/api/` directory
-2. **Composables**: Create reusable composition functions
-3. **Middleware**: Auth and validation middleware
-4. **Nitro Utilities**: Server-side utilities
-5. **Auto-imports**: Configure auto-import patterns
-6. **SSR-Safe**: Ensure patterns work with SSR
+## Nuxt Best Practices (REQUIRED)
+
+### 22. Nuxt Package Integration Pattern
+
+**Rule**: Packages MUST integrate with Nuxt using Nuxt Layers or explicit exports.
+
+**Nuxt Layer Approach** (for UI/component packages):
+
+```typescript
+// packages/clusters-frt/base/nuxt.config.ts
+export default defineNuxtConfig({
+  // Layer configuration
+  components: true,
+  composables: {
+    dirs: ['composables']
+  }
+})
+
+// Root nuxt.config.ts extends the layer
+export default defineNuxtConfig({
+  extends: [
+    './packages/clusters-frt/base'
+  ]
+})
+```
+
+**Explicit Export Approach** (for utility packages):
+
+```typescript
+// packages/@universo/types/base/package.json
+{
+  "name": "@universo/types",
+  "exports": {
+    ".": "./src/index.ts",
+    "./entities": "./src/entities/index.ts"
+  }
+}
+
+// Import in any package
+import { User, Cluster } from '@universo/types'
+import { UserEntity } from '@universo/types/entities'
+```
+
+**Benefits**:
+- Hot Module Replacement (HMR) for package changes
+- Auto-imports from packages
+- Type-safe across packages
+- SSR-compatible
+
+**Detection**:
+
+```bash
+# Find packages without Nuxt integration
+find packages/*/base -name "package.json" | while read f; do
+  dir=$(dirname "$f")
+  if [ ! -f "$dir/nuxt.config.ts" ] && ! grep -q '"exports"' "$f"; then
+    echo "Missing integration: $dir"
+  fi
+done
+```
+
+---
+
+### 23. Server API Route Organization Pattern
+
+**Rule**: Server routes MUST be organized by feature within package `server/` directories.
+
+**Structure**:
+
+```
+packages/clusters-srv/base/
+├── server/
+│   ├── api/
+│   │   ├── clusters/
+│   │   │   ├── index.get.ts          # GET /api/clusters
+│   │   │   ├── index.post.ts         # POST /api/clusters
+│   │   │   ├── [id].get.ts           # GET /api/clusters/:id
+│   │   │   ├── [id].patch.ts         # PATCH /api/clusters/:id
+│   │   │   ├── [id].delete.ts        # DELETE /api/clusters/:id
+│   │   │   └── [id]/
+│   │   │       ├── domains.get.ts    # GET /api/clusters/:id/domains
+│   │   │       └── members.get.ts    # GET /api/clusters/:id/members
+│   │   └── health.get.ts             # GET /api/health
+│   ├── middleware/
+│   │   ├── auth.ts                   # Authentication middleware
+│   │   └── validate.ts               # Request validation
+│   └── utils/
+│       ├── db.ts                     # Database utilities
+│       └── guards.ts                 # Permission guards
+```
+
+**Server Route Implementation**:
+
+```typescript
+// packages/clusters-srv/base/server/api/clusters/index.get.ts
+import { defineEventHandler, getQuery } from 'h3'
+import { z } from 'zod'
+
+const querySchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(10),
+  search: z.string().optional()
+})
+
+export default defineEventHandler(async (event) => {
+  // Validate query params
+  const query = querySchema.parse(getQuery(event))
+  
+  // Get user from auth middleware
+  const user = event.context.user
+  
+  // Fetch data using repository pattern
+  const clusters = await getClustersRepository().findPaginated(query, user.id)
+  
+  return {
+    data: clusters,
+    pagination: {
+      page: query.page,
+      limit: query.limit,
+      total: clusters.length
+    }
+  }
+})
+```
+
+**Benefits**:
+- Clear API structure
+- File-based routing
+- Type-safe request/response
+- Automatic hot reload
+- SSR and API routes in same codebase
+
+---
+
+### 24. Composables Pattern
+
+**Rule**: Reusable logic MUST be extracted into composables following Vue best practices.
+
+**Composable Structure**:
+
+```
+packages/clusters-frt/base/composables/
+├── useClusters.ts                # Main data fetching
+├── useClusterForm.ts             # Form state management
+├── useClusterPermissions.ts      # Permission checks
+└── index.ts                      # Barrel export
+```
+
+**Data Fetching Composable**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusters.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import type { Cluster, ClusterCreateInput } from '@universo/types'
+
+export const useClusters = () => {
+  const queryClient = useQueryClient()
+  
+  // Fetch list
+  const { data: clusters, isLoading } = useQuery({
+    queryKey: ['clusters'],
+    queryFn: () => $fetch<Cluster[]>('/api/clusters')
+  })
+  
+  // Create mutation
+  const createCluster = useMutation({
+    mutationFn: (data: ClusterCreateInput) => 
+      $fetch('/api/clusters', { method: 'POST', body: data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clusters'] })
+    }
+  })
+  
+  return {
+    clusters,
+    isLoading,
+    createCluster
+  }
+}
+```
+
+**Form Composable**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusterForm.ts
+import { ref, computed } from 'vue'
+import { z } from 'zod'
+
+const clusterSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional()
+})
+
+export const useClusterForm = (initialData?: Partial<Cluster>) => {
+  const formData = ref({
+    name: initialData?.name ?? '',
+    description: initialData?.description ?? ''
+  })
+  
+  const errors = ref<Record<string, string>>({})
+  
+  const validate = () => {
+    try {
+      clusterSchema.parse(formData.value)
+      errors.value = {}
+      return true
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        errors.value = Object.fromEntries(
+          err.errors.map(e => [e.path[0], e.message])
+        )
+      }
+      return false
+    }
+  }
+  
+  const isValid = computed(() => Object.keys(errors.value).length === 0)
+  
+  return {
+    formData,
+    errors,
+    validate,
+    isValid
+  }
+}
+```
+
+**Benefits**:
+- Reusable across components
+- Type-safe
+- Testable in isolation
+- Auto-imported by Nuxt
+- SSR-compatible with proper lifecycle handling
+
+---
+
+### 25. Type-Safe API Client Pattern
+
+**Rule**: Frontend-Backend communication MUST use shared types and type-safe clients.
+
+**Shared Types Package**:
+
+```typescript
+// packages/@universo/types/base/src/api/clusters.ts
+import { z } from 'zod'
+
+// Request schemas
+export const clusterCreateSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional()
+})
+
+export const clusterUpdateSchema = clusterCreateSchema.partial()
+
+// Response types
+export interface Cluster {
+  id: string
+  name: string
+  description?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+  }
+}
+
+// Type inference
+export type ClusterCreateInput = z.infer<typeof clusterCreateSchema>
+export type ClusterUpdateInput = z.infer<typeof clusterUpdateSchema>
+```
+
+**Backend Usage**:
+
+```typescript
+// packages/clusters-srv/base/server/api/clusters/index.post.ts
+import { clusterCreateSchema, type Cluster } from '@universo/types/api/clusters'
+
+export default defineEventHandler(async (event): Promise<Cluster> => {
+  const body = await readBody(event)
+  
+  // Validate with shared schema
+  const data = clusterCreateSchema.parse(body)
+  
+  // Create using repository
+  const cluster = await getClustersRepository().create(data)
+  
+  return cluster
+})
+```
+
+**Frontend Usage**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusters.ts
+import type { Cluster, ClusterCreateInput } from '@universo/types/api/clusters'
+
+export const useClusters = () => {
+  const createCluster = async (data: ClusterCreateInput): Promise<Cluster> => {
+    return $fetch('/api/clusters', {
+      method: 'POST',
+      body: data
+    })
+  }
+  
+  return { createCluster }
+}
+```
+
+**Benefits**:
+- Single source of truth for types
+- Compile-time type checking
+- Runtime validation with Zod
+- API contract enforcement
+- Refactoring safety
+
+---
+
+### 26. SSR-Safe Composables Pattern
+
+**Rule**: Composables MUST handle SSR correctly using lifecycle hooks.
+
+**Browser-Only Code**:
+
+```typescript
+// packages/clusters-frt/base/composables/useLocalStorage.ts
+import { ref, watch, onMounted } from 'vue'
+
+export const useLocalStorage = <T>(key: string, defaultValue: T) => {
+  const data = ref<T>(defaultValue)
+  const isReady = ref(false)
+  
+  // Only access localStorage on client
+  onMounted(() => {
+    const stored = localStorage.getItem(key)
+    if (stored) {
+      try {
+        data.value = JSON.parse(stored)
+      } catch (e) {
+        console.error('Failed to parse localStorage:', e)
+      }
+    }
+    isReady.value = true
+  })
+  
+  // Watch for changes (only on client)
+  if (process.client) {
+    watch(data, (newValue) => {
+      localStorage.setItem(key, JSON.stringify(newValue))
+    }, { deep: true })
+  }
+  
+  return { data, isReady }
+}
+```
+
+**API Calls with SSR**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusters.ts
+export const useClusterDetail = (id: string) => {
+  // useAsyncData works on both server and client
+  const { data, pending, error, refresh } = useAsyncData(
+    `cluster-${id}`,
+    () => $fetch<Cluster>(`/api/clusters/${id}`),
+    {
+      // Cache for 5 minutes
+      getCachedData: (key) => useNuxtApp().payload.data[key],
+    }
+  )
+  
+  return {
+    cluster: data,
+    loading: pending,
+    error,
+    refresh
+  }
+}
+```
+
+**Benefits**:
+- No hydration mismatches
+- Proper SSR data fetching
+- Client-only code isolation
+- Performance optimization
+
+---
+
+### 27. Middleware Pattern
+
+**Rule**: Authentication and authorization MUST use Nuxt middleware.
+
+**Server Middleware** (for API routes):
+
+```typescript
+// packages/auth-srv/base/server/middleware/auth.ts
+import { defineEventHandler, createError } from 'h3'
+import { verifyToken } from '../utils/jwt'
+
+export default defineEventHandler(async (event) => {
+  // Skip auth for public routes
+  if (event.path.startsWith('/api/public')) {
+    return
+  }
+  
+  // Get token from header
+  const authHeader = getHeader(event, 'authorization')
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw createError({
+      statusCode: 401,
+      message: 'Missing authentication token'
+    })
+  }
+  
+  const token = authHeader.substring(7)
+  
+  try {
+    // Verify and decode token
+    const user = await verifyToken(token)
+    
+    // Attach user to event context
+    event.context.user = user
+  } catch (error) {
+    throw createError({
+      statusCode: 401,
+      message: 'Invalid authentication token'
+    })
+  }
+})
+```
+
+**Route Middleware** (for pages):
+
+```typescript
+// packages/clusters-frt/base/middleware/cluster-access.ts
+export default defineNuxtRouteMiddleware(async (to) => {
+  const clusterId = to.params.id
+  
+  // Check if user has access to cluster
+  const hasAccess = await $fetch(`/api/clusters/${clusterId}/check-access`)
+  
+  if (!hasAccess) {
+    return navigateTo('/unauthorized')
+  }
+})
+```
+
+**Page Usage**:
+
+```vue
+<!-- packages/clusters-frt/base/pages/clusters/[id].vue -->
+<script setup lang="ts">
+definePageMeta({
+  middleware: ['auth', 'cluster-access']
+})
+</script>
+```
+
+**Benefits**:
+- Centralized auth logic
+- Type-safe route protection
+- SSR-compatible
+- Reusable across routes
+
+---
+
+### 28. Nuxt Layers for Package Sharing
+
+**Rule**: Frontend packages SHOULD expose Nuxt Layers for component/composable sharing.
+
+**Layer Configuration**:
+
+```typescript
+// packages/clusters-frt/base/nuxt.config.ts
+export default defineNuxtConfig({
+  // Enable auto-imports from this layer
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    }
+  ],
+  
+  // Auto-import composables
+  imports: {
+    dirs: ['composables']
+  },
+  
+  // Layer-specific config
+  runtimeConfig: {
+    public: {
+      clustersApiBase: '/api/clusters'
+    }
+  }
+})
+```
+
+**Root App Integration**:
+
+```typescript
+// Root nuxt.config.ts
+export default defineNuxtConfig({
+  extends: [
+    // Include all frontend package layers
+    './packages/clusters-frt/base',
+    './packages/auth-frt/base',
+    './packages/@universo/ui/base'
+  ],
+  
+  // Override/extend layer config as needed
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.API_BASE || 'http://localhost:3000'
+    }
+  }
+})
+```
+
+**Benefits**:
+- Share components across apps
+- Auto-import from packages
+- Layer-specific configuration
+- Composable reusability
+- Hot reload for package changes
+
+---
+
+### 29. TypeScript Configuration in Monorepo
+
+**Rule**: Use TypeScript project references for better type checking and build performance.
+
+**Base tsconfig**:
+
+```json
+// tsconfig.base.json (root)
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
+  }
+}
+```
+
+**Package tsconfig**:
+
+```json
+// packages/clusters-frt/base/tsconfig.json
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@universo/types": ["../../@universo/types/base/src"],
+      "@universo/utils": ["../../@universo/utils/base/src"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.vue"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+**Nuxt TypeScript Integration**:
+
+```typescript
+// nuxt.config.ts
+export default defineNuxtConfig({
+  typescript: {
+    strict: true,
+    shim: false,
+    // Include workspace packages for type checking
+    includeWorkspace: true,
+    // Hoist common types
+    hoist: [
+      '@nuxt/schema',
+      'nuxt',
+      'vue',
+      'vue-router'
+    ]
+  }
+})
+```
+
+**Benefits**:
+- Fast incremental builds
+- Better IDE support
+- Type errors in packages
+- Shared type definitions
+- Monorepo-aware type checking
 
 ---
 
@@ -763,7 +1360,7 @@ grep -r "query\(" packages/*/src --exclude-dir=migrations
 # Direct Supabase client usage
 grep -r "supabaseClient" packages/*/src
 
-# useEffect for data fetching
+# useEffect for data fetching (React antipattern - should not exist in Nuxt)
 grep -r "useEffect.*fetch\|useEffect.*axios" packages/*/src
 
 # Source packages with dependencies
@@ -773,8 +1370,25 @@ find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
 # Direct i18next usage
 grep -r "i18next.use" packages/*/src
 
-# Unconditional StrictMode (adapt for Vue)
-grep -r "StrictMode" packages/*/src/main.tsx | grep -v "isProduction"
+# Packages without Nuxt integration
+find packages/*/base -name "package.json" | while read f; do
+  dir=$(dirname "$f")
+  if [ ! -f "$dir/nuxt.config.ts" ] && ! grep -q '"exports"' "$f"; then
+    echo "Missing integration: $dir"
+  fi
+done
+
+# Non-SSR-safe localStorage usage
+grep -r "localStorage\|sessionStorage" packages/*/src | grep -v "onMounted\|process.client"
+
+# Direct fetch without proper SSR handling
+grep -r "\$fetch\|fetch(" packages/*/composables | grep -v "useAsyncData\|useFetch"
+
+# Server routes without validation
+grep -r "defineEventHandler" packages/*/server/api | grep -v "schema\.parse\|validate"
+
+# Middleware without error handling
+grep -r "defineEventHandler" packages/*/server/middleware | grep -v "createError\|try.*catch"
 ```
 
 ---

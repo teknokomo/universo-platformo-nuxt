@@ -216,6 +216,8 @@ Consistent naming with scope prefixes prevents package name conflicts and clearl
 
 **Rationale**: Learning from existing implementations accelerates development while avoiding technical debt transfer. Nuxt-specific best practices ensure optimal implementation for the chosen stack. The three-entity pattern provides consistency and predictability across the platform's feature set.
 
+**Detailed Implementation Patterns**: For comprehensive Nuxt-specific implementation patterns including server routes, composables, middleware, SSR-safe code, and package integration, see `.specify/memory/architectural-patterns.md` and `.specify/memory/architectural-patterns-RU.md`.
+
 ### VII. Utility Package Organization
 
 **Rule**: Shared code MUST be organized into utility packages without `-frt` or `-srv` suffixes.
