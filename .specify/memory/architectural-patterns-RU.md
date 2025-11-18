@@ -660,20 +660,617 @@ const { data } = useQuery({
 
 ### Адаптировать для Nuxt/Vue
 
-1. **TanStack Query** → Использовать Vue Query или composables Nuxt
-2. **React Hooks** → Vue Composition API composables
+1. **TanStack Query** → Использовать `@tanstack/vue-query` или composables Nuxt с `useFetch`/`useAsyncData`
+2. **React Hooks** → Vue Composition API composables (использовать префикс `use*`)
 3. **React StrictMode** → Строгий режим Vue DevTools
-4. **React Router** → Файловая маршрутизация Nuxt
-5. **Express Routes** → Серверные маршруты Nuxt
+4. **React Router** → Файловая маршрутизация Nuxt с директорией `pages/`
+5. **Express Routes** → Серверные маршруты Nuxt в директории `server/api/`
 
-### Паттерны для Добавления в Nuxt
+---
 
-1. **Server Routes**: Использовать директорию `server/api/`
-2. **Composables**: Создавать переиспользуемые композиционные функции
-3. **Middleware**: Middleware для аутентификации и валидации
-4. **Nitro Utilities**: Утилиты на стороне сервера
-5. **Auto-imports**: Настроить паттерны автоимпорта
-6. **SSR-Safe**: Убедиться, что паттерны работают с SSR
+## Лучшие Практики Nuxt (ОБЯЗАТЕЛЬНО)
+
+### 14. Паттерн Интеграции Пакетов Nuxt
+
+**Правило**: Пакеты ДОЛЖНЫ интегрироваться с Nuxt используя Nuxt Layers или явные exports.
+
+**Подход Nuxt Layer** (для UI/компонентных пакетов):
+
+```typescript
+// packages/clusters-frt/base/nuxt.config.ts
+export default defineNuxtConfig({
+  // Конфигурация слоя
+  components: true,
+  composables: {
+    dirs: ['composables']
+  }
+})
+
+// Корневой nuxt.config.ts расширяет слой
+export default defineNuxtConfig({
+  extends: [
+    './packages/clusters-frt/base'
+  ]
+})
+```
+
+**Подход Явного Export** (для утилитных пакетов):
+
+```typescript
+// packages/@universo/types/base/package.json
+{
+  "name": "@universo/types",
+  "exports": {
+    ".": "./src/index.ts",
+    "./entities": "./src/entities/index.ts"
+  }
+}
+
+// Импорт в любом пакете
+import { User, Cluster } from '@universo/types'
+import { UserEntity } from '@universo/types/entities'
+```
+
+**Преимущества**:
+- Hot Module Replacement (HMR) для изменений пакетов
+- Автоимпорт из пакетов
+- Типобезопасность между пакетами
+- Совместимость с SSR
+
+**Обнаружение**:
+
+```bash
+# Найти пакеты без интеграции Nuxt
+find packages/*/base -name "package.json" | while read f; do
+  dir=$(dirname "$f")
+  if [ ! -f "$dir/nuxt.config.ts" ] && ! grep -q '"exports"' "$f"; then
+    echo "Отсутствует интеграция: $dir"
+  fi
+done
+```
+
+---
+
+### 15. Паттерн Организации Серверных API Маршрутов
+
+**Правило**: Серверные маршруты ДОЛЖНЫ быть организованы по функциям внутри директорий `server/` пакетов.
+
+**Структура**:
+
+```
+packages/clusters-srv/base/
+├── server/
+│   ├── api/
+│   │   ├── clusters/
+│   │   │   ├── index.get.ts          # GET /api/clusters
+│   │   │   ├── index.post.ts         # POST /api/clusters
+│   │   │   ├── [id].get.ts           # GET /api/clusters/:id
+│   │   │   ├── [id].patch.ts         # PATCH /api/clusters/:id
+│   │   │   ├── [id].delete.ts        # DELETE /api/clusters/:id
+│   │   │   └── [id]/
+│   │   │       ├── domains.get.ts    # GET /api/clusters/:id/domains
+│   │   │       └── members.get.ts    # GET /api/clusters/:id/members
+│   │   └── health.get.ts             # GET /api/health
+│   ├── middleware/
+│   │   ├── auth.ts                   # Middleware аутентификации
+│   │   └── validate.ts               # Валидация запросов
+│   └── utils/
+│       ├── db.ts                     # Утилиты базы данных
+│       └── guards.ts                 # Проверки прав доступа
+```
+
+**Реализация Серверного Маршрута**:
+
+```typescript
+// packages/clusters-srv/base/server/api/clusters/index.get.ts
+import { defineEventHandler, getQuery } from 'h3'
+import { z } from 'zod'
+
+const querySchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(10),
+  search: z.string().optional()
+})
+
+export default defineEventHandler(async (event) => {
+  // Валидация параметров запроса
+  const query = querySchema.parse(getQuery(event))
+  
+  // Получить пользователя из middleware аутентификации
+  const user = event.context.user
+  
+  // Получить данные используя паттерн репозитория
+  const clusters = await getClustersRepository().findPaginated(query, user.id)
+  
+  return {
+    data: clusters,
+    pagination: {
+      page: query.page,
+      limit: query.limit,
+      total: clusters.length
+    }
+  }
+})
+```
+
+**Преимущества**:
+- Понятная структура API
+- Файловая маршрутизация
+- Типобезопасные запрос/ответ
+- Автоматическая горячая перезагрузка
+- SSR и API маршруты в одной кодовой базе
+
+---
+
+### 16. Паттерн Composables
+
+**Правило**: Переиспользуемая логика ДОЛЖНА быть извлечена в composables следуя лучшим практикам Vue.
+
+**Структура Composables**:
+
+```
+packages/clusters-frt/base/composables/
+├── useClusters.ts                # Основная загрузка данных
+├── useClusterForm.ts             # Управление состоянием формы
+├── useClusterPermissions.ts      # Проверки прав доступа
+└── index.ts                      # Barrel export
+```
+
+**Composable Загрузки Данных**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusters.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import type { Cluster, ClusterCreateInput } from '@universo/types'
+
+export const useClusters = () => {
+  const queryClient = useQueryClient()
+  
+  // Получить список
+  const { data: clusters, isLoading } = useQuery({
+    queryKey: ['clusters'],
+    queryFn: () => $fetch<Cluster[]>('/api/clusters')
+  })
+  
+  // Мутация создания
+  const createCluster = useMutation({
+    mutationFn: (data: ClusterCreateInput) => 
+      $fetch('/api/clusters', { method: 'POST', body: data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clusters'] })
+    }
+  })
+  
+  return {
+    clusters,
+    isLoading,
+    createCluster
+  }
+}
+```
+
+**Composable Формы**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusterForm.ts
+import { ref, computed } from 'vue'
+import { z } from 'zod'
+
+const clusterSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional()
+})
+
+export const useClusterForm = (initialData?: Partial<Cluster>) => {
+  const formData = ref({
+    name: initialData?.name ?? '',
+    description: initialData?.description ?? ''
+  })
+  
+  const errors = ref<Record<string, string>>({})
+  
+  const validate = () => {
+    try {
+      clusterSchema.parse(formData.value)
+      errors.value = {}
+      return true
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        errors.value = Object.fromEntries(
+          err.errors.map(e => [e.path[0], e.message])
+        )
+      }
+      return false
+    }
+  }
+  
+  const isValid = computed(() => Object.keys(errors.value).length === 0)
+  
+  return {
+    formData,
+    errors,
+    validate,
+    isValid
+  }
+}
+```
+
+**Преимущества**:
+- Переиспользуемость между компонентами
+- Типобезопасность
+- Тестируемость в изоляции
+- Автоимпорт в Nuxt
+- Совместимость с SSR при правильной обработке жизненного цикла
+
+---
+
+### 17. Паттерн Типобезопасного API Клиента
+
+**Правило**: Коммуникация Frontend-Backend ДОЛЖНА использовать общие типы и типобезопасные клиенты.
+
+**Пакет Общих Типов**:
+
+```typescript
+// packages/@universo/types/base/src/api/clusters.ts
+import { z } from 'zod'
+
+// Схемы запросов
+export const clusterCreateSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional()
+})
+
+export const clusterUpdateSchema = clusterCreateSchema.partial()
+
+// Типы ответов
+export interface Cluster {
+  id: string
+  name: string
+  description?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+  }
+}
+
+// Вывод типов
+export type ClusterCreateInput = z.infer<typeof clusterCreateSchema>
+export type ClusterUpdateInput = z.infer<typeof clusterUpdateSchema>
+```
+
+**Использование на Backend**:
+
+```typescript
+// packages/clusters-srv/base/server/api/clusters/index.post.ts
+import { clusterCreateSchema, type Cluster } from '@universo/types/api/clusters'
+
+export default defineEventHandler(async (event): Promise<Cluster> => {
+  const body = await readBody(event)
+  
+  // Валидация с общей схемой
+  const data = clusterCreateSchema.parse(body)
+  
+  // Создание используя репозиторий
+  const cluster = await getClustersRepository().create(data)
+  
+  return cluster
+})
+```
+
+**Использование на Frontend**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusters.ts
+import type { Cluster, ClusterCreateInput } from '@universo/types/api/clusters'
+
+export const useClusters = () => {
+  const createCluster = async (data: ClusterCreateInput): Promise<Cluster> => {
+    return $fetch('/api/clusters', {
+      method: 'POST',
+      body: data
+    })
+  }
+  
+  return { createCluster }
+}
+```
+
+**Преимущества**:
+- Единый источник истины для типов
+- Проверка типов на этапе компиляции
+- Валидация во время выполнения с Zod
+- Обеспечение соблюдения контракта API
+- Безопасность рефакторинга
+
+---
+
+### 18. Паттерн SSR-Безопасных Composables
+
+**Правило**: Composables ДОЛЖНЫ корректно обрабатывать SSR используя хуки жизненного цикла.
+
+**Код Только для Браузера**:
+
+```typescript
+// packages/clusters-frt/base/composables/useLocalStorage.ts
+import { ref, watch, onMounted } from 'vue'
+
+export const useLocalStorage = <T>(key: string, defaultValue: T) => {
+  const data = ref<T>(defaultValue)
+  const isReady = ref(false)
+  
+  // Доступ к localStorage только на клиенте
+  onMounted(() => {
+    const stored = localStorage.getItem(key)
+    if (stored) {
+      try {
+        data.value = JSON.parse(stored)
+      } catch (e) {
+        console.error('Не удалось разобрать localStorage:', e)
+      }
+    }
+    isReady.value = true
+  })
+  
+  // Отслеживать изменения (только на клиенте)
+  if (process.client) {
+    watch(data, (newValue) => {
+      localStorage.setItem(key, JSON.stringify(newValue))
+    }, { deep: true })
+  }
+  
+  return { data, isReady }
+}
+```
+
+**API Вызовы с SSR**:
+
+```typescript
+// packages/clusters-frt/base/composables/useClusters.ts
+export const useClusterDetail = (id: string) => {
+  // useAsyncData работает и на сервере, и на клиенте
+  const { data, pending, error, refresh } = useAsyncData(
+    `cluster-${id}`,
+    () => $fetch<Cluster>(`/api/clusters/${id}`),
+    {
+      // Кэширование на 5 минут
+      getCachedData: (key) => useNuxtApp().payload.data[key],
+    }
+  )
+  
+  return {
+    cluster: data,
+    loading: pending,
+    error,
+    refresh
+  }
+}
+```
+
+**Преимущества**:
+- Отсутствие несоответствий гидратации
+- Правильная загрузка данных SSR
+- Изоляция кода только для клиента
+- Оптимизация производительности
+
+---
+
+### 19. Паттерн Middleware
+
+**Правило**: Аутентификация и авторизация ДОЛЖНЫ использовать middleware Nuxt.
+
+**Server Middleware** (для API маршрутов):
+
+```typescript
+// packages/auth-srv/base/server/middleware/auth.ts
+import { defineEventHandler, createError } from 'h3'
+import { verifyToken } from '../utils/jwt'
+
+export default defineEventHandler(async (event) => {
+  // Пропустить аутентификацию для публичных маршрутов
+  if (event.path.startsWith('/api/public')) {
+    return
+  }
+  
+  // Получить токен из заголовка
+  const authHeader = getHeader(event, 'authorization')
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw createError({
+      statusCode: 401,
+      message: 'Отсутствует токен аутентификации'
+    })
+  }
+  
+  const token = authHeader.substring(7)
+  
+  try {
+    // Проверить и декодировать токен
+    const user = await verifyToken(token)
+    
+    // Прикрепить пользователя к контексту события
+    event.context.user = user
+  } catch (error) {
+    throw createError({
+      statusCode: 401,
+      message: 'Недействительный токен аутентификации'
+    })
+  }
+})
+```
+
+**Route Middleware** (для страниц):
+
+```typescript
+// packages/clusters-frt/base/middleware/cluster-access.ts
+export default defineNuxtRouteMiddleware(async (to) => {
+  const clusterId = to.params.id
+  
+  // Проверить, есть ли у пользователя доступ к кластеру
+  const hasAccess = await $fetch(`/api/clusters/${clusterId}/check-access`)
+  
+  if (!hasAccess) {
+    return navigateTo('/unauthorized')
+  }
+})
+```
+
+**Использование на Странице**:
+
+```vue
+<!-- packages/clusters-frt/base/pages/clusters/[id].vue -->
+<script setup lang="ts">
+definePageMeta({
+  middleware: ['auth', 'cluster-access']
+})
+</script>
+```
+
+**Преимущества**:
+- Централизованная логика аутентификации
+- Типобезопасная защита маршрутов
+- Совместимость с SSR
+- Переиспользуемость между маршрутами
+
+---
+
+### 20. Nuxt Layers для Совместного Использования Пакетов
+
+**Правило**: Фронтенд пакеты ДОЛЖНЫ предоставлять Nuxt Layers для совместного использования компонентов/composables.
+
+**Конфигурация Layer**:
+
+```typescript
+// packages/clusters-frt/base/nuxt.config.ts
+export default defineNuxtConfig({
+  // Включить автоимпорт из этого слоя
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    }
+  ],
+  
+  // Автоимпорт composables
+  imports: {
+    dirs: ['composables']
+  },
+  
+  // Специфичная для слоя конфигурация
+  runtimeConfig: {
+    public: {
+      clustersApiBase: '/api/clusters'
+    }
+  }
+})
+```
+
+**Интеграция с Корневым Приложением**:
+
+```typescript
+// Корневой nuxt.config.ts
+export default defineNuxtConfig({
+  extends: [
+    // Включить все слои фронтенд пакетов
+    './packages/clusters-frt/base',
+    './packages/auth-frt/base',
+    './packages/@universo/ui/base'
+  ],
+  
+  // Переопределить/расширить конфигурацию слоя при необходимости
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.API_BASE || 'http://localhost:3000'
+    }
+  }
+})
+```
+
+**Преимущества**:
+- Совместное использование компонентов между приложениями
+- Автоимпорт из пакетов
+- Специфичная для слоя конфигурация
+- Переиспользуемость composables
+- Горячая перезагрузка для изменений пакетов
+
+---
+
+### 21. Конфигурация TypeScript в Монорепозитории
+
+**Правило**: Использовать ссылки проекта TypeScript для лучшей проверки типов и производительности сборки.
+
+**Базовый tsconfig**:
+
+```json
+// tsconfig.base.json (корневой)
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
+  }
+}
+```
+
+**tsconfig Пакета**:
+
+```json
+// packages/clusters-frt/base/tsconfig.json
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@universo/types": ["../../@universo/types/base/src"],
+      "@universo/utils": ["../../@universo/utils/base/src"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.vue"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+**Интеграция TypeScript в Nuxt**:
+
+```typescript
+// nuxt.config.ts
+export default defineNuxtConfig({
+  typescript: {
+    strict: true,
+    shim: false,
+    // Включить пакеты workspace для проверки типов
+    includeWorkspace: true,
+    // Поднять общие типы
+    hoist: [
+      '@nuxt/schema',
+      'nuxt',
+      'vue',
+      'vue-router'
+    ]
+  }
+})
+```
+
+**Преимущества**:
+- Быстрые инкрементальные сборки
+- Лучшая поддержка IDE
+- Ошибки типов в пакетах
+- Общие определения типов
+- Проверка типов с учетом монорепозитория
 
 ---
 
@@ -688,7 +1285,7 @@ grep -r "query\(" packages/*/src --exclude-dir=migrations
 # Прямое использование клиента Supabase
 grep -r "supabaseClient" packages/*/src
 
-# useEffect для загрузки данных
+# useEffect для загрузки данных (антипаттерн React - не должно существовать в Nuxt)
 grep -r "useEffect.*fetch\|useEffect.*axios" packages/*/src
 
 # Пакеты с исходным кодом с dependencies
@@ -698,8 +1295,25 @@ find packages/*/base -name "package.json" -exec grep -L '"main":' {} \; | \
 # Прямое использование i18next
 grep -r "i18next.use" packages/*/src
 
-# Безусловный StrictMode (адаптировать для Vue)
-grep -r "StrictMode" packages/*/src/main.tsx | grep -v "isProduction"
+# Пакеты без интеграции Nuxt
+find packages/*/base -name "package.json" | while read f; do
+  dir=$(dirname "$f")
+  if [ ! -f "$dir/nuxt.config.ts" ] && ! grep -q '"exports"' "$f"; then
+    echo "Отсутствует интеграция: $dir"
+  fi
+done
+
+# Небезопасное использование localStorage для SSR
+grep -r "localStorage\|sessionStorage" packages/*/src | grep -v "onMounted\|process.client"
+
+# Прямой fetch без правильной обработки SSR
+grep -r "\$fetch\|fetch(" packages/*/composables | grep -v "useAsyncData\|useFetch"
+
+# Серверные маршруты без валидации
+grep -r "defineEventHandler" packages/*/server/api | grep -v "schema\.parse\|validate"
+
+# Middleware без обработки ошибок
+grep -r "defineEventHandler" packages/*/server/middleware | grep -v "createError\|try.*catch"
 ```
 
 ---
