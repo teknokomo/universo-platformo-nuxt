@@ -1,588 +1,655 @@
 # Tasks: Initial Universo Platformo Nuxt Setup
 
 **Input**: Design documents from `.specify/features/001-initial-setup/`  
-**Prerequisites**: plan.md (✅), spec.md (✅)
+**Prerequisites**: plan.md (✅), spec.md (✅), research.md (✅)
 
-**Tests**: Tests for this feature are configuration validation tests, not traditional unit/integration tests. These are included as tasks.
+**Tests**: Configuration validation tests included. No traditional unit/integration tests needed for this infrastructure feature.
 
-**Organization**: Tasks are grouped by user story (US1-US4) to enable independent implementation and testing of each story following P1→P2→P3 priority order.
+**Organization**: Tasks grouped by user story (US1-US5) to enable independent implementation and testing. Priority order: P1 → P2 → P3.
 
-## Format: `[ID] [P?] [Story] Description`
+## Format: `- [ ] [TaskID] [P?] [Story?] Description with file path`
 
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (US1-US4)
-- Include exact file paths in descriptions
+- **[P]**: Parallelizable (different files, no dependencies)
+- **[Story]**: User story mapping (US1, US2, US3, US4, US5)
+- **File paths**: Absolute paths from repository root
 
 ## Path Conventions
 
-This feature establishes the repository root structure:
-
-- Root configuration files: `/package.json`, `/tsconfig.json`, etc.
-- Root documentation: `/README.md`, `/README-RU.md`
-- Packages directory: `/packages/` (initially empty)
-- Specification: `/.specify/features/001-initial-setup/`
-
----
-
-## Phase 0: Prerequisites Check
-
-**Purpose**: Verify prerequisites before starting implementation
-
-- [ ] T000 Verify constitution exists at `.specify/memory/constitution.md`
-- [ ] T001 Verify spec.md exists at `.specify/features/001-initial-setup/spec.md`
-- [ ] T002 Verify plan.md exists at `.specify/features/001-initial-setup/plan.md`
-- [ ] T003 Verify Node.js LTS 18.x+ installed on development machine
-- [ ] T004 Verify Git installed and configured
-
-**Checkpoint**: All prerequisites verified - ready to begin Phase 1
+Repository root structure for initial setup:
+- Configuration: `/package.json`, `/tsconfig.json`, `/.eslintrc.cjs`, etc.
+- Documentation: `/README.md`, `/README-RU.md`
+- Workspace: `/packages/` (initially empty with `.gitkeep`)
+- Specifications: `/.specify/features/001-initial-setup/`
 
 ---
 
-## Phase 1: User Story 1 - Repository Foundation Setup (Priority: P1) 🎯 MVP
+## Phase 1: Setup - Repository Foundation (User Story 1 - Priority P1) 🎯 MVP
 
-**Goal**: Create bilingual documentation and basic configuration for repository foundation
+**Goal**: Establish bilingual documentation and basic repository structure so developers can understand the project immediately.
 
-**Independent Test**: Clone repository fresh, read README.md, verify understanding within 5 minutes
+**Independent Test**: Clone repository, read README.md, verify understanding within 5 minutes. Check all configuration files exist.
 
-### Documentation Tasks (English Primary)
+**Success Criteria**: SC-001, SC-004, SC-005, SC-009
 
-- [ ] T010 [P] [US1] Create `/README.md` with project overview section
+### English Documentation (Primary)
+
+- [ ] T001 [P] [US1] Create `/README.md` with project overview section
   - Project name: Universo Platformo Nuxt
-  - Brief description of purpose (fullstack platform with Nuxt/TypeScript)
+  - Brief description: Fullstack platform built on Nuxt.js and TypeScript
   - Statement: "This is a Nuxt.js implementation of Universo Platformo concept"
+  - Badges for License, PNPM, TypeScript, Nuxt
 
-- [ ] T011 [P] [US1] Add "Relationship to universo-platformo-react" section to `/README.md`
-  - Explain: React version is conceptual reference
-  - Explain: This Nuxt version uses same concepts but different implementation
-  - Explain: No code copying, Nuxt best practices used
-  - Link to React repo: `https://github.com/teknokomo/universo-platformo-react`
+- [ ] T002 [P] [US1] Add "Relationship to universo-platformo-react" section in `/README.md`
+  - Explain: React version as conceptual reference
+  - Explain: Nuxt version uses same concepts, different implementation
+  - Explain: No code copying, Nuxt best practices applied
+  - Link: https://github.com/teknokomo/universo-platformo-react
 
-- [ ] T012 [P] [US1] Add "Key Differences" section to `/README.md`
-  - Technology stack differences (Nuxt vs React, fullstack vs separate)
-  - Architecture approaches (file-based routing vs React Router, etc.)
-  - Implementation philosophy (best practices for each stack)
+- [ ] T003 [P] [US1] Add "Key Differences" section with comparison table in `/README.md`
+  - Technology stack comparison (Nuxt vs React, integrated vs separate backend)
+  - Architecture differences (file-based routing vs React Router)
+  - Implementation philosophy differences
 
-- [ ] T013 [P] [US1] Add "Technology Stack" section to `/README.md`
-  - Framework: Nuxt 3.x (fullstack)
-  - Language: TypeScript 5.x (strict mode)
-  - Package Manager: PNPM 8.x+
-  - Database: Supabase (PostgreSQL-based) with abstraction layer
-  - Authentication: Passport.js with Supabase connector
-  - UI Library: Material UI (MUI)
-  - Code Quality: ESLint, Prettier
+- [ ] T004 [P] [US1] Add "Technology Stack" section in `/README.md`
+  - Core: Nuxt 3.x, TypeScript 5.x (strict), PNPM 8.x+
+  - Database: Supabase with abstraction layer
+  - Auth: Passport.js with Supabase connector
+  - UI: Vuetify 3 (Material Design for Vue)
+  - Quality: ESLint, Prettier, Vitest
 
-- [ ] T014 [P] [US1] Add "Repository Structure" section to `/README.md`
-  - Explain monorepo organization
-  - Explain `packages/` directory purpose
-  - Explain `-frt` (frontend) and `-srv` (server) package naming
-  - Explain `base/` folder requirement for future implementations
+- [ ] T005 [P] [US1] Add "Repository Structure" section in `/README.md`
+  - Explain monorepo organization with PNPM workspaces
+  - Document `packages/` directory purpose
+  - Explain `-frt` (frontend) and `-srv` (backend) naming
+  - Explain `base/` folder requirement
+  - Include directory tree diagram
 
-- [ ] T015 [P] [US1] Add "Getting Started" section to `/README.md`
-  - Prerequisites (Node.js 18.x+, PNPM 8.x+)
-  - Installation steps: `pnpm install`
-  - Development commands: `pnpm dev`, `pnpm build`, `pnpm typecheck`
-  - Linting/formatting: `pnpm lint`, `pnpm format`
+- [ ] T006 [P] [US1] Add "Three-Entity Pattern" section in `/README.md`
+  - Explain base pattern: Clusters/Domains/Resources
+  - Show pattern replication: Metaverses/Sections/Entities
+  - Explain as core architectural concept
+  - Note: Pattern repeats across all features
 
-- [ ] T016 [P] [US1] Add "Future Roadmap" section to `/README.md`
-  - Explain three-entity pattern: Clusters/Domains/Resources
-  - Mention pattern will be replicated: Metaverses/Sections/Entities
-  - Explain incremental feature development (P1→P2→P3)
-  - Note: First feature will be Clusters
+- [ ] T007 [P] [US1] Add "Getting Started" section in `/README.md`
+  - Prerequisites: Node.js 18.x+, PNPM 8.x+
+  - Installation: Clone, `pnpm install`
+  - Development commands: dev, build, typecheck, lint, format
+  - Quality check: `pnpm quality`
 
-- [ ] T017 [P] [US1] Add "Documentation & Governance" section to `/README.md`
+- [ ] T008 [P] [US1] Add "Creating a New Package" section in `/README.md`
+  - Step 1: Create directory structure with base/ folder
+  - Step 2: Create package.json
+  - Step 3: Create bilingual README files
+  - Step 4: Run `pnpm install`
+  - Estimated time: < 10 minutes
+
+- [ ] T009 [P] [US1] Add "Future Roadmap" section in `/README.md`
+  - Phase 1: Foundation (current - repository setup)
+  - Phase 2: Core Features (Clusters - first implementation)
+  - Phase 3: Authentication & Authorization
+  - Phase 4: Additional features (Metaverses, Spaces, etc.)
+  - Note: Monitor universo-platformo-react for feature updates
+
+- [ ] T010 [P] [US1] Add "Documentation & Governance" section in `/README.md`
   - Link to constitution: `.specify/memory/constitution.md`
+  - Link to architectural patterns (English & Russian)
   - Link to specifications: `.specify/features/`
-  - Explain bilingual documentation requirement (English + Russian)
-  - Link to GitHub workflow instructions: `.github/instructions/`
+  - Link to GitHub instructions: `.github/instructions/`
+  - Explain bilingual documentation requirement
 
-- [ ] T018 [US1] Review and finalize `/README.md`
-  - Verify all sections present and complete
-  - Verify formatting and structure
-  - Count total lines for Russian translation reference
+- [ ] T011 [US1] Review and finalize `/README.md` structure
+  - Verify all sections complete and well-organized
+  - Check all internal links work
+  - Count lines for Russian translation baseline
+  - Ensure constitution principles referenced
 
-### Documentation Tasks (Russian Translation)
+### Russian Translation
 
-- [ ] T019 [US1] Create `/README-RU.md` by translating `/README.md`
+- [ ] T012 [US1] Create `/README-RU.md` translating `/README.md`
   - Translate all text content to Russian
-  - Keep technical terms in English where appropriate (Nuxt, TypeScript, PNPM, etc.)
-  - Keep same section structure, same headings
-  - Keep same code blocks (untranslated)
-  - Keep same links and URLs
+  - Keep technical terms in English where appropriate
+  - Maintain identical section structure
+  - Keep code blocks untranslated
+  - Preserve all links and URLs
 
-- [ ] T020 [US1] Verify `/README-RU.md` line count matches `/README.md` ±2 lines
-  - Count lines in both files
-  - If difference > 2 lines, adjust formatting to match
-  - Document actual line counts in task notes
+- [ ] T013 [US1] Verify `/README-RU.md` line count matches `/README.md` ±2 lines
+  - Count lines: `wc -l README.md README-RU.md`
+  - If difference > 2, adjust formatting
+  - Document counts in commit message
 
-### Configuration File Tasks
+### Base Configuration Files
 
-- [ ] T021 [P] [US1] Create `/package.json` with workspace root configuration
+- [ ] T014 [P] [US1] Ensure `/package.json` has complete workspace configuration
   - Package name: `universo-platformo-nuxt`
   - Version: `0.1.0`
-  - Description: "Universo Platformo - Nuxt.js fullstack implementation"
-  - License: (set appropriate license)
-  - Private: `true` (monorepo root)
-  - Scripts: empty initially (will be added in later phases)
-  - devDependencies: empty initially (will be added in later phases)
+  - Private: true
+  - Scripts: (already exist - verify complete)
+  - DevDependencies: (already exist - verify complete)
+  - Engines: Node >=18.0.0, PNPM >=8.0.0
 
-- [ ] T022 [P] [US1] Create `/.gitignore` for Node.js/TypeScript/Nuxt project
-  - Ignore: `node_modules/`, `.nuxt/`, `.output/`, `dist/`
-  - Ignore: `.env`, `.env.*`, `!.env.example`
-  - Ignore: `*.log`, `*.log.*`
-  - Ignore: `.DS_Store`, `Thumbs.db`
-  - Ignore: IDE files (`.vscode/*`, `.idea/*`, `*.swp`, `*.swo`)
-  - Do NOT ignore: `.specify/` directory
+- [ ] T015 [P] [US1] Verify `/.gitignore` comprehensiveness
+  - Ignores: `node_modules/`, `.nuxt/`, `.output/`, `dist/`
+  - Ignores: `.env`, `.env.*` (but not `.env.example`)
+  - Ignores: IDE files (`.vscode/`, `.idea/`, `*.swp`)
+  - Does NOT ignore: `.specify/` directory
+  - Ignores: Build artifacts and logs
 
-- [ ] T023 [US1] Commit Phase 1 changes with message: "Initial repository foundation with bilingual documentation"
+### Validation
 
-### Validation Tasks for User Story 1
+- [ ] T016 [US1] Run fresh clone test (SC-001)
+  - Clone repository to temporary location
+  - Read README.md
+  - Time the understanding process (should be < 5 minutes)
+  - Document feedback
 
-- [ ] T024 [US1] Validation: Fresh clone test
-  - Clone repository on clean environment
-  - Read README.md and README-RU.md
-  - Verify understanding within 5 minutes
-  - Record time and feedback (SC-001)
+- [ ] T017 [US1] Verify configuration files exist (SC-005)
+  - Check: README.md, README-RU.md exist
+  - Check: package.json, tsconfig.json exist
+  - Check: .gitignore, .eslintrc.cjs, .prettierrc exist
+  - Check: pnpm-workspace.yaml exists
 
-- [ ] T025 [US1] Validation: File existence check
-  - Verify `/README.md` exists
-  - Verify `/README-RU.md` exists
-  - Verify `/package.json` exists
-  - Verify `/.gitignore` exists (SC-005)
+- [ ] T018 [US1] Validate bilingual line counts (SC-004)
+  - Run: `wc -l README.md README-RU.md`
+  - Verify: Difference ≤ 2 lines
+  - Document: Actual counts
 
-- [ ] T026 [US1] Validation: Bilingual line count check
-  - Count lines in README.md
-  - Count lines in README-RU.md
-  - Verify difference ≤ 2 lines (SC-004)
-
-- [ ] T027 [US1] Validation: Documentation clarity check
-  - Verify React relationship clearly explained
-  - Verify conceptual vs implementation distinction clear
-  - Verify key differences explained (SC-009)
-
-**Checkpoint**: User Story 1 complete - Repository has bilingual documentation and basic configuration
+**Checkpoint Phase 1**: Repository foundation complete with bilingual documentation
 
 ---
 
-## Phase 2: User Story 2 - Monorepo Structure Initialization (Priority: P2)
+## Phase 2: Foundational - Monorepo Structure (User Story 2 - Priority P2)
 
-**Goal**: Establish PNPM workspace with package structure conventions
+**Goal**: Establish PNPM workspace structure enabling package management and future feature development.
 
-**Independent Test**: Run `pnpm install`, verify workspace detection, check that packages/ directory exists
+**Independent Test**: Run `pnpm install`, verify workspace detection, confirm packages/ directory ready.
 
-### PNPM Workspace Configuration
+**Success Criteria**: SC-002, SC-006, SC-010
 
-- [ ] T030 [US2] Create `/pnpm-workspace.yaml` with workspace configuration
-  - Define packages pattern: `packages/*`
-  - Add comment explaining workspace structure
+### Workspace Configuration
 
-- [ ] T031 [US2] Update `/package.json` with workspace scripts
-  - Add script: `"install:all": "pnpm install"`
-  - Add script: `"clean": "pnpm -r clean && rm -rf node_modules"`
-  - Add script: `"clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules"`
-  - Add comment explaining recursive commands (`-r` flag)
+- [ ] T020 [US2] Verify `/pnpm-workspace.yaml` configuration
+  - Pattern: `packages/*` defined
+  - Add comments explaining workspace structure
+  - Verify syntax is correct
 
-- [ ] T032 [US2] Install PNPM if not already installed
-  - Check if PNPM 8.x+ available: `pnpm --version`
-  - If not: Document installation command in notes
-  - Note: This is for developer setup, not a repository file
+- [ ] T021 [US2] Verify `/.npmrc` has Nuxt-compatible settings
+  - Setting: `shamefully-hoist=true` (required for Nuxt)
+  - Setting: `strict-peer-dependencies=true`
+  - Add comment explaining why shamefully-hoist is needed
 
-### Packages Directory Structure
+- [ ] T022 [US2] Update workspace scripts in `/package.json`
+  - Verify: `install:all`, `clean`, `clean:all` scripts
+  - Add: `dev:all` for running all package dev servers
+  - Add: `build:all` for building all packages
 
-- [ ] T033 [US2] Create `/packages/` directory
-  - Create empty directory
-  - Purpose: Will house all feature packages
+### Package Directory
 
-- [ ] T034 [US2] Create `/packages/.gitkeep` file
-  - Empty file to preserve directory in Git
-  - Add comment explaining purpose
+- [ ] T023 [US2] Ensure `/packages/` directory exists
+  - Create if doesn't exist: `mkdir -p packages`
+  - Purpose: Houses all feature packages
 
-### Package Structure Documentation
+- [ ] T024 [US2] Create `/packages/.gitkeep` file
+  - Empty file to preserve empty directory in Git
+  - Add comment: "Preserves packages directory structure"
 
-- [ ] T035 [US2] Add "Package Structure Conventions" section to `/README.md`
-  - Explain: Packages follow domain naming
-  - Explain: Frontend packages use `-frt` suffix
-  - Explain: Backend/server packages use `-srv` suffix
-  - Explain: All packages have `base/` root folder
-  - Example: `packages/clusters-frt/base/` and `packages/clusters-srv/base/`
+### Documentation Updates
 
-- [ ] T036 [US2] Add "Creating a New Package" section to `/README.md`
-  - Step 1: Create directory `packages/{domain}-{frt|srv}/base/`
-  - Step 2: Create `package.json` with appropriate dependencies
-  - Step 3: Create bilingual README files
-  - Step 4: Run `pnpm install` to register workspace
-  - Estimated time: Less than 10 minutes
+- [ ] T025 [US2] Verify "Package Structure Conventions" in README.md
+  - Document: Domain naming with `-frt`/`-srv` suffixes
+  - Document: All packages require `base/` folder
+  - Examples: `packages/clusters-frt/base/`, `packages/clusters-srv/base/`
+  - Document: Utility packages use `@universo/` scope
 
-- [ ] T037 [US2] Update `/README-RU.md` with Russian translations
-  - Translate "Package Structure Conventions" section
-  - Translate "Creating a New Package" section
+- [ ] T026 [US2] Verify "Creating a New Package" guide in README.md
+  - Complete step-by-step instructions
+  - Estimated time documented (< 10 minutes)
+  - Include package.json template example
+
+- [ ] T027 [US2] Update Russian README with package documentation
+  - Translate new package sections
   - Verify line count still matches ±2
 
-### Workspace Installation & Verification
+### Workspace Installation
 
-- [ ] T038 [US2] Run `pnpm install` at repository root
-  - Execute: `pnpm install`
-  - Verify: Command completes successfully
-  - Verify: `node_modules/` created
-  - Verify: `pnpm-lock.yaml` created
+- [ ] T028 [US2] Run full workspace installation
+  - Execute: `pnpm install` at repository root
+  - Verify: No errors
+  - Verify: `pnpm-lock.yaml` updated
+  - Time: Should complete < 2 minutes (SC-002)
 
-- [ ] T039 [US2] Test workspace detection
+- [ ] T029 [US2] Test workspace detection
   - Run: `pnpm list --depth 0`
-  - Verify: Workspace root detected
-  - Verify: No errors about workspace configuration
+  - Verify: Workspace recognized
+  - Verify: No package errors
 
-- [ ] T040 [US2] Commit Phase 2 changes with message: "Setup PNPM monorepo workspace structure"
+### Validation
 
-### Validation Tasks for User Story 2
+- [ ] T030 [US2] Installation time test (SC-002)
+  - Fresh clone on clean environment
+  - Time `pnpm install` execution
+  - Verify: < 2 minutes
+  - Document: Actual time
 
-- [ ] T041 [US2] Validation: Installation time test
-  - Fresh checkout on standard dev machine
-  - Run `pnpm install`
-  - Record time (should be < 2 minutes for initial setup) (SC-002)
+- [ ] T031 [US2] Packages directory verification (SC-010)
+  - Check: `/packages/` exists and tracked by Git
+  - Check: `.gitkeep` preserves structure
+  - Test: Create dummy package, verify workspace detection
 
-- [ ] T042 [US2] Validation: Workspace configuration check
-  - Verify `pnpm-workspace.yaml` exists
-  - Verify workspace pattern defined correctly
-  - Verify PNPM recognizes workspace
-
-- [ ] T043 [US2] Validation: Packages directory check
-  - Verify `/packages/` directory exists
-  - Verify directory is under version control (SC-010)
-  - Verify `.gitkeep` preserves empty directory
-
-- [ ] T044 [US2] Validation: Package creation documentation test
+- [ ] T032 [US2] Package creation guide test (SC-006)
   - Follow README guide to create test package
-  - Verify process takes < 10 minutes
-  - Verify created package follows conventions (SC-006)
-  - Clean up test package after validation
+  - Time the process
+  - Verify: < 10 minutes
+  - Clean up test package
+  - Document: Any improvements needed
 
-**Checkpoint**: User Story 2 complete - Monorepo workspace configured and documented
+**Checkpoint Phase 2**: Monorepo workspace configured and operational
 
 ---
 
-## Phase 3: User Story 4 - Base TypeScript Configuration (Priority: P2)
+## Phase 3: Foundational - TypeScript Configuration (User Story 4 - Priority P2)
 
-**Goal**: Configure TypeScript with strict mode, linting, and formatting for monorepo
+**Goal**: Configure TypeScript strict mode, linting, and formatting for monorepo-wide code quality.
 
-**Independent Test**: Create test TypeScript file, verify type checking works with zero errors
+**Independent Test**: Create test .ts file, verify type checking, linting, formatting work correctly.
 
-**Note**: User Story 4 is implemented before User Story 3 because TypeScript configuration is more critical than GitHub labels for development work.
+**Success Criteria**: SC-003, SC-008, SC-011, SC-018
 
-### TypeScript Configuration
+**Note**: User Story 4 before US3 because TypeScript is more critical than GitHub labels.
 
-- [ ] T050 [P] [US4] Install TypeScript and Nuxt as dev dependencies
-  - Install: `pnpm add -D typescript @types/node`
-  - Install: `pnpm add nuxt`
-  - Note: Nuxt includes Vue and other core dependencies
+### TypeScript Setup
 
-- [ ] T051 [P] [US4] Create `/tsconfig.json` with strict mode configuration
-  - Enable: `"strict": true` (NON-NEGOTIABLE per constitution)
-  - Enable: `"esModuleInterop": true`
-  - Enable: `"skipLibCheck": true`
-  - Enable: `"resolveJsonModule": true`
-  - Set: `"target": "ESNext"`
-  - Set: `"module": "ESNext"`
-  - Set: `"moduleResolution": "bundler"`
-  - Extend: Nuxt's base tsconfig when Nuxt initialized
+- [ ] T040 [P] [US4] Verify TypeScript and Nuxt installation
+  - Check: `typescript`, `@types/node` in devDependencies
+  - Check: `nuxt` in dependencies
+  - Verify versions: TypeScript 5.x, Nuxt 3.x
 
-- [ ] T052 [P] [US4] Configure TypeScript path aliases for monorepo
-  - Add `paths` configuration for `@/*` aliases
-  - Add `paths` configuration for workspace packages
-  - Document path aliases in comments
+- [ ] T041 [P] [US4] Verify `/tsconfig.json` strict mode configuration (SC-011)
+  - Critical: `"strict": true` MUST be set (constitution requirement)
+  - Setting: `"esModuleInterop": true`
+  - Setting: `"skipLibCheck": true`
+  - Setting: `"moduleResolution": "bundler"` (Nuxt 3 compatible)
+  - Setting: `"target": "ESNext"`
+  - Include: Path aliases for packages
+
+- [ ] T042 [P] [US4] Document TypeScript configuration in README
+  - Explain: Strict mode is non-negotiable
+  - Explain: Path aliases for monorepo
+  - Explain: Nuxt-specific settings
+  - Reference: Constitution Principle IV
 
 ### Linting Configuration
 
-- [ ] T053 [P] [US4] Install ESLint and Nuxt ESLint config
-  - Install: `pnpm add -D eslint @nuxtjs/eslint-config-typescript`
-  - Install: `pnpm add -D @typescript-eslint/parser @typescript-eslint/eslint-plugin`
+- [ ] T043 [P] [US4] Verify ESLint installation and configuration
+  - Check: `eslint`, `@nuxtjs/eslint-config-typescript` installed
+  - Check: `@typescript-eslint/parser`, `@typescript-eslint/eslint-plugin`
+  - Verify: `/.eslintrc.cjs` exists and configured
 
-- [ ] T054 [P] [US4] Create `/.eslintrc.js` with TypeScript/Nuxt rules
-  - Extend: `@nuxtjs/eslint-config-typescript`
+- [ ] T044 [P] [US4] Verify `/.eslintrc.cjs` rules
+  - Extends: `@nuxtjs/eslint-config-typescript`
   - Parser: `@typescript-eslint/parser`
-  - Plugins: `@typescript-eslint`
-  - Rules: Enforce no `any` without justification
-  - Ignore: `node_modules/`, `.nuxt/`, `dist/`, `.output/`
+  - Rules: Appropriate for TypeScript/Nuxt
+  - Ignores: `node_modules/`, `.nuxt/`, `dist/`, `.output/`
 
-- [ ] T055 [P] [US4] Create `/.eslintignore` file
-  - Ignore: `node_modules/`
-  - Ignore: `.nuxt/`
-  - Ignore: `dist/`
-  - Ignore: `.output/`
-  - Ignore: `*.min.js`
+- [ ] T045 [P] [US4] Verify `/.eslintignore` file
+  - Ignore: Build directories and artifacts
+  - Ignore: Dependencies
+  - Do not ignore: Source code
 
 ### Formatting Configuration
 
-- [ ] T056 [P] [US4] Install Prettier and ESLint-Prettier integration
-  - Install: `pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier`
+- [ ] T046 [P] [US4] Verify Prettier installation
+  - Check: `prettier`, `eslint-config-prettier`, `eslint-plugin-prettier`
+  - Verify: Integration with ESLint
 
-- [ ] T057 [P] [US4] Create `/.prettierrc` with code style rules
-  - Set: `"semi": true`
-  - Set: `"singleQuote": true`
-  - Set: `"tabWidth": 2`
-  - Set: `"trailingComma": "es5"`
-  - Set: `"printWidth": 100`
-  - Set: `"arrowParens": "always"`
+- [ ] T047 [P] [US4] Verify `/.prettierrc` configuration
+  - Settings: `semi`, `singleQuote`, `tabWidth`, `trailingComma`
+  - Settings: `printWidth`, `arrowParens`
+  - Consistent with project style
 
-- [ ] T058 [P] [US4] Create `/.prettierignore` file
-  - Ignore: `node_modules/`
-  - Ignore: `.nuxt/`
-  - Ignore: `dist/`
-  - Ignore: `.output/`
-  - Ignore: `pnpm-lock.yaml`
-  - Ignore: `*.min.js`
-  - Ignore: `*.min.css`
+- [ ] T048 [P] [US4] Verify `/.prettierignore` file
+  - Ignore: Build artifacts
+  - Ignore: `pnpm-lock.yaml`, `package-lock.json`
+  - Ignore: `.min.js`, `.min.css` files
 
-### Package Scripts Configuration
+### Quality Scripts
 
-- [ ] T059 [US4] Add code quality scripts to `/package.json`
-  - Add: `"typecheck": "nuxi typecheck"`
-  - Add: `"lint": "eslint ."`
-  - Add: `"lint:fix": "eslint . --fix"`
-  - Add: `"format": "prettier --write ."`
-  - Add: `"format:check": "prettier --check ."`
-  - Add: `"quality": "pnpm typecheck && pnpm lint && pnpm format:check"`
+- [ ] T049 [US4] Verify package.json quality scripts (SC-018)
+  - Script: `typecheck` → `nuxi typecheck`
+  - Script: `lint` → `eslint .`
+  - Script: `lint:fix` → `eslint . --fix`
+  - Script: `format` → `prettier --write .`
+  - Script: `format:check` → `prettier --check .`
+  - Script: `quality` → runs all checks
+  - Count: At least 9 essential scripts
 
-### Initial Validation Run
+### Initial Quality Check
 
-- [ ] T060 [US4] Format all existing files
+- [ ] T050 [US4] Format all existing files
   - Run: `pnpm format`
-  - Verify: All files formatted successfully
-  - Review: Check formatting looks correct
+  - Verify: All files formatted
+  - Review: Check formatting is correct
 
-- [ ] T061 [US4] Run linting on existing files
+- [ ] T051 [US4] Run linting on all files (SC-008)
   - Run: `pnpm lint`
-  - Verify: Zero errors (SC-008)
+  - Verify: Zero errors
   - Fix: Any issues found
+  - Document: Results
 
-- [ ] T062 [US4] Run type checking on existing files
+- [ ] T052 [US4] Run type checking (SC-003)
   - Run: `pnpm typecheck`
-  - Verify: Zero type errors (SC-003)
-  - Fix: Any issues found
+  - Verify: Zero type errors
+  - Verify: Strict mode is active
+  - Document: Results
 
-- [ ] T063 [US4] Commit Phase 3 changes with message: "Configure TypeScript, ESLint, and Prettier with strict mode"
+- [ ] T053 [US4] Run full quality check
+  - Run: `pnpm quality`
+  - Verify: All checks pass
+  - Verify: Zero errors across all tools
 
-### Validation Tasks for User Story 4
+### Validation
 
-- [ ] T064 [US4] Validation: Create test TypeScript file
-  - Create: `/test.ts` with sample code including type annotations
+- [ ] T054 [US4] Create test TypeScript file
+  - Create: `/test-typescript.ts` with type annotations
   - Run: `pnpm typecheck`
-  - Verify: Type checking works correctly
-  - Delete: `/test.ts` after test
+  - Verify: Type checking works
+  - Delete: test file after validation
 
-- [ ] T065 [US4] Validation: Test linting catches errors
-  - Create: `/test.ts` with intentional linting issues
+- [ ] T055 [US4] Test linting error detection
+  - Create: `/test-lint.ts` with intentional violations
   - Run: `pnpm lint`
-  - Verify: Linter identifies issues
-  - Delete: `/test.ts` after test
+  - Verify: Errors detected
+  - Delete: test file after validation
 
-- [ ] T066 [US4] Validation: Test formatting works
-  - Create: `/test.ts` with poor formatting
+- [ ] T056 [US4] Test formatting
+  - Create: `/test-format.ts` with poor formatting
   - Run: `pnpm format`
-  - Verify: File is properly formatted
-  - Delete: `/test.ts` after test
+  - Verify: File properly formatted
+  - Delete: test file after validation
 
-- [ ] T067 [US4] Validation: Zero errors on existing code
-  - Run: `pnpm quality` (typecheck + lint + format:check)
-  - Verify: All checks pass with zero errors (SC-003, SC-008)
+- [ ] T057 [US4] Strict mode verification (SC-011)
+  - Open: `/tsconfig.json`
+  - Verify: `"strict": true` is explicitly set
+  - Verify: Not inherited implicitly
+  - Document: Constitution compliance confirmed
 
-- [ ] T068 [US4] Validation: Strict mode verification
-  - Open `/tsconfig.json`
-  - Verify: `"strict": true` is set
-  - This is NON-NEGOTIABLE per constitution
-
-**Checkpoint**: User Story 4 complete - TypeScript configured with strict mode, linting, and formatting
+**Checkpoint Phase 3**: TypeScript strict mode and quality tools operational
 
 ---
 
-## Phase 4: User Story 3 - GitHub Repository Organization (Priority: P3)
+## Phase 4: Enhancement - GitHub Repository Organization (User Story 3 - Priority P3)
 
-**Goal**: Configure GitHub labels for project management
+**Goal**: Configure GitHub labels for effective project management and issue tracking.
 
-**Independent Test**: Check GitHub repository, verify labels exist and follow guidelines
+**Independent Test**: Check GitHub repository, verify ≥8 labels exist following guidelines.
 
-**Note**: This phase requires GitHub API access or web interface access.
+**Success Criteria**: SC-007
 
-### Fetch Current Labels
+**Note**: Requires GitHub API access or web interface.
 
-- [ ] T070 [P] [US3] Query existing GitHub labels
-  - Use: GitHub API or web interface
-  - Document: Current labels (name, color, description)
-  - Save: List for reference
+### Label Analysis
 
-- [ ] T071 [P] [US3] Review `.github/instructions/github-labels.md` guidelines
-  - Read: Label requirements from instructions
+- [ ] T060 [P] [US3] Review `.github/instructions/github-labels.md` guidelines
+  - Read: Complete labeling guidelines
   - Identify: Required label categories
-  - Identify: Suggested labels
+  - Identify: Recommended labels
+  - Document: Current requirements
+
+- [ ] T061 [P] [US3] Query existing GitHub labels
+  - Use: GitHub web interface or API
+  - Document: Current labels (name, color, description)
+  - Identify: Labels to keep vs modify
 
 ### Label Design
 
-- [ ] T072 [US3] Design label structure
-  - Category: Type labels
-    - `type:feature` (color: #0e8a16, green)
-    - `type:bug` (color: #d73a4a, red)
-    - `type:docs` (color: #0075ca, blue)
-    - `type:refactor` (color: #fbca04, yellow)
-    - `type:chore` (color: #fef2c0, light yellow)
+- [ ] T062 [US3] Design type labels
+  - `type:feature` (green #0e8a16) - New features
+  - `type:bug` (red #d73a4a) - Bug fixes
+  - `type:docs` (blue #0075ca) - Documentation
+  - `type:refactor` (yellow #fbca04) - Code refactoring
+  - `type:chore` (light yellow #fef2c0) - Maintenance
 
-- [ ] T073 [US3] Design area labels
-  - `area:infrastructure` (color: #d4c5f9, purple)
-  - `area:clusters` (color: #d4c5f9, purple)
-  - `area:metaverses` (color: #d4c5f9, purple)
-  - `area:auth` (color: #d4c5f9, purple)
-  - Note: More areas will be added as features are developed
+- [ ] T063 [US3] Design area labels
+  - `area:infrastructure` (purple #d4c5f9) - Infrastructure
+  - `area:clusters` (purple #d4c5f9) - Clusters feature
+  - `area:metaverses` (purple #d4c5f9) - Metaverses feature
+  - `area:auth` (purple #d4c5f9) - Authentication
+  - Note: More areas added as features develop
 
-- [ ] T074 [US3] Design priority labels
-  - `priority:P1` (color: #b60205, dark red) - MVP
-  - `priority:P2` (color: #ff9800, orange)
-  - `priority:P3` (color: #fef2c0, light yellow)
+- [ ] T064 [US3] Design priority labels
+  - `priority:P1` (dark red #b60205) - MVP critical
+  - `priority:P2` (orange #ff9800) - Important
+  - `priority:P3` (light yellow #fef2c0) - Nice to have
 
-- [ ] T075 [US3] Design status labels (optional)
-  - `status:blocked` (color: #e99695, light red)
-  - `status:in-progress` (color: #c2e0c6, light green)
-  - `status:review` (color: #bfdadc, light blue)
+- [ ] T065 [US3] Design status labels (optional)
+  - `status:blocked` (light red #e99695) - Blocked
+  - `status:in-progress` (light green #c2e0c6) - In progress
+  - `status:review` (light blue #bfdadc) - In review
 
 ### Label Creation
 
-- [ ] T076 [US3] Create type labels in GitHub
-  - Create: All 5 type labels with correct colors and descriptions
-  - Use: GitHub API or web interface
-  - Verify: Labels appear in repository
+- [ ] T066 [P] [US3] Create type labels in GitHub repository
+  - Create: All 5 type labels via GitHub interface
+  - Set: Correct colors and descriptions
+  - Verify: Labels visible in repository
 
-- [ ] T077 [P] [US3] Create area labels in GitHub
+- [ ] T067 [P] [US3] Create area labels in GitHub repository
   - Create: All 4 initial area labels
-  - Use: GitHub API or web interface
-  - Verify: Labels appear in repository
+  - Set: Correct colors and descriptions
+  - Verify: Labels visible
 
-- [ ] T078 [P] [US3] Create priority labels in GitHub
+- [ ] T068 [P] [US3] Create priority labels in GitHub repository
   - Create: All 3 priority labels
-  - Use: GitHub API or web interface
-  - Verify: Labels appear in repository
+  - Set: Correct colors and descriptions
+  - Verify: Labels visible
 
-- [ ] T079 [P] [US3] Create status labels in GitHub (optional)
-  - Create: All 3 status labels
-  - Use: GitHub API or web interface
-  - Verify: Labels appear in repository
+- [ ] T069 [P] [US3] Create status labels (optional)
+  - Create: All 3 status labels if desired
+  - Set: Correct colors and descriptions
+  - Verify: Labels visible
 
-### Documentation Update
+### Documentation
 
-- [ ] T080 [US3] Add "GitHub Labels" section to `/README.md`
-  - Explain: Label categories (type, area, priority, status)
+- [ ] T070 [US3] Add "GitHub Labels" section to README.md
+  - Explain: Label categories and purpose
   - Explain: When to use each label
-  - Link: To `.github/instructions/github-labels.md`
-  - Provide: Examples of proper label usage
+  - Link: `.github/instructions/github-labels.md`
+  - Examples: Proper label usage
 
-- [ ] T081 [US3] Translate "GitHub Labels" section to Russian in `/README-RU.md`
-  - Translate: Section to Russian
-  - Verify: Line count still matches ±2
+- [ ] T071 [US3] Translate labels section to README-RU.md
+  - Translate: GitHub Labels section
+  - Verify: Line count matches ±2
 
-- [ ] T082 [US3] Commit Phase 4 changes with message: "Configure GitHub repository labels for project management"
+### Validation
 
-### Validation Tasks for User Story 3
+- [ ] T072 [US3] Label count verification (SC-007)
+  - Count: Total GitHub labels
+  - Verify: ≥ 8 labels configured
+  - Document: Actual count and categories
 
-- [ ] T083 [US3] Validation: Label count check
-  - Query: GitHub repository labels
-  - Count: Total number of labels
-  - Verify: At least 8 labels configured (SC-007)
-  - Document: Actual count
+- [ ] T073 [US3] Label category coverage
+  - Verify: Type labels (5)
+  - Verify: Area labels (4+)
+  - Verify: Priority labels (3)
+  - Total: Should be 12+ labels
 
-- [ ] T084 [US3] Validation: Label category coverage
-  - Verify: Type labels present (5 labels)
-  - Verify: Area labels present (4+ labels)
-  - Verify: Priority labels present (3 labels)
+- [ ] T074 [US3] Test label application
+  - Create: Test issue
+  - Apply: Labels from different categories
+  - Verify: Labels apply correctly
+  - Close/delete: Test issue
 
-- [ ] T085 [US3] Validation: Test issue creation with labels
-  - Create: Test issue in GitHub
-  - Apply: Multiple labels from different categories
-  - Verify: Labels can be applied correctly
-  - Close: Test issue after validation
-
-**Checkpoint**: User Story 3 complete - GitHub labels configured for project management
+**Checkpoint Phase 4**: GitHub repository organized with comprehensive labels
 
 ---
 
-## Phase 5: Final Validation & Polish
+## Phase 5: Enhancement - Bilingual Documentation Validation (User Story 5 - Priority P2)
 
-**Purpose**: Verify all user stories complete and all success criteria met
+**Goal**: Implement automated validation for bilingual documentation consistency.
+
+**Independent Test**: Create test docs with mismatched line counts, verify validation detects discrepancy.
+
+**Success Criteria**: SC-004 (automated enforcement)
+
+### Validation Script Creation
+
+- [ ] T080 [P] [US5] Create `/scripts/` directory
+  - Create: `/scripts/` at repository root
+  - Add to: `.gitignore` if scripts are temporary
+  - Or: Keep scripts for CI/CD integration
+
+- [ ] T081 [P] [US5] Create `/scripts/validate-i18n-docs.sh` validation script
+  - Function: Compare line counts of README.md vs README-RU.md
+  - Logic: Calculate difference, check if ≤ 2 lines
+  - Output: Success/failure with line counts
+  - Exit: 0 for success, 1 for failure
+
+- [ ] T082 [US5] Make validation script executable
+  - Run: `chmod +x scripts/validate-i18n-docs.sh`
+  - Test: Run script manually
+  - Verify: Works correctly
+
+### Script Enhancement
+
+- [ ] T083 [P] [US5] Add support for multiple file pairs
+  - Extend: Script to check multiple README pairs
+  - Pattern: Find all `*-RU.md` files, match with base
+  - Report: All mismatches, not just first
+
+- [ ] T084 [P] [US5] Add detailed reporting
+  - Output: Clear success/failure messages
+  - Output: Actual line counts for each file
+  - Output: Difference value
+  - Output: Which files passed/failed
+
+### Documentation
+
+- [ ] T085 [US5] Add validation instructions to README.md
+  - Section: "Bilingual Documentation Validation"
+  - Explain: How to run validation script
+  - Explain: What the script checks (±2 line requirement)
+  - Example: `./scripts/validate-i18n-docs.sh`
+
+- [ ] T086 [US5] Document validation in `.github/instructions/i18n-docs.md`
+  - Add: Automated validation section
+  - Explain: Script usage
+  - Explain: CI integration (future)
+
+- [ ] T087 [US5] Update Russian README with validation info
+  - Translate: Validation sections
+  - Verify: Line count matches ±2
+
+### Validation
+
+- [ ] T088 [US5] Test validation with matching files
+  - Run: Validation script on current READMEs
+  - Verify: Passes (reports success)
+  - Document: Results
+
+- [ ] T089 [US5] Test validation with mismatched files
+  - Create: Test files with >2 line difference
+  - Run: Validation script
+  - Verify: Fails (reports mismatch)
+  - Clean: Delete test files
+
+- [ ] T090 [US5] Test detailed reporting
+  - Run: Validation with verbose output
+  - Verify: Shows line counts for all files
+  - Verify: Clear pass/fail indicators
+
+**Checkpoint Phase 5**: Automated bilingual validation implemented
+
+---
+
+## Phase 6: Final Validation & Completion
+
+**Purpose**: Verify all user stories complete, all success criteria met, create GitHub issue/PR.
 
 ### Cross-Story Validation
 
-- [ ] T090 [P] Validation: All documentation bilingual
-  - Verify: README.md and README-RU.md both exist
-  - Verify: Line counts match within ±2
+- [ ] T095 [P] Final bilingual documentation check
+  - Verify: README.md and README-RU.md exist
+  - Verify: Line counts match ±2
   - Verify: All sections translated
+  - Run: Automated validation script
 
-- [ ] T091 [P] Validation: All configuration files present
-  - Verify: package.json exists and valid
-  - Verify: pnpm-workspace.yaml exists and valid
-  - Verify: tsconfig.json exists with strict mode
-  - Verify: .eslintrc.js exists and valid
-  - Verify: .prettierrc exists and valid
-  - Verify: .gitignore exists and comprehensive
+- [ ] T096 [P] Final configuration verification
+  - Verify: All config files present (package.json, tsconfig.json, etc.)
+  - Verify: All tools configured (ESLint, Prettier, TypeScript)
+  - Verify: Workspace properly configured
 
-- [ ] T092 [P] Validation: Code quality checks pass
+- [ ] T097 [P] Final code quality check
   - Run: `pnpm quality`
   - Verify: Zero type errors (SC-003)
   - Verify: Zero lint errors (SC-008)
-  - Verify: All files formatted correctly
+  - Verify: All files formatted
 
-- [ ] T093 [P] Validation: GitHub repository properly organized
-  - Verify: At least 8 labels exist (SC-007)
-  - Verify: Labels follow guidelines
-  - Verify: Repository description set
+- [ ] T098 [P] Final package structure check
+  - Verify: `/packages/` directory exists (SC-010)
+  - Verify: `.gitkeep` present
+  - Verify: README documents package creation
 
-- [ ] T094 Validation: Fresh clone end-to-end test
-  - Clone: Repository fresh on clean machine
-  - Read: README.md (record time, should be < 5 min) (SC-001)
-  - Install: `pnpm install` (record time, should be < 2 min) (SC-002)
-  - Test: `pnpm quality` (should pass all checks)
-  - Create: Test package following guide (should take < 10 min) (SC-006)
+### Success Criteria Validation
 
-### All Success Criteria Check
+- [ ] T099 Complete success criteria checklist
+  - ✅ SC-001: 5-minute understanding test
+  - ✅ SC-002: 2-minute installation test
+  - ✅ SC-003: Zero type errors
+  - ✅ SC-004: Bilingual line count ±2
+  - ✅ SC-005: All config files present
+  - ✅ SC-006: 10-minute package creation
+  - ✅ SC-007: 8+ GitHub labels
+  - ✅ SC-008: Zero lint errors
+  - ✅ SC-009: Clear documentation
+  - ✅ SC-010: Packages directory visible
+  - Additional: SC-011, SC-018 from enhanced spec
 
-- [ ] T095 Validation: Verify all 10 success criteria
-  - ✅ SC-001: Developer understands project within 5 minutes
-  - ✅ SC-002: Package installation completes within 2 minutes
-  - ✅ SC-003: All source code passes type checking with zero errors
-  - ✅ SC-004: English and Russian READMEs have same line count ±2
-  - ✅ SC-005: All required configuration files present
-  - ✅ SC-006: New package creation takes < 10 minutes
-  - ✅ SC-007: At least 8 properly configured issue labels
-  - ✅ SC-008: Code quality checks complete with zero errors
-  - ✅ SC-009: Documentation clearly distinguishes concepts
-  - ✅ SC-010: Packages directory visible and configured
+### End-to-End Validation
 
-### Documentation Polish
+- [ ] T100 Fresh clone end-to-end test
+  - Clone: Repository to clean location
+  - Read: README.md (time: should be < 5 min)
+  - Install: `pnpm install` (time: should be < 2 min)
+  - Test: `pnpm quality` (should pass)
+  - Create: Test package per guide (time: should be < 10 min)
+  - Document: All timings and results
 
-- [ ] T096 [P] Review and polish all documentation
-  - Review: README.md for clarity and completeness
-  - Review: README-RU.md for translation accuracy
-  - Fix: Any typos or unclear sections
-  - Verify: All links work correctly
+### Documentation Finalization
 
-- [ ] T097 [P] Update specification status
+- [ ] T101 [P] Review and polish README.md
+  - Review: All sections clear and complete
+  - Fix: Typos or unclear sections
+  - Verify: All links work
+  - Verify: Formatting consistent
+
+- [ ] T102 [P] Review and polish README-RU.md
+  - Review: Translation accuracy
+  - Fix: Any translation issues
+  - Verify: Matches English structure
+  - Verify: Line count ±2
+
+- [ ] T103 Update specification status
   - Update: `spec.md` status from "Draft" to "Implemented"
   - Add: Implementation completion date
-  - Add: Link to GitHub PR
+  - Add: Link to final PR
 
-- [ ] T098 Commit final changes with message: "Complete initial setup feature - all success criteria validated"
+### GitHub Issue & PR Creation
 
-### Create GitHub Issue & PR
-
-- [ ] T099 Create GitHub Issue for this feature
+- [ ] T104 Create GitHub Issue for feature completion
   - Follow: `.github/instructions/github-issues.md`
-  - Title: "Initial Universo Platformo Nuxt Setup"
-  - Include: Bilingual description (English + Russian spoiler)
-  - Apply: Labels (type:feature, area:infrastructure, priority:P1)
-  - Link: To specification in `.specify/features/001-initial-setup/`
+  - Title: "Initial Universo Platformo Nuxt Setup - Feature Complete"
+  - Description: Bilingual (English + Russian in spoiler)
+  - Labels: `type:feature`, `area:infrastructure`, `priority:P1`
+  - Link: To specification and this PR
+  - Link: To tasks.md for reference
 
-- [ ] T100 Create Pull Request for this feature
-  - Follow: `.github/instructions/github-pr.md`
-  - Title: "GH#{issue_number} Initial Universo Platformo Nuxt Setup"
-  - Include: Bilingual description (English + Russian spoiler)
-  - Include: "Additional Work" section listing all changes
-  - Reference: `Fixes #{issue_number}`
-  - Request: Review before merge
+- [ ] T105 Update Pull Request description
+  - Update: PR description with final status
+  - Include: All changes summary
+  - Include: Success criteria validation results
+  - Reference: Issue number with "Fixes #N"
+  - Include: Testing evidence
 
-**Checkpoint**: Feature complete - All user stories implemented and validated
+**Checkpoint Phase 6**: Feature complete and ready for merge
 
 ---
 
@@ -590,38 +657,48 @@ This feature establishes the repository root structure:
 
 ### Phase Dependencies
 
-1. **Phase 0 (Prerequisites)**: No dependencies - start immediately
-2. **Phase 1 (US1 - P1)**: Depends on Phase 0 completion
-3. **Phase 2 (US2 - P2)**: Depends on Phase 1 completion (needs README for package documentation)
-4. **Phase 3 (US4 - P2)**: Depends on Phase 1 completion (independent of Phase 2)
-5. **Phase 4 (US3 - P3)**: Depends on Phase 1 completion (independent of Phases 2-3)
-6. **Phase 5 (Final)**: Depends on all user story phases complete
-
-### Optimal Execution Order
-
 ```
-Phase 0: Prerequisites ✓
+Phase 1 (US1 - P1): Repository Foundation
          ↓
-Phase 1: US1 (P1) - Foundation ✓
+    Can start in parallel:
+         ├─→ Phase 2 (US2 - P2): Monorepo Structure
+         ├─→ Phase 3 (US4 - P2): TypeScript Config
+         ├─→ Phase 4 (US3 - P3): GitHub Labels
+         └─→ Phase 5 (US5 - P2): Doc Validation
          ↓
-         ├─→ Phase 2: US2 (P2) - Monorepo ✓
-         │         ↓
-         ├─→ Phase 3: US4 (P2) - TypeScript ✓  [Can run parallel with Phase 2]
-         │         ↓
-         └─→ Phase 4: US3 (P3) - GitHub Labels ✓  [Can run parallel with Phases 2-3]
-                   ↓
-         Phase 5: Final Validation ✓
+Phase 6: Final Validation & Completion
 ```
+
+### Critical Path
+
+**Sequential (minimum time)**:
+1. Phase 1: Foundation (4-6 hours)
+2. Phase 2: Monorepo (3-4 hours)
+3. Phase 6: Validation (2-3 hours)
+
+**Total: 9-13 hours minimum**
 
 ### Parallel Opportunities
 
-After Phase 1 completes, these can run in parallel (if multiple developers):
+**After Phase 1 completes** (with 4 developers):
+- Developer A: Phase 2 (Monorepo) - 3-4 hours
+- Developer B: Phase 3 (TypeScript) - 3-4 hours
+- Developer C: Phase 4 (GitHub Labels) - 2-3 hours
+- Developer D: Phase 5 (Doc Validation) - 2-3 hours
 
-- Phase 2 (US2) - One developer works on monorepo setup
-- Phase 3 (US4) - Another developer works on TypeScript configuration
-- Phase 4 (US3) - Another developer works on GitHub labels
+**Parallel completion: ~4 hours after Phase 1**
 
-Tasks marked [P] within each phase can run in parallel.
+**Total with parallelism: ~10-11 hours**
+
+### Within-Phase Parallelism
+
+Tasks marked `[P]` can run simultaneously:
+- Phase 1: 10 parallel tasks (T001-T010)
+- Phase 2: 3 parallel tasks
+- Phase 3: 9 parallel tasks (T040-T048)
+- Phase 4: 8 parallel tasks
+- Phase 5: 4 parallel tasks
+- Phase 6: 4 parallel tasks
 
 ---
 
@@ -629,55 +706,80 @@ Tasks marked [P] within each phase can run in parallel.
 
 ### MVP-First Approach (Recommended)
 
-1. ✅ Complete Phase 0: Prerequisites
-2. ✅ Complete Phase 1: US1 (P1) - Repository Foundation
-3. **STOP and VALIDATE**: Can developers understand the project?
-4. ✅ Complete Phase 2: US2 (P2) - Monorepo
-5. **STOP and VALIDATE**: Can workspace be installed and used?
-6. ✅ Complete Phase 3: US4 (P2) - TypeScript
-7. **STOP and VALIDATE**: Do code quality checks pass?
-8. ✅ Complete Phase 4: US3 (P3) - GitHub Labels
-9. **STOP and VALIDATE**: Are labels configured correctly?
-10. ✅ Complete Phase 5: Final Validation
-11. ✅ Create Issue and PR
+1. **Complete Phase 1** (US1 - P1)
+   - STOP: Validate developers understand project
+   - Decision: Continue or adjust documentation
 
-### Incremental Delivery
+2. **Complete Phase 2** (US2 - P2)
+   - STOP: Validate workspace installation works
+   - Decision: Continue or fix workspace issues
 
-Each phase represents a deliverable milestone:
+3. **Complete Phase 3** (US4 - P2)
+   - STOP: Validate code quality checks pass
+   - Decision: Continue or fix configuration
 
-- **After Phase 1**: Repository has documentation, can be read and understood
-- **After Phase 2**: Repository has workspace, packages can be added
-- **After Phase 3**: Repository has type checking, code quality enforced
-- **After Phase 4**: Repository has project management labels
-- **After Phase 5**: Repository is production-ready for feature development
+4. **Optional: Phases 4-5** (US3 - P3, US5 - P2)
+   - These enhance but aren't critical
+   - Can defer if time constrained
+
+5. **Complete Phase 6**
+   - Final validation
+   - Create issue and update PR
+   - Request review
+
+### Incremental Delivery Milestones
+
+- **Milestone 1** (Phase 1): Repository readable and understandable
+- **Milestone 2** (Phase 2): Packages can be added and managed
+- **Milestone 3** (Phase 3): Code quality enforced
+- **Milestone 4** (Phase 4-5): Management and validation tools
+- **Milestone 5** (Phase 6): Production-ready foundation
+
+Each milestone is independently valuable and deployable.
 
 ---
 
 ## Notes
 
-- [P] tasks can run in parallel (different files, no dependencies between them)
-- [US1], [US2], [US3], [US4] labels map tasks to user stories for traceability
-- Each user story is independently testable and deliverable
-- Phase 1 (US1-P1) is MVP and must be completed first
-- Phases 2-4 (US2-P2, US4-P2, US3-P3) can run in parallel after Phase 1
-- Commit after completing each phase for clean history
-- Stop at checkpoints to validate each user story independently
-- All 10 success criteria must pass before feature is considered complete
-- Create GitHub Issue and PR only after all validation passes
+- **[P] tasks**: Can run in parallel (different files, no blocking dependencies)
+- **[Story] labels**: Map tasks to user stories for traceability (US1-US5)
+- **File paths**: All paths absolute from repository root
+- **Checkpoints**: Stop and validate after each phase
+- **Commit frequency**: Commit after completing each phase or logical task group
+- **Validation**: Run quality checks frequently during implementation
+- **Constitution**: All tasks comply with project constitution principles
+- **Bilingual**: NON-NEGOTIABLE - both English and Russian always updated together
 
 ---
 
 ## Estimated Effort
 
-- Phase 0: 0.5 hours (prerequisites check)
+### By Phase
 - Phase 1 (US1): 4-6 hours (documentation, configuration)
-- Phase 2 (US2): 3-4 hours (monorepo setup)
+- Phase 2 (US2): 3-4 hours (monorepo setup, workspace)
 - Phase 3 (US4): 3-4 hours (TypeScript, linting, formatting)
 - Phase 4 (US3): 2-3 hours (GitHub labels)
-- Phase 5: 2-3 hours (validation, polish, Issue/PR)
+- Phase 5 (US5): 2-3 hours (validation script)
+- Phase 6: 2-3 hours (final validation, issue/PR)
 
-**Total**: 15-20 hours
+### Total
+- **Sequential**: 16-23 hours
+- **With 4 developers**: 10-11 hours
+- **MVP only** (Phases 1-3, 6): 11-16 hours
 
-**Critical Path**: Phase 0 → Phase 1 → Phase 2 → Phase 5 (11-14 hours minimum)
+### Task Count
+- **Total tasks**: 105
+- **Parallelizable**: 34 tasks marked [P]
+- **Per user story**:
+  - US1 (P1): 18 tasks
+  - US2 (P2): 13 tasks
+  - US4 (P2): 18 tasks
+  - US3 (P3): 15 tasks
+  - US5 (P2): 11 tasks
+  - Final: 10 tasks
 
-With parallel execution (3 developers): Can complete in ~8-10 hours
+---
+
+**Generated**: Based on spec.md, plan.md, and research.md  
+**Last Updated**: 2025-11-18  
+**Status**: Ready for implementation
