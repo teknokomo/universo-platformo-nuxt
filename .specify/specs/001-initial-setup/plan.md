@@ -1,7 +1,7 @@
 # Implementation Plan: Initial Universo Platformo Nuxt Setup
 
 **Branch**: `001-initial-setup` | **Date**: 2025-11-15 | **Spec**: [spec.md](./spec.md)  
-**Input**: Feature specification from `.specify/features/001-initial-setup/spec.md`
+**Input**: Feature specification from `.specify/specs/001-initial-setup/spec.md`
 
 ## Summary
 
@@ -51,7 +51,7 @@ All constitution principles are fully compliant for this feature. No technology 
 ### Documentation (this feature)
 
 ```text
-.specify/features/001-initial-setup/
+.specify/specs/001-initial-setup/
 ├── spec.md              # Feature specification (exists)
 ├── plan.md              # This file (implementation plan)
 ├── tasks.md             # Task breakdown (to be created by /speckit.tasks)
@@ -154,7 +154,7 @@ This is the minimal setup required before any feature development can begin. Fut
      - Getting started guide (installation, development)
      - Future roadmap (three-entity pattern: Clusters/Domains/Resources)
      - Link to constitution (`.specify/memory/constitution.md`)
-     - Link to specifications (`.specify/features/`)
+     - Link to specifications (`.specify/specs/`)
 
 4. **Documentation - Russian (Translation)**
    - Create `README-RU.md` as exact translation of README.md
@@ -490,7 +490,7 @@ Before marking this feature complete, verify all 10 success criteria:
 ### Internal Dependencies
 
 - Constitution exists (✅ `.specify/memory/constitution.md`)
-- Specification exists (✅ `.specify/features/001-initial-setup/spec.md`)
+- Specification exists (✅ `.specify/specs/001-initial-setup/spec.md`)
 - This plan.md exists (✅ this file)
 - Tasks.md will be created by `/speckit.tasks` command
 
