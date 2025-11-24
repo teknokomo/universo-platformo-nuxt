@@ -364,7 +364,7 @@ Detailed architectural patterns adopted from Universo Platformo React:
 
 ### Specifications
 
-Feature specifications and plans are located in [.specify/features/](./.specify/features/).
+Feature specifications and plans are located in [.specify/specs/](./.specify/specs/).
 
 Each feature includes:
 

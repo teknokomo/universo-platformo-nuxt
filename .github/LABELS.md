@@ -138,4 +138,4 @@ This exceeds the minimum requirement of 8 labels (SC-007) specified in the succe
 
 - Complete labeling guidelines: [.github/instructions/github-labels.md](../.github/instructions/github-labels.md)
 - Project constitution: [.specify/memory/constitution.md](../.specify/memory/constitution.md)
-- Feature specification: [.specify/features/001-initial-setup/spec.md](../.specify/features/001-initial-setup/spec.md)
+- Feature specification: [.specify/specs/001-initial-setup/spec.md](../.specify/specs/001-initial-setup/spec.md)

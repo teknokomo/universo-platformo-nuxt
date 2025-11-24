@@ -1,6 +1,6 @@
 # Tasks: Initial Universo Platformo Nuxt Setup
 
-**Input**: Design documents from `.specify/features/001-initial-setup/`  
+**Input**: Design documents from `.specify/specs/001-initial-setup/`  
 **Prerequisites**: plan.md (✅), spec.md (✅), research.md (✅)
 
 **Tests**: Configuration validation tests included. No traditional unit/integration tests needed for this infrastructure feature.
@@ -19,7 +19,7 @@ Repository root structure for initial setup:
 - Configuration: `/package.json`, `/tsconfig.json`, `/.eslintrc.cjs`, etc.
 - Documentation: `/README.md`, `/README-RU.md`
 - Workspace: `/packages/` (initially empty with `.gitkeep`)
-- Specifications: `/.specify/features/001-initial-setup/`
+- Specifications: `/.specify/specs/001-initial-setup/`
 
 ---
 
@@ -93,7 +93,7 @@ Repository root structure for initial setup:
 - [ ] T010 [P] [US1] Add "Documentation & Governance" section in `/README.md`
   - Link to constitution: `.specify/memory/constitution.md`
   - Link to architectural patterns (English & Russian)
-  - Link to specifications: `.specify/features/`
+  - Link to specifications: `.specify/specs/`
   - Link to GitHub instructions: `.github/instructions/`
   - Explain bilingual documentation requirement
 

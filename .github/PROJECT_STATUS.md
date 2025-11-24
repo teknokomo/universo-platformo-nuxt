@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-The foundational setup for Universo Platformo Nuxt has been successfully completed following the specification-driven development workflow outlined in `.specify/features/001-initial-setup/`. All phases have been implemented, all success criteria have been met, and the project is ready for feature development.
+The foundational setup for Universo Platformo Nuxt has been successfully completed following the specification-driven development workflow outlined in `.specify/specs/001-initial-setup/`. All phases have been implemented, all success criteria have been met, and the project is ready for feature development.
 
 ## Implementation Phases
 
@@ -99,9 +99,9 @@ All six core principles of the project constitution have been followed:
 
 ### ✅ II. Specification-Driven Development
 
-- Complete specification exists: `.specify/features/001-initial-setup/spec.md`
-- Implementation plan followed: `.specify/features/001-initial-setup/plan.md`
-- Task breakdown documented: `.specify/features/001-initial-setup/tasks.md`
+- Complete specification exists: `.specify/specs/001-initial-setup/spec.md`
+- Implementation plan followed: `.specify/specs/001-initial-setup/plan.md`
+- Task breakdown documented: `.specify/specs/001-initial-setup/tasks.md`
 - All phases executed according to specification
 
 ### ✅ III. Bilingual Documentation (NON-NEGOTIABLE)
