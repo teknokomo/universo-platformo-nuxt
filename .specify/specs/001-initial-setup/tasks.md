@@ -904,7 +904,7 @@ Each milestone is independently valuable and deployable.
 - **Bilingual**: NON-NEGOTIABLE - both English and Russian always updated together
 - **Package Structure**: This feature documents the optimal modular structure; actual packages created in subsequent features
 - **React Reference**: Use [universo-platformo-react](https://github.com/teknokomo/universo-platformo-react) as CONCEPT reference, not code to copy
-- **Avoid Monoliths**: Create focused packages from start (unlike React version's flowise-components/flowise-server that need splitting)
+- **Modular Design**: Create focused, single-purpose packages from the start for better maintainability and future extraction
 
 ---
 
