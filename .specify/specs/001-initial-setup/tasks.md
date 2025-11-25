@@ -7,7 +7,7 @@
 
 **Organization**: Tasks grouped by user story (US1-US5) to enable independent implementation and testing. Priority order: P1 → P2 → P3.
 
-**Updated**: 2025-11-24 - Enhanced to reflect optimal modular package structure based on universo-platformo-react analysis
+**Updated**: 2025-11-25 - Enhanced with comprehensive package structure aligned with universo-platformo-react (added missing packages: projects, storages, analytics, multiplayer; expanded node-components with detailed node categories; added flowise-* legacy migration note)
 
 ## Format: `- [ ] [TaskID] [P?] [Story?] Description with file path`
 
@@ -26,28 +26,39 @@ Repository root structure for initial setup:
 **Future Package Structure** (documented for context, not implemented in this feature):
 ```
 packages/
-├── auth-frt/base/          # Authentication UI components
-├── auth-srv/base/          # Passport.js + Supabase backend
-├── clusters-frt/base/      # Clusters management frontend
-├── clusters-srv/base/      # Clusters backend API
-├── metaverses-frt/base/    # Metaverses management frontend
-├── metaverses-srv/base/    # Metaverses backend API
-├── uniks-frt/base/         # Workspace management frontend
-├── uniks-srv/base/         # Workspace backend API
-├── spaces-frt/base/        # Spaces/Canvases frontend
-├── spaces-srv/base/        # Spaces backend API
-├── space-builder-frt/base/ # AI-powered space builder frontend
-├── space-builder-srv/base/ # Space builder LLM integration
-├── publish-frt/base/       # Publication system frontend
-├── publish-srv/base/       # Publication backend
-├── updl/base/              # UPDL node definitions
-├── node-components/base/   # LangChain and custom node library
+├── auth-frt/base/              # Authentication UI components
+├── auth-srv/base/              # Passport.js + Supabase backend
+├── clusters-frt/base/          # Clusters management frontend
+├── clusters-srv/base/          # Clusters backend API
+├── metaverses-frt/base/        # Metaverses management frontend
+├── metaverses-srv/base/        # Metaverses backend API
+├── uniks-frt/base/             # Workspace management frontend (equiv. to organizations)
+├── uniks-srv/base/             # Workspace backend API
+├── projects-frt/base/          # Project management frontend
+├── projects-srv/base/          # Project management backend
+├── spaces-frt/base/            # Spaces/Canvases frontend
+├── spaces-srv/base/            # Spaces backend API
+├── space-builder-frt/base/     # AI-powered space builder frontend
+├── space-builder-srv/base/     # Space builder LLM integration
+├── publish-frt/base/           # Publication system frontend
+├── publish-srv/base/           # Publication backend
+├── profile-frt/base/           # User profile frontend
+├── profile-srv/base/           # User profile backend
+├── storages-frt/base/          # File storage frontend
+├── storages-srv/base/          # File storage backend
+├── analytics-frt/base/         # Analytics dashboard
+├── multiplayer-srv/base/       # Real-time multiplayer (Colyseus)
+├── updl/base/                  # UPDL node definitions
+├── node-components/base/       # LangChain and custom node library
 ├── @universo/
-│   ├── types/              # Shared TypeScript types
-│   ├── utils/              # Shared utilities
-│   ├── api-client/         # API client library
-│   └── i18n/               # Internationalization
-└── template-{name}/base/   # Template packages (MMOOMM, Quiz, etc.)
+│   ├── types/                  # Shared TypeScript types
+│   ├── utils/                  # Shared utilities
+│   ├── api-client/             # API client library
+│   ├── i18n/                   # Internationalization
+│   ├── template-vuetify/       # Vuetify 3 components and themes
+│   └── rest-docs/              # REST API documentation
+├── template-mmoomm/base/       # PlayCanvas MMO template
+└── template-quiz/base/         # AR.js quiz template
 ```
 
 ---
@@ -69,19 +80,34 @@ packages/
 - `auth-frt` + `auth-srv`: Authentication pages and session management
 - `clusters-frt` + `clusters-srv`: Clusters/Domains/Resources (Three-entity pattern foundation)
 - `metaverses-frt` + `metaverses-srv`: Metaverses/Sections/Entities (Three-entity pattern)
-- `uniks-frt` + `uniks-srv`: Workspace management (conceptual equivalent to organizations)
+- `uniks-frt` + `uniks-srv`: Workspace management (conceptual equivalent to React's organizations)
 - `spaces-frt` + `spaces-srv`: Spaces/Canvases flow editor
 - `space-builder-frt` + `space-builder-srv`: AI-powered prompt-to-flow generation
 - `publish-frt` + `publish-srv`: Application publishing and export system
 - `profile-frt` + `profile-srv`: User profile management
+- `projects-frt` + `projects-srv`: Project management within workspaces
+- `storages-frt` + `storages-srv`: File storage and asset management
+- `analytics-frt`: Analytics dashboard and metrics visualization
+
+**Multiplayer & Real-time Packages**:
+- `multiplayer-srv/base`: Real-time multiplayer server (Colyseus-based)
 
 **Node System Packages**:
 - `updl/base`: UPDL node definitions (Entity, Component, Action, Event, Data, Space, Universo)
-- `node-components/base`: Node library including:
-  - LangChain integration nodes (LLMs, chains, agents, tools)
-  - Custom AI nodes
-  - Data processing nodes
-  - Integration nodes
+- `node-components/base`: Comprehensive node library including:
+  - **LLM Nodes**: ChatOpenAI, ChatAnthropic, ChatGoogle, local models
+  - **Chain Nodes**: LLMChain, SequentialChain, ConversationChain
+  - **Agent Nodes**: OpenAI Functions Agent, ReAct Agent, Plan-and-Execute
+  - **Tool Nodes**: Calculator, WebBrowser, Custom API, SerpAPI
+  - **Memory Nodes**: BufferMemory, ConversationSummary, Redis, Postgres
+  - **Vector Store Nodes**: Pinecone, Supabase, Chroma, FAISS
+  - **Embeddings Nodes**: OpenAI, HuggingFace, Cohere
+  - **Document Loader Nodes**: PDF, CSV, JSON, Web Scraper, Notion
+  - **Text Splitter Nodes**: Character, Recursive, Token-based
+  - **Cache Nodes**: InMemory, Redis, Upstash
+  - **Output Parser Nodes**: Structured, List, DateTime
+  - **Custom AI Nodes**: Universo-specific integrations
+  - **Data Processing Nodes**: Transform, Filter, Aggregate
 
 **Shared Utility Packages** (scoped with `@universo/`):
 - `@universo/types`: Shared TypeScript interfaces and types
@@ -89,11 +115,18 @@ packages/
 - `@universo/api-client`: Type-safe API client for backend services
 - `@universo/i18n`: Centralized internationalization (EN/RU)
 - `@universo/template-vuetify`: Vuetify 3 component library and themes
+- `@universo/rest-docs`: REST API documentation generator
 
 **Template Packages**:
 - `template-mmoomm/base`: PlayCanvas MMO space template
 - `template-quiz/base`: AR.js quiz template
 - `template-{future}/base`: Additional templates as needed
+
+**Note on Legacy Flowise Packages**: The React repository contains `flowise-*` prefixed packages (flowise-components, flowise-server, flowise-ui, etc.) which are legacy packages from the original Flowise project. In this Nuxt implementation, we DO NOT create flowise-prefixed packages. Instead:
+- `flowise-components` functionality → absorbed into `node-components/base` and `spaces-frt` + `spaces-srv`
+- `flowise-server` functionality → absorbed into `spaces-srv` and feature-specific `-srv` packages
+- `flowise-ui` functionality → absorbed into `spaces-frt` and `@universo/template-vuetify`
+- `flowise-store` functionality → absorbed into `storages-frt` + `storages-srv`
 
 ### Implementation Roadmap (Post-Initial Setup)
 
@@ -103,7 +136,9 @@ packages/
 - TypeScript strict mode setup
 - Base tooling and quality checks
 
-**Phase 2: Authentication** (Feature 002)
+**Phase 2: Shared Foundation & Authentication** (Feature 002)
+- `@universo/types`: Shared TypeScript interfaces (required by all features)
+- `@universo/utils`: Common utility functions
 - `auth-frt`: Login/register pages, session guards
 - `auth-srv`: Passport.js + Supabase integration
 - Session management and middleware
@@ -111,9 +146,11 @@ packages/
 **Phase 3: Three-Entity Pattern Foundation** (Feature 003)
 - `clusters-frt` + `clusters-srv`: First implementation of Clusters/Domains/Resources pattern
 - Establishes pattern that will be replicated in Metaverses and other features
+- `@universo/api-client`: Type-safe API client (foundation for all API calls)
 
-**Phase 4: Workspace Management** (Feature 004)
-- `uniks-frt` + `uniks-srv`: Workspace creation and management
+**Phase 4: Workspace & Project Management** (Feature 004)
+- `uniks-frt` + `uniks-srv`: Workspace creation and management (equivalent to React's organizations)
+- `projects-frt` + `projects-srv`: Project management within workspaces
 - Multi-user collaboration preparation
 
 **Phase 5: Metaverses** (Feature 005)
@@ -122,26 +159,45 @@ packages/
 
 **Phase 6: Spaces & Node System** (Feature 006)
 - `spaces-frt` + `spaces-srv`: Visual flow editor (Spaces/Canvases)
-- `updl/base`: UPDL node definitions
-- `node-components/base`: Initial node library (subset of LangChain nodes)
+- `updl/base`: UPDL node definitions (Entity, Component, Action, Event, Data, Space, Universo)
+- `node-components/base`: Initial node library with core LangChain nodes:
+  - LLM Nodes (ChatOpenAI, ChatAnthropic)
+  - Chain Nodes (LLMChain, ConversationChain)
+  - Memory Nodes (BufferMemory, ConversationSummary)
+  - Basic Tool Nodes (Calculator, Custom API)
 
 **Phase 7: Node Library Expansion** (Feature 007)
-- Expand `node-components/base` with comprehensive LangChain integration
-- Add custom AI nodes
+- Expand `node-components/base` with full LangChain integration:
+  - Agent Nodes (OpenAI Functions, ReAct, Plan-and-Execute)
+  - Vector Store Nodes (Pinecone, Supabase, Chroma, FAISS)
+  - Embeddings Nodes (OpenAI, HuggingFace, Cohere)
+  - Document Loader Nodes (PDF, CSV, JSON, Web Scraper)
+  - Text Splitter Nodes (Character, Recursive, Token-based)
+  - Cache Nodes (InMemory, Redis, Upstash)
+  - Output Parser Nodes (Structured, List, DateTime)
+- Add custom AI nodes for Universo-specific integrations
 - Add data processing and integration nodes
 
 **Phase 8: AI Space Builder** (Feature 008)
 - `space-builder-frt` + `space-builder-srv`: Prompt-to-flow AI generation
 - LLM integration for automated space creation
 
-**Phase 9: Publishing System** (Feature 009)
+**Phase 9: Publishing & Storage System** (Feature 009)
 - `publish-frt` + `publish-srv`: Export and publication functionality
+- `storages-frt` + `storages-srv`: File storage and asset management
 - `template-mmoomm/base`: PlayCanvas MMO template
 - `template-quiz/base`: AR.js quiz template
 
-**Phase 10: Profiles & Additional Features** (Feature 010+)
+**Phase 10: Profiles & Analytics** (Feature 010)
 - `profile-frt` + `profile-srv`: User profile management
+- `analytics-frt`: Analytics dashboard and metrics visualization
+- `@universo/rest-docs`: REST API documentation generator
+
+**Phase 11: Multiplayer & Advanced Features** (Feature 011+)
+- `multiplayer-srv/base`: Real-time multiplayer server (Colyseus-based)
 - Additional templates and integrations
+- `@universo/template-vuetify` enhancements
+- `@universo/i18n`: Full internationalization setup
 - Advanced features as needed
 
 ### Reference Monitoring
@@ -924,7 +980,7 @@ Each milestone is independently valuable and deployable.
 - **MVP only** (Phases 1-3, 6): 11-16 hours
 
 ### Task Count
-- **Total tasks**: 105
+- **Total tasks**: 87
 - **Parallelizable**: 34 tasks marked [P]
 - **Per user story**:
   - US1 (P1): 18 tasks
@@ -932,10 +988,10 @@ Each milestone is independently valuable and deployable.
   - US4 (P2): 18 tasks
   - US3 (P3): 15 tasks
   - US5 (P2): 11 tasks
-  - Final: 10 tasks
+  - Final: 12 tasks
 
 ---
 
 **Generated**: Based on spec.md, plan.md, research.md, and universo-platformo-react analysis  
-**Last Updated**: 2025-11-24  
-**Status**: Enhanced with optimal modular package structure - Ready for implementation
+**Last Updated**: 2025-11-25  
+**Status**: Enhanced with comprehensive modular package structure aligned with universo-platformo-react - Ready for implementation

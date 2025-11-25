@@ -1,31 +1,20 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.2.0 → 1.3.0
-Rationale: Minor version - strengthened modular architecture enforcement with explicit prohibitions against non-package implementations
+Version Change: 1.3.0 → 1.3.1
+Rationale: Patch version - corrected UI framework reference from template-mui (React) to template-vuetify (Vue/Nuxt)
 
 Modified Principles:
-  - Principle I (Monorepo): Added CRITICAL PROHIBITION section forbidding non-package implementations
-  - Principle I (Monorepo): Added explicit migration strategy for future package extraction
-  - Principle I (Monorepo): Strengthened enforcement language throughout
+  - Principle VII (Utility Package Organization): Changed @universo/template-mui to @universo/template-vuetify
 
-Added Sections:
-  - CRITICAL PROHIBITION: Non-Package Implementations section under Principle I
-  - Future Repository Separation Strategy under Principle I
-  - Package extraction requirements and guidelines
+Clarification:
+  - MUI (Material UI) is a React-specific library
+  - Vuetify 3 is the Vue-native Material Design library for Nuxt projects
+  - This change aligns constitution with the actual technology stack (Vue/Nuxt)
 
-Removed Sections: None
-
-Templates Status:
-  ✅ All templates remain aligned
-  ⚠️ Implementation plans MUST verify all features are package-based
-  ⚠️ Code reviews MUST reject non-package implementations
-
-Follow-up TODOs:
-  - Update all implementation plans to explicitly verify package placement
-  - Add automated checks to prevent code outside packages/ directory
-  - Document package extraction workflow for future repository separation
-  - Create package creation wizard/script to enforce structure
+Previous Version (1.3.0):
+  Ratified: 2025-11-17
+  Minor version - strengthened modular architecture enforcement with explicit prohibitions against non-package implementations
 
 Previous Version (1.2.0):
   Ratified: 2025-11-17
@@ -228,7 +217,7 @@ Consistent naming with scope prefixes prevents package name conflicts and clearl
 - **@universo/utils**: Common utility functions and helpers
 - **@universo/api-client**: Shared API client library for backend communication
 - **@universo/i18n**: Internationalization configuration and namespace management
-- **@universo/template-mui** (or equivalent): Shared UI components and templates
+- **@universo/template-vuetify**: Shared UI components and templates (Vuetify 3 for Vue/Nuxt)
 
 **Requirements**:
 
@@ -503,4 +492,4 @@ This constitution supersedes all other development practices, guidelines, and co
 - Team members MAY propose amendments through normal GitHub Issue process
 - Historical versions MUST be preserved in git history
 
-**Version**: 1.3.0 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-17
+**Version**: 1.3.1 | **Ratified**: 2025-11-15 | **Last Amended**: 2025-11-25
