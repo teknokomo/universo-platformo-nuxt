@@ -7,6 +7,8 @@
 
 **Organization**: Tasks grouped by user story (US1-US5) to enable independent implementation and testing. Priority order: P1 → P2 → P3.
 
+**Updated**: 2025-11-24 - Enhanced to reflect optimal modular package structure based on universo-platformo-react analysis
+
 ## Format: `- [ ] [TaskID] [P?] [Story?] Description with file path`
 
 - **[P]**: Parallelizable (different files, no dependencies)
@@ -20,6 +22,140 @@ Repository root structure for initial setup:
 - Documentation: `/README.md`, `/README-RU.md`
 - Workspace: `/packages/` (initially empty with `.gitkeep`)
 - Specifications: `/.specify/specs/001-initial-setup/`
+
+**Future Package Structure** (documented for context, not implemented in this feature):
+```
+packages/
+├── auth-frt/base/          # Authentication UI components
+├── auth-srv/base/          # Passport.js + Supabase backend
+├── clusters-frt/base/      # Clusters management frontend
+├── clusters-srv/base/      # Clusters backend API
+├── metaverses-frt/base/    # Metaverses management frontend
+├── metaverses-srv/base/    # Metaverses backend API
+├── uniks-frt/base/         # Workspace management frontend
+├── uniks-srv/base/         # Workspace backend API
+├── spaces-frt/base/        # Spaces/Canvases frontend
+├── spaces-srv/base/        # Spaces backend API
+├── space-builder-frt/base/ # AI-powered space builder frontend
+├── space-builder-srv/base/ # Space builder LLM integration
+├── publish-frt/base/       # Publication system frontend
+├── publish-srv/base/       # Publication backend
+├── updl/base/              # UPDL node definitions
+├── node-components/base/   # LangChain and custom node library
+├── @universo/
+│   ├── types/              # Shared TypeScript types
+│   ├── utils/              # Shared utilities
+│   ├── api-client/         # API client library
+│   └── i18n/               # Internationalization
+└── template-{name}/base/   # Template packages (MMOOMM, Quiz, etc.)
+```
+
+---
+
+## 📋 Package Structure Strategy
+
+**Context**: This repository creates a Nuxt.js implementation of Universo Platformo that replicates the functionality of [universo-platformo-react](https://github.com/teknokomo/universo-platformo-react) with optimal modular architecture from the start.
+
+### Key Architectural Principles
+
+1. **Frontend/Backend Separation**: All features with both UI and API split into `-frt` (frontend) and `-srv` (server/backend) packages
+2. **base/ Folder Convention**: Every package contains `/base/` directory to support future multiple implementations
+3. **Avoid Monolithic Packages**: Unlike the React version which has large `flowise-components` and `flowise-server` packages that need splitting, we create focused packages from the beginning
+4. **Independent Packages**: Each package should be ready to extract into a separate repository with minimal changes
+
+### Package Categories
+
+**Core Feature Packages** (frontend + backend pairs):
+- `auth-frt` + `auth-srv`: Authentication pages and session management
+- `clusters-frt` + `clusters-srv`: Clusters/Domains/Resources (Three-entity pattern foundation)
+- `metaverses-frt` + `metaverses-srv`: Metaverses/Sections/Entities (Three-entity pattern)
+- `uniks-frt` + `uniks-srv`: Workspace management (conceptual equivalent to organizations)
+- `spaces-frt` + `spaces-srv`: Spaces/Canvases flow editor
+- `space-builder-frt` + `space-builder-srv`: AI-powered prompt-to-flow generation
+- `publish-frt` + `publish-srv`: Application publishing and export system
+- `profile-frt` + `profile-srv`: User profile management
+
+**Node System Packages**:
+- `updl/base`: UPDL node definitions (Entity, Component, Action, Event, Data, Space, Universo)
+- `node-components/base`: Node library including:
+  - LangChain integration nodes (LLMs, chains, agents, tools)
+  - Custom AI nodes
+  - Data processing nodes
+  - Integration nodes
+
+**Shared Utility Packages** (scoped with `@universo/`):
+- `@universo/types`: Shared TypeScript interfaces and types
+- `@universo/utils`: Shared utility functions and helpers
+- `@universo/api-client`: Type-safe API client for backend services
+- `@universo/i18n`: Centralized internationalization (EN/RU)
+- `@universo/template-vuetify`: Vuetify 3 component library and themes
+
+**Template Packages**:
+- `template-mmoomm/base`: PlayCanvas MMO space template
+- `template-quiz/base`: AR.js quiz template
+- `template-{future}/base`: Additional templates as needed
+
+### Implementation Roadmap (Post-Initial Setup)
+
+**Phase 1: Foundation** (Feature 001 - This feature)
+- Repository structure and documentation
+- PNPM workspace configuration
+- TypeScript strict mode setup
+- Base tooling and quality checks
+
+**Phase 2: Authentication** (Feature 002)
+- `auth-frt`: Login/register pages, session guards
+- `auth-srv`: Passport.js + Supabase integration
+- Session management and middleware
+
+**Phase 3: Three-Entity Pattern Foundation** (Feature 003)
+- `clusters-frt` + `clusters-srv`: First implementation of Clusters/Domains/Resources pattern
+- Establishes pattern that will be replicated in Metaverses and other features
+
+**Phase 4: Workspace Management** (Feature 004)
+- `uniks-frt` + `uniks-srv`: Workspace creation and management
+- Multi-user collaboration preparation
+
+**Phase 5: Metaverses** (Feature 005)
+- `metaverses-frt` + `metaverses-srv`: Second implementation of three-entity pattern
+- Demonstrates pattern reusability
+
+**Phase 6: Spaces & Node System** (Feature 006)
+- `spaces-frt` + `spaces-srv`: Visual flow editor (Spaces/Canvases)
+- `updl/base`: UPDL node definitions
+- `node-components/base`: Initial node library (subset of LangChain nodes)
+
+**Phase 7: Node Library Expansion** (Feature 007)
+- Expand `node-components/base` with comprehensive LangChain integration
+- Add custom AI nodes
+- Add data processing and integration nodes
+
+**Phase 8: AI Space Builder** (Feature 008)
+- `space-builder-frt` + `space-builder-srv`: Prompt-to-flow AI generation
+- LLM integration for automated space creation
+
+**Phase 9: Publishing System** (Feature 009)
+- `publish-frt` + `publish-srv`: Export and publication functionality
+- `template-mmoomm/base`: PlayCanvas MMO template
+- `template-quiz/base`: AR.js quiz template
+
+**Phase 10: Profiles & Additional Features** (Feature 010+)
+- `profile-frt` + `profile-srv`: User profile management
+- Additional templates and integrations
+- Advanced features as needed
+
+### Reference Monitoring
+
+**Active monitoring of universo-platformo-react**:
+- Track new features for implementation in Nuxt version
+- Identify improved patterns and architectural decisions
+- Avoid copying legacy code or unfinished features
+- Adapt concepts to Nuxt.js best practices
+
+**Key React packages to reference**:
+- [flowise-components](https://github.com/teknokomo/universo-platformo-react/tree/main/packages/flowise-components) - Node library structure
+- [updl/base](https://github.com/teknokomo/universo-platformo-react/tree/main/packages/updl/base) - UPDL node definitions
+- All `-frt`/`-srv` package pairs - Frontend/backend separation patterns
 
 ---
 
@@ -83,12 +219,21 @@ Repository root structure for initial setup:
   - Step 4: Run `pnpm install`
   - Estimated time: < 10 minutes
 
-- [ ] T009 [P] [US1] Add "Future Roadmap" section in `/README.md`
-  - Phase 1: Foundation (current - repository setup)
-  - Phase 2: Core Features (Clusters - first implementation)
-  - Phase 3: Authentication & Authorization
-  - Phase 4: Additional features (Metaverses, Spaces, etc.)
-  - Note: Monitor universo-platformo-react for feature updates
+- [ ] T009 [P] [US1] Add "Future Roadmap & Package Structure" section in `/README.md`
+  - Overview: Explain modular package approach inspired by universo-platformo-react
+  - Phase 1: Foundation (current - repository setup, documentation, tooling)
+  - Phase 2: Authentication (`auth-frt` + `auth-srv` packages)
+  - Phase 3: Three-Entity Pattern (`clusters-frt` + `clusters-srv` as foundation)
+  - Phase 4: Workspace Management (`uniks-frt` + `uniks-srv`)
+  - Phase 5: Metaverses (`metaverses-frt` + `metaverses-srv`)
+  - Phase 6: Spaces & Nodes (`spaces-frt` + `spaces-srv`, `updl/base`, `node-components/base`)
+  - Phase 7: Node Library Expansion (LangChain integration, custom nodes)
+  - Phase 8: AI Space Builder (`space-builder-frt` + `space-builder-srv`)
+  - Phase 9: Publishing System (`publish-frt` + `publish-srv`, templates)
+  - Phase 10+: Profiles and Additional Features
+  - Include: Package naming conventions (-frt/-srv, base/ folder, @universo/ scope)
+  - Include: Link to reference React packages structure
+  - Note: Monitor universo-platformo-react for feature updates and improvements
 
 - [ ] T010 [P] [US1] Add "Documentation & Governance" section in `/README.md`
   - Link to constitution: `.specify/memory/constitution.md`
@@ -96,6 +241,14 @@ Repository root structure for initial setup:
   - Link to specifications: `.specify/specs/`
   - Link to GitHub instructions: `.github/instructions/`
   - Explain bilingual documentation requirement
+
+- [ ] T010A [P] [US1] Add "Package Categories & Node System" section in `/README.md`
+  - Core Feature Packages: List main `-frt` + `-srv` pairs (auth, clusters, metaverses, uniks, spaces, space-builder, publish, profile)
+  - Node System: Explain UPDL nodes and node-components library
+  - Node Types: LangChain nodes (LLMs, chains, agents, tools), Custom AI nodes, Data processing, Integration nodes
+  - Shared Utilities: @universo/types, @universo/utils, @universo/api-client, @universo/i18n, @universo/template-vuetify
+  - Template Packages: template-mmoomm, template-quiz, future templates
+  - Include: Brief explanation of each category's purpose
 
 - [ ] T011 [US1] Review and finalize `/README.md` structure
   - Verify all sections complete and well-organized
@@ -749,6 +902,9 @@ Each milestone is independently valuable and deployable.
 - **Validation**: Run quality checks frequently during implementation
 - **Constitution**: All tasks comply with project constitution principles
 - **Bilingual**: NON-NEGOTIABLE - both English and Russian always updated together
+- **Package Structure**: This feature documents the optimal modular structure; actual packages created in subsequent features
+- **React Reference**: Use [universo-platformo-react](https://github.com/teknokomo/universo-platformo-react) as CONCEPT reference, not code to copy
+- **Modular Design**: Create focused, single-purpose packages from the start for better maintainability and future extraction
 
 ---
 
@@ -780,6 +936,6 @@ Each milestone is independently valuable and deployable.
 
 ---
 
-**Generated**: Based on spec.md, plan.md, and research.md  
-**Last Updated**: 2025-11-18  
-**Status**: Ready for implementation
+**Generated**: Based on spec.md, plan.md, research.md, and universo-platformo-react analysis  
+**Last Updated**: 2025-11-24  
+**Status**: Enhanced with optimal modular package structure - Ready for implementation
