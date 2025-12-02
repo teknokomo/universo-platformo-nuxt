@@ -249,7 +249,7 @@ packages/
   - UI: Vuetify 3 (Material Design for Vue)
   - Quality: ESLint, Prettier, Vitest
 
-- [ ] T005 [P] [US1] Add "Repository Structure" section in `/README.md`
+- [X] T005 [P] [US1] Add "Repository Structure" section in `/README.md`
   - Explain monorepo organization with PNPM workspaces
   - Document `packages/` directory purpose
   - Explain `-frt` (frontend) and `-srv` (backend) naming
