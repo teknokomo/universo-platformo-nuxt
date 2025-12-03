@@ -14,7 +14,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "quality": "pnpm typecheck && pnpm lint && pnpm format:check"
+    "quality": "pnpm typecheck && pnpm lint && pnpm format:check",
+    "validate:i18n": "powershell -ExecutionPolicy Bypass -File scripts/validate-i18n-docs.ps1"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.1.0",

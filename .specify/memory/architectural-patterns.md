@@ -48,21 +48,22 @@ app.vue                         # ❌ Only minimal bootstrap allowed!
 
 **Decision Matrix for Code Placement**:
 
-| Code Type                    | Placement                          | Allowed in Root? |
-|------------------------------|-------------------------------------|------------------|
-| Feature UI components        | `packages/{domain}-frt/base/src/`  | ❌ NO           |
-| Feature API routes           | `packages/{domain}-srv/base/src/`  | ❌ NO           |
-| Feature business logic       | `packages/{domain}-srv/base/src/`  | ❌ NO           |
-| Shared types                 | `packages/@universo/types/base/`   | ❌ NO           |
-| Shared utilities             | `packages/@universo/utils/base/`   | ❌ NO           |
-| Configuration files          | Root directory                      | ✅ YES          |
-| Minimal app bootstrap        | Root `app.vue` (loads packages)     | ✅ YES (minimal)|
-| Build/deployment scripts     | Root directory                      | ✅ YES          |
-| Documentation                | Root `README.md`                    | ✅ YES          |
+| Code Type                | Placement                         | Allowed in Root? |
+| ------------------------ | --------------------------------- | ---------------- |
+| Feature UI components    | `packages/{domain}-frt/base/src/` | ❌ NO            |
+| Feature API routes       | `packages/{domain}-srv/base/src/` | ❌ NO            |
+| Feature business logic   | `packages/{domain}-srv/base/src/` | ❌ NO            |
+| Shared types             | `packages/@universo/types/base/`  | ❌ NO            |
+| Shared utilities         | `packages/@universo/utils/base/`  | ❌ NO            |
+| Configuration files      | Root directory                    | ✅ YES           |
+| Minimal app bootstrap    | Root `app.vue` (loads packages)   | ✅ YES (minimal) |
+| Build/deployment scripts | Root directory                    | ✅ YES           |
+| Documentation            | Root `README.md`                  | ✅ YES           |
 
 **Package Extraction Readiness Checklist**:
 
 For each package to be extraction-ready:
+
 - [ ] All dependencies explicitly declared in package.json
 - [ ] No imports from outside the package (except workspace deps)
 - [ ] Independent build and test scripts
@@ -430,19 +431,19 @@ GET /api/v1/metaverses/:id/entities
 
 ```typescript
 // Nuxt server middleware: server/middleware/rate-limit.ts
-import { defineEventHandler } from 'h3'
-import { createRateLimiter } from '@universo/utils/rate-limiting'
+import { defineEventHandler } from 'h3';
+import { createRateLimiter } from '@universo/utils/rate-limiting';
 
 const limiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  redisUrl: process.env.REDIS_URL // Falls back to memory store if not set
-})
+  redisUrl: process.env.REDIS_URL, // Falls back to memory store if not set
+});
 
 export default defineEventHandler(async (event) => {
-  await limiter(event)
+  await limiter(event);
   // Continue to route handler
-})
+});
 ```
 
 **Endpoint-Specific Limits**:
@@ -450,19 +451,19 @@ export default defineEventHandler(async (event) => {
 ```typescript
 // More restrictive limits for auth endpoints
 // server/api/auth/login.post.ts
-import { defineEventHandler } from 'h3'
-import { createRateLimiter } from '@universo/utils/rate-limiting'
+import { defineEventHandler } from 'h3';
+import { createRateLimiter } from '@universo/utils/rate-limiting';
 
 const authLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 5, // Only 5 login attempts per 15 minutes
-  redisUrl: process.env.REDIS_URL
-})
+  redisUrl: process.env.REDIS_URL,
+});
 
 export default defineEventHandler(async (event) => {
-  await authLimiter(event)
+  await authLimiter(event);
   // Handle login
-})
+});
 ```
 
 **Production Setup**:
@@ -474,6 +475,7 @@ REDIS_URL=rediss://:password@redis.example.com:6380 # TLS (recommended)
 ```
 
 **Multi-Instance Support**:
+
 - Redis store shares rate limit counters across all server instances
 - Works with Docker, Kubernetes, PM2 cluster mode
 - Automatic reconnection and error handling
@@ -757,16 +759,14 @@ export default defineNuxtConfig({
   // Layer configuration
   components: true,
   composables: {
-    dirs: ['composables']
-  }
-})
+    dirs: ['composables'],
+  },
+});
 
 // Root nuxt.config.ts extends the layer
 export default defineNuxtConfig({
-  extends: [
-    './packages/clusters-frt/base'
-  ]
-})
+  extends: ['./packages/clusters-frt/base'],
+});
 ```
 
 **Explicit Export Approach** (for utility packages):
@@ -787,6 +787,7 @@ import { UserEntity } from '@universo/types/entities'
 ```
 
 **Benefits**:
+
 - Hot Module Replacement (HMR) for package changes
 - Auto-imports from packages
 - Type-safe across packages
@@ -838,37 +839,38 @@ packages/clusters-srv/base/
 
 ```typescript
 // packages/clusters-srv/base/server/api/clusters/index.get.ts
-import { defineEventHandler, getQuery } from 'h3'
-import { z } from 'zod'
+import { defineEventHandler, getQuery } from 'h3';
+import { z } from 'zod';
 
 const querySchema = z.object({
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(10),
-  search: z.string().optional()
-})
+  search: z.string().optional(),
+});
 
 export default defineEventHandler(async (event) => {
   // Validate query params
-  const query = querySchema.parse(getQuery(event))
-  
+  const query = querySchema.parse(getQuery(event));
+
   // Get user from auth middleware
-  const user = event.context.user
-  
+  const user = event.context.user;
+
   // Fetch data using repository pattern
-  const clusters = await getClustersRepository().findPaginated(query, user.id)
-  
+  const clusters = await getClustersRepository().findPaginated(query, user.id);
+
   return {
     data: clusters,
     pagination: {
       page: query.page,
       limit: query.limit,
-      total: clusters.length
-    }
-  }
-})
+      total: clusters.length,
+    },
+  };
+});
 ```
 
 **Benefits**:
+
 - Clear API structure
 - File-based routing
 - Type-safe request/response
@@ -895,82 +897,81 @@ packages/clusters-frt/base/composables/
 
 ```typescript
 // packages/clusters-frt/base/composables/useClusters.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import type { Cluster, ClusterCreateInput } from '@universo/types'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
+import type { Cluster, ClusterCreateInput } from '@universo/types';
 
 export const useClusters = () => {
-  const queryClient = useQueryClient()
-  
+  const queryClient = useQueryClient();
+
   // Fetch list
   const { data: clusters, isLoading } = useQuery({
     queryKey: ['clusters'],
-    queryFn: () => $fetch<Cluster[]>('/api/clusters')
-  })
-  
+    queryFn: () => $fetch<Cluster[]>('/api/clusters'),
+  });
+
   // Create mutation
   const createCluster = useMutation({
-    mutationFn: (data: ClusterCreateInput) => 
+    mutationFn: (data: ClusterCreateInput) =>
       $fetch('/api/clusters', { method: 'POST', body: data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clusters'] })
-    }
-  })
-  
+      queryClient.invalidateQueries({ queryKey: ['clusters'] });
+    },
+  });
+
   return {
     clusters,
     isLoading,
-    createCluster
-  }
-}
+    createCluster,
+  };
+};
 ```
 
 **Form Composable**:
 
 ```typescript
 // packages/clusters-frt/base/composables/useClusterForm.ts
-import { ref, computed } from 'vue'
-import { z } from 'zod'
+import { ref, computed } from 'vue';
+import { z } from 'zod';
 
 const clusterSchema = z.object({
   name: z.string().min(1).max(100),
-  description: z.string().max(500).optional()
-})
+  description: z.string().max(500).optional(),
+});
 
 export const useClusterForm = (initialData?: Partial<Cluster>) => {
   const formData = ref({
     name: initialData?.name ?? '',
-    description: initialData?.description ?? ''
-  })
-  
-  const errors = ref<Record<string, string>>({})
-  
+    description: initialData?.description ?? '',
+  });
+
+  const errors = ref<Record<string, string>>({});
+
   const validate = () => {
     try {
-      clusterSchema.parse(formData.value)
-      errors.value = {}
-      return true
+      clusterSchema.parse(formData.value);
+      errors.value = {};
+      return true;
     } catch (err) {
       if (err instanceof z.ZodError) {
-        errors.value = Object.fromEntries(
-          err.errors.map(e => [e.path[0], e.message])
-        )
+        errors.value = Object.fromEntries(err.errors.map((e) => [e.path[0], e.message]));
       }
-      return false
+      return false;
     }
-  }
-  
-  const isValid = computed(() => Object.keys(errors.value).length === 0)
-  
+  };
+
+  const isValid = computed(() => Object.keys(errors.value).length === 0);
+
   return {
     formData,
     errors,
     validate,
-    isValid
-  }
-}
+    isValid,
+  };
+};
 ```
 
 **Benefits**:
+
 - Reusable across components
 - Type-safe
 - Testable in isolation
@@ -987,77 +988,78 @@ export const useClusterForm = (initialData?: Partial<Cluster>) => {
 
 ```typescript
 // packages/@universo/types/base/src/api/clusters.ts
-import { z } from 'zod'
+import { z } from 'zod';
 
 // Request schemas
 export const clusterCreateSchema = z.object({
   name: z.string().min(1).max(100),
-  description: z.string().max(500).optional()
-})
+  description: z.string().max(500).optional(),
+});
 
-export const clusterUpdateSchema = clusterCreateSchema.partial()
+export const clusterUpdateSchema = clusterCreateSchema.partial();
 
 // Response types
 export interface Cluster {
-  id: string
-  name: string
-  description?: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PaginatedResponse<T> {
-  data: T[]
+  data: T[];
   pagination: {
-    page: number
-    limit: number
-    total: number
-  }
+    page: number;
+    limit: number;
+    total: number;
+  };
 }
 
 // Type inference
-export type ClusterCreateInput = z.infer<typeof clusterCreateSchema>
-export type ClusterUpdateInput = z.infer<typeof clusterUpdateSchema>
+export type ClusterCreateInput = z.infer<typeof clusterCreateSchema>;
+export type ClusterUpdateInput = z.infer<typeof clusterUpdateSchema>;
 ```
 
 **Backend Usage**:
 
 ```typescript
 // packages/clusters-srv/base/server/api/clusters/index.post.ts
-import { clusterCreateSchema, type Cluster } from '@universo/types/api/clusters'
+import { clusterCreateSchema, type Cluster } from '@universo/types/api/clusters';
 
 export default defineEventHandler(async (event): Promise<Cluster> => {
-  const body = await readBody(event)
-  
+  const body = await readBody(event);
+
   // Validate with shared schema
-  const data = clusterCreateSchema.parse(body)
-  
+  const data = clusterCreateSchema.parse(body);
+
   // Create using repository
-  const cluster = await getClustersRepository().create(data)
-  
-  return cluster
-})
+  const cluster = await getClustersRepository().create(data);
+
+  return cluster;
+});
 ```
 
 **Frontend Usage**:
 
 ```typescript
 // packages/clusters-frt/base/composables/useClusters.ts
-import type { Cluster, ClusterCreateInput } from '@universo/types/api/clusters'
+import type { Cluster, ClusterCreateInput } from '@universo/types/api/clusters';
 
 export const useClusters = () => {
   const createCluster = async (data: ClusterCreateInput): Promise<Cluster> => {
     return $fetch('/api/clusters', {
       method: 'POST',
-      body: data
-    })
-  }
-  
-  return { createCluster }
-}
+      body: data,
+    });
+  };
+
+  return { createCluster };
+};
 ```
 
 **Benefits**:
+
 - Single source of truth for types
 - Compile-time type checking
 - Runtime validation with Zod
@@ -1074,34 +1076,38 @@ export const useClusters = () => {
 
 ```typescript
 // packages/clusters-frt/base/composables/useLocalStorage.ts
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue';
 
 export const useLocalStorage = <T>(key: string, defaultValue: T) => {
-  const data = ref<T>(defaultValue)
-  const isReady = ref(false)
-  
+  const data = ref<T>(defaultValue);
+  const isReady = ref(false);
+
   // Only access localStorage on client
   onMounted(() => {
-    const stored = localStorage.getItem(key)
+    const stored = localStorage.getItem(key);
     if (stored) {
       try {
-        data.value = JSON.parse(stored)
+        data.value = JSON.parse(stored);
       } catch (e) {
-        console.error('Failed to parse localStorage:', e)
+        console.error('Failed to parse localStorage:', e);
       }
     }
-    isReady.value = true
-  })
-  
+    isReady.value = true;
+  });
+
   // Watch for changes (only on client)
   if (process.client) {
-    watch(data, (newValue) => {
-      localStorage.setItem(key, JSON.stringify(newValue))
-    }, { deep: true })
+    watch(
+      data,
+      (newValue) => {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      },
+      { deep: true }
+    );
   }
-  
-  return { data, isReady }
-}
+
+  return { data, isReady };
+};
 ```
 
 **API Calls with SSR**:
@@ -1117,18 +1123,19 @@ export const useClusterDetail = (id: string) => {
       // Cache for 5 minutes
       getCachedData: (key) => useNuxtApp().payload.data[key],
     }
-  )
-  
+  );
+
   return {
     cluster: data,
     loading: pending,
     error,
-    refresh
-  }
-}
+    refresh,
+  };
+};
 ```
 
 **Benefits**:
+
 - No hydration mismatches
 - Proper SSR data fetching
 - Client-only code isolation
@@ -1144,39 +1151,39 @@ export const useClusterDetail = (id: string) => {
 
 ```typescript
 // packages/auth-srv/base/server/middleware/auth.ts
-import { defineEventHandler, createError } from 'h3'
-import { verifyToken } from '../utils/jwt'
+import { defineEventHandler, createError } from 'h3';
+import { verifyToken } from '../utils/jwt';
 
 export default defineEventHandler(async (event) => {
   // Skip auth for public routes
   if (event.path.startsWith('/api/public')) {
-    return
+    return;
   }
-  
+
   // Get token from header
-  const authHeader = getHeader(event, 'authorization')
+  const authHeader = getHeader(event, 'authorization');
   if (!authHeader?.startsWith('Bearer ')) {
     throw createError({
       statusCode: 401,
-      message: 'Missing authentication token'
-    })
+      message: 'Missing authentication token',
+    });
   }
-  
-  const token = authHeader.substring(7)
-  
+
+  const token = authHeader.substring(7);
+
   try {
     // Verify and decode token
-    const user = await verifyToken(token)
-    
+    const user = await verifyToken(token);
+
     // Attach user to event context
-    event.context.user = user
+    event.context.user = user;
   } catch (error) {
     throw createError({
       statusCode: 401,
-      message: 'Invalid authentication token'
-    })
+      message: 'Invalid authentication token',
+    });
   }
-})
+});
 ```
 
 **Route Middleware** (for pages):
@@ -1184,15 +1191,15 @@ export default defineEventHandler(async (event) => {
 ```typescript
 // packages/clusters-frt/base/middleware/cluster-access.ts
 export default defineNuxtRouteMiddleware(async (to) => {
-  const clusterId = to.params.id
-  
+  const clusterId = to.params.id;
+
   // Check if user has access to cluster
-  const hasAccess = await $fetch(`/api/clusters/${clusterId}/check-access`)
-  
+  const hasAccess = await $fetch(`/api/clusters/${clusterId}/check-access`);
+
   if (!hasAccess) {
-    return navigateTo('/unauthorized')
+    return navigateTo('/unauthorized');
   }
-})
+});
 ```
 
 **Page Usage**:
@@ -1201,12 +1208,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
 <!-- packages/clusters-frt/base/pages/clusters/[id].vue -->
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth', 'cluster-access']
-})
+  middleware: ['auth', 'cluster-access'],
+});
 </script>
 ```
 
 **Benefits**:
+
 - Centralized auth logic
 - Type-safe route protection
 - SSR-compatible
@@ -1228,21 +1236,21 @@ export default defineNuxtConfig({
     {
       path: '~/components',
       pathPrefix: false,
-    }
+    },
   ],
-  
+
   // Auto-import composables
   imports: {
-    dirs: ['composables']
+    dirs: ['composables'],
   },
-  
+
   // Layer-specific config
   runtimeConfig: {
     public: {
-      clustersApiBase: '/api/clusters'
-    }
-  }
-})
+      clustersApiBase: '/api/clusters',
+    },
+  },
+});
 ```
 
 **Root App Integration**:
@@ -1254,19 +1262,20 @@ export default defineNuxtConfig({
     // Include all frontend package layers
     './packages/clusters-frt/base',
     './packages/auth-frt/base',
-    './packages/@universo/ui/base'
+    './packages/@universo/ui/base',
   ],
-  
+
   // Override/extend layer config as needed
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'http://localhost:3000'
-    }
-  }
-})
+      apiBase: process.env.API_BASE || 'http://localhost:3000',
+    },
+  },
+});
 ```
 
 **Benefits**:
+
 - Share components across apps
 - Auto-import from packages
 - Layer-specific configuration
@@ -1330,17 +1339,13 @@ export default defineNuxtConfig({
     // Include workspace packages for type checking
     includeWorkspace: true,
     // Hoist common types
-    hoist: [
-      '@nuxt/schema',
-      'nuxt',
-      'vue',
-      'vue-router'
-    ]
-  }
-})
+    hoist: ['@nuxt/schema', 'nuxt', 'vue', 'vue-router'],
+  },
+});
 ```
 
 **Benefits**:
+
 - Fast incremental builds
 - Better IDE support
 - Type errors in packages
