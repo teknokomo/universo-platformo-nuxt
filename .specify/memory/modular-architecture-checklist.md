@@ -186,7 +186,6 @@ Use this section during PULL REQUEST REVIEWS:
 ### 12. Enforcement Actions
 
 If violations found:
-
 1. Request changes on PR
 2. Reference this checklist and constitution
 3. Provide migration path to fix violations
@@ -281,7 +280,6 @@ If violations found in existing code:
 **Step-by-step migration:**
 
 1. **Identify violation**:
-
    ```bash
    find . -maxdepth 2 -name "*.vue" -o -name "*.ts" | grep -v node_modules | grep -v packages
    ```
@@ -292,7 +290,6 @@ If violations found in existing code:
    - Shared code → `@universo/{name}`
 
 3. **Create package structure**:
-
    ```bash
    mkdir -p packages/{package-name}/base/src
    cd packages/{package-name}/base
@@ -300,7 +297,6 @@ If violations found in existing code:
    ```
 
 4. **Move code to package**:
-
    ```bash
    mv ../../src/components/MyComponent.vue src/components/
    ```
@@ -310,7 +306,6 @@ If violations found in existing code:
    - Example: `import { Foo } from './foo'` → `import { Foo } from '{package-name}'`
 
 6. **Add to workspace**:
-
    ```yaml
    # pnpm-workspace.yaml
    packages:
@@ -318,7 +313,6 @@ If violations found in existing code:
    ```
 
 7. **Verify build**:
-
    ```bash
    pnpm install
    pnpm build
@@ -347,7 +341,6 @@ Track these metrics to ensure modular architecture compliance:
 ### 17. Regular Audits
 
 Schedule regular audits:
-
 - **Weekly**: Automated checks in CI/CD
 - **Monthly**: Manual review of new packages
 - **Quarterly**: Full project audit using this checklist
@@ -361,11 +354,9 @@ Schedule regular audits:
 This project is designed from the ground up for modularity and future package extraction. Any code that violates these principles creates **technical debt** that blocks the project's fundamental goals.
 
 When in doubt, follow this simple rule:
-
 > **If it's feature code, it goes in a package. No exceptions.**
 
 For questions or clarification, refer to:
-
 - [Constitution Principle I](./constitution.md#i-monorepo-architecture-with-pnpm)
 - [Architectural Pattern 0](./architectural-patterns.md#0-package-based-modularity)
 - [universo-platformo-react](https://github.com/teknokomo/universo-platformo-react) reference implementation

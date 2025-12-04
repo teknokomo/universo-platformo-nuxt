@@ -26,7 +26,6 @@ This research consolidates best practices for building a fullstack monorepo usin
 **Rationale**: Modern Nuxt monorepos separate applications from shared libraries, providing better scalability and maintainability.
 
 **Implementation**:
-
 ```
 /
 ├── apps/              # Nuxt applications
@@ -43,15 +42,13 @@ This research consolidates best practices for building a fullstack monorepo usin
 ```
 
 **Configuration** (`pnpm-workspace.yaml`):
-
 ```yaml
 packages:
-  - 'apps/**'
-  - 'packages/**'
+  - "apps/**"
+  - "packages/**"
 ```
 
 **Alternatives Considered**:
-
 - Flat structure with all packages in `packages/` only
 - Rejected because: Doesn't scale well when multiple applications are needed
 
@@ -66,23 +63,20 @@ packages:
 **Rationale**: Nuxt Layers provide native framework support for sharing code between applications, superior to manual imports.
 
 **Implementation**:
-
 ```typescript
 // apps/main-app/nuxt.config.ts
 export default defineNuxtConfig({
   extends: ['@my-monorepo/ui'], // Layer from packages/ui
-});
+})
 ```
 
 **Benefits**:
-
 - Share configurations automatically
 - Components auto-imported across apps
 - Type-safe sharing mechanism
 - No build step needed for layers
 
 **Alternatives Considered**:
-
 - Nuxt Modules: More complex, better for plugins/advanced integrations
 - Plain shared packages: Requires manual imports, less integrated
 
@@ -97,7 +91,6 @@ export default defineNuxtConfig({
 **Rationale**: Strict TypeScript catches errors early and ensures type safety across entire monorepo. Non-negotiable per constitution.
 
 **Implementation** (`tsconfig.base.json`):
-
 ```json
 {
   "compilerOptions": {
@@ -113,19 +106,17 @@ export default defineNuxtConfig({
 ```
 
 **Nuxt-specific** (`nuxt.config.ts`):
-
 ```typescript
 export default defineNuxtConfig({
   typescript: {
     strict: true,
     typeCheck: true,
-    shim: false,
-  },
-});
+    shim: false
+  }
+})
 ```
 
 **Key Points**:
-
 - Use `moduleResolution: "bundler"` for Nuxt 3 compatibility
 - Enable `typeCheck: true` in Nuxt config for build-time checking
 - Each package extends base config for consistency
@@ -141,25 +132,21 @@ export default defineNuxtConfig({
 **Rationale**: Nuxt requires flattened dependencies for optimal module resolution. While this reduces PNPM's strict isolation benefits, it's necessary for Nuxt ecosystem compatibility.
 
 **Implementation** (`.npmrc`):
-
 ```
 shamefully-hoist=true
 strict-peer-dependencies=true
 ```
 
 **Important Notes**:
-
 - `shamefully-hoist` is global (affects entire workspace)
 - Required for Nuxt's auto-import system to work properly
 - Alternative: Use `public-hoist-pattern` for selective hoisting (more complex)
 
 **Trade-offs**:
-
 - **Pros**: Nuxt compatibility, simpler module resolution
 - **Cons**: Loses PNPM's strict isolation, potential phantom dependencies
 
 **Alternatives Considered**:
-
 - `nodeLinker=hoisted`: Too permissive
 - No hoisting: Breaks Nuxt auto-imports
 
@@ -174,27 +161,25 @@ strict-peer-dependencies=true
 **Rationale**: Nuxt's integrated server provides type-safe API routes without separate backend framework. Zod adds runtime validation.
 
 **Implementation**:
-
 ```typescript
 // server/api/example.ts
-import { z } from 'zod';
+import { z } from 'zod'
 
 const schema = z.object({
   title: z.string(),
   body: z.string(),
-});
+})
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const validated = schema.parse(body);
-
+  const body = await readBody(event)
+  const validated = schema.parse(body)
+  
   // Type-safe validated data
-  return { success: true, data: validated };
-});
+  return { success: true, data: validated }
+})
 ```
 
 **Key Patterns**:
-
 - File-based routing in `/server/api/`
 - `defineEventHandler` for all routes
 - `readBody(event)` for POST/PUT
@@ -202,7 +187,6 @@ export default defineEventHandler(async (event) => {
 - Zod for runtime + compile-time validation
 
 **Alternatives Considered**:
-
 - tRPC: Excellent for full type safety but adds complexity
 - Manual typing: No runtime validation, less safe
 
@@ -219,7 +203,6 @@ export default defineEventHandler(async (event) => {
 **Rationale**: Official Nuxt module provides SSR-compatible authentication and database access with Vue composables.
 
 **Implementation**:
-
 ```typescript
 // Installation
 pnpm add @nuxtjs/supabase
@@ -238,13 +221,11 @@ await supabase.auth.signInWithOtp({ email: email.value })
 ```
 
 **Key Composables**:
-
 - `useSupabaseClient()`: Access Supabase client
 - `useSupabaseUser()`: Reactive user state
 - `useSupabaseCookieRedirect()`: Handle post-auth redirects
 
 **Row Level Security Pattern**:
-
 ```sql
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
@@ -254,7 +235,6 @@ CREATE POLICY "Users can view their own profile."
 ```
 
 **Best Practices**:
-
 - Always enable RLS on tables
 - Use composables for auth state
 - Type database queries with generated types
@@ -272,7 +252,6 @@ CREATE POLICY "Users can view their own profile."
 **Rationale**: Material UI is React-specific. Vuetify is the mature, Vue-native Material Design implementation with Nuxt 3 compatibility.
 
 **Implementation**:
-
 ```typescript
 // Installation
 pnpm add vuetify@next
@@ -288,7 +267,6 @@ export default defineNuxtPlugin(nuxtApp => {
 ```
 
 **Key Benefits**:
-
 - Native Vue 3 support
 - SSR compatible
 - Material Design 3 components
@@ -296,7 +274,6 @@ export default defineNuxtPlugin(nuxtApp => {
 - Extensive component library
 
 **Alternative**: Nuxt UI (official Nuxt component library)
-
 - **Pros**: Tight Nuxt integration, modern design
 - **Cons**: Not Material Design, smaller component set
 
@@ -313,10 +290,9 @@ export default defineNuxtPlugin(nuxtApp => {
 **Rationale**: Vitest is the standard testing framework in Nuxt/Vite ecosystem. `@nuxt/test-utils` provides Nuxt-aware testing environment.
 
 **Implementation**:
-
 ```typescript
 // vitest.config.ts
-import { defineVitestConfig } from '@nuxt/test-utils/config';
+import { defineVitestConfig } from '@nuxt/test-utils/config'
 
 export default defineVitestConfig({
   test: {
@@ -328,14 +304,13 @@ export default defineVitestConfig({
     },
     globals: true,
   },
-});
+})
 ```
 
 **Workspace Configuration** (Monorepo):
-
 ```typescript
-import { defineWorkspace } from 'vitest/config';
-import { defineVitestProject } from '@nuxt/test-utils/config';
+import { defineWorkspace } from 'vitest/config'
+import { defineVitestProject } from '@nuxt/test-utils/config'
 
 export default defineWorkspace([
   await defineVitestProject({
@@ -345,11 +320,10 @@ export default defineWorkspace([
       environment: 'nuxt',
     },
   }),
-]);
+])
 ```
 
 **Best Practices**:
-
 - Use `defineVitestConfig` (not plain `defineConfig`)
 - Set `environment: 'nuxt'` for Nuxt tests
 - Separate Nuxt tests from pure unit tests
@@ -357,7 +331,6 @@ export default defineWorkspace([
 - Enable `globals: true` for cleaner test syntax
 
 **TypeScript Support**:
-
 ```typescript
 // nuxt.config.ts
 typescript: {
@@ -380,27 +353,23 @@ typescript: {
 **Rationale**: Passport.js provides flexibility for multiple auth strategies. Integration with Supabase enables database-backed sessions with RLS.
 
 **Implementation Approach**:
-
 ```typescript
 // server/middleware/auth.ts
-import passport from 'passport';
-import { Strategy as SupabaseStrategy } from 'passport-supabase';
+import passport from 'passport'
+import { Strategy as SupabaseStrategy } from 'passport-supabase'
 
 export default defineEventHandler(async (event) => {
   // Initialize passport with Supabase strategy
-  passport.use(
-    new SupabaseStrategy({
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
-    })
-  );
-});
+  passport.use(new SupabaseStrategy({
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_KEY,
+  }))
+})
 ```
 
 **Note**: This is a planned implementation. Current best practice is to start with `@nuxtjs/supabase` composables and add Passport.js when additional auth strategies are needed.
 
 **Progressive Enhancement**:
-
 1. **Phase 1**: Use `@nuxtjs/supabase` for OAuth/OTP
 2. **Phase 2**: Add Passport.js for custom strategies
 3. **Phase 3**: Implement multi-provider support
@@ -416,7 +385,6 @@ export default defineEventHandler(async (event) => {
 **Rationale**: Clear naming prevents conflicts and indicates package purpose. Aligns with existing constitution while adding clarity.
 
 **Convention**:
-
 - **Feature packages**: `{domain}-frt` / `{domain}-srv` (no scope)
   - Examples: `clusters-frt`, `clusters-srv`
 - **Utility packages**: `@universo/{function}` (with scope)
@@ -425,7 +393,6 @@ export default defineEventHandler(async (event) => {
   - Examples: `template-mmoomm`, `template-quiz`
 
 **Directory Structure**:
-
 ```
 packages/
 ├── clusters-frt/          # Feature frontend
@@ -438,7 +405,6 @@ packages/
 ```
 
 **Benefits**:
-
 - Clear separation of concerns
 - No naming conflicts
 - Easy to identify package type
@@ -455,15 +421,14 @@ packages/
 **Rationale**: Prevents vendor lock-in, enables testing, maintains clean architecture. Required by constitution Principle VIII.
 
 **Implementation Approach**:
-
 ```typescript
 // packages/@universo/database/base/repositories/BaseRepository.ts
 export interface IRepository<T> {
-  findById(id: string): Promise<T | null>;
-  findAll(filters?: any): Promise<T[]>;
-  create(data: Partial<T>): Promise<T>;
-  update(id: string, data: Partial<T>): Promise<T>;
-  delete(id: string): Promise<void>;
+  findById(id: string): Promise<T | null>
+  findAll(filters?: any): Promise<T[]>
+  create(data: Partial<T>): Promise<T>
+  update(id: string, data: Partial<T>): Promise<T>
+  delete(id: string): Promise<void>
 }
 
 // Supabase implementation
@@ -472,17 +437,20 @@ export class SupabaseRepository<T> implements IRepository<T> {
     private client: SupabaseClient,
     private tableName: string
   ) {}
-
+  
   async findById(id: string): Promise<T | null> {
-    const { data } = await this.client.from(this.tableName).select().eq('id', id).single();
-    return data;
+    const { data } = await this.client
+      .from(this.tableName)
+      .select()
+      .eq('id', id)
+      .single()
+    return data
   }
   // ... other methods
 }
 ```
 
 **Key Principles**:
-
 - No direct database calls in business logic
 - All queries through repository interface
 - Easy to swap implementations (Supabase → PostgreSQL → MySQL)
@@ -499,14 +467,12 @@ export class SupabaseRepository<T> implements IRepository<T> {
 **Rationale**: Nuxt provides integrated build system. Only use specialized tools (tsdown, unbuild) for utility packages without Nuxt context.
 
 **Decision Matrix**:
-
 - **Nuxt apps**: Use `nuxi build` (built-in)
 - **Nuxt layers**: No build step needed (consumed directly)
 - **Utility packages**: Use `unbuild` or `tsdown`
 - **Types-only packages**: Use `tsc --emitDeclarationOnly`
 
 **Root Scripts** (`package.json`):
-
 ```json
 {
   "scripts": {
@@ -527,7 +493,6 @@ export class SupabaseRepository<T> implements IRepository<T> {
 ### Decision: ESLint + Prettier + TypeScript strict mode
 
 **Implementation**:
-
 ```javascript
 // .eslintrc.cjs
 module.exports = {
@@ -551,7 +516,6 @@ module.exports = {
 ```
 
 **Quality Scripts**:
-
 ```json
 {
   "lint": "eslint .",
@@ -575,7 +539,6 @@ module.exports = {
 **Rationale**: Manual validation of bilingual docs doesn't scale. Automation enforces constitution Principle III (NON-NEGOTIABLE bilingual documentation).
 
 **Implementation Approach**:
-
 ```bash
 #!/bin/bash
 # scripts/validate-i18n-docs.sh
@@ -583,17 +546,17 @@ module.exports = {
 validate_pair() {
   local en_file=$1
   local ru_file=$2
-
+  
   local en_lines=$(wc -l < "$en_file")
   local ru_lines=$(wc -l < "$ru_file")
   local diff=$((en_lines - ru_lines))
   local abs_diff=${diff#-}
-
+  
   if [ $abs_diff -gt 2 ]; then
     echo "❌ Line count mismatch: $en_file ($en_lines) vs $ru_file ($ru_lines)"
     return 1
   fi
-
+  
   echo "✅ Valid: $en_file ($en_lines lines) matches $ru_file ($ru_lines lines)"
   return 0
 }
@@ -617,41 +580,39 @@ validate_pair README.md README-RU.md
 **Implementation Options**:
 
 **Option A: Nuxt API Shield Module**
-
 ```typescript
 export default defineNuxtConfig({
   modules: ['nuxt-api-shield'],
   apiShield: {
     limit: 100,
     window: 60000, // 1 minute
-  },
-});
+  }
+})
 ```
 
 **Option B: Custom Middleware**
-
 ```typescript
 // server/middleware/rate-limit.ts
-import { LRUCache } from 'lru-cache';
+import { LRUCache } from 'lru-cache'
 
 const cache = new LRUCache({
   max: 500,
   ttl: 60000, // 1 minute
-});
+})
 
 export default defineEventHandler((event) => {
-  const ip = getRequestIP(event);
-  const count = cache.get(ip) || 0;
-
+  const ip = getRequestIP(event)
+  const count = cache.get(ip) || 0
+  
   if (count > 100) {
     throw createError({
       statusCode: 429,
-      message: 'Too many requests',
-    });
+      message: 'Too many requests'
+    })
   }
-
-  cache.set(ip, count + 1);
-});
+  
+  cache.set(ip, count + 1)
+})
 ```
 
 **Decision**: Implement custom middleware for flexibility, use API Shield for simpler cases
@@ -707,7 +668,6 @@ export default defineEventHandler((event) => {
 ## References
 
 ### Official Documentation
-
 - [Nuxt 3 Documentation](https://nuxt.com/docs)
 - [Supabase Documentation](https://supabase.com/docs)
 - [PNPM Documentation](https://pnpm.io)
@@ -715,14 +675,12 @@ export default defineEventHandler((event) => {
 - [Vuetify 3 Documentation](https://vuetifyjs.com)
 
 ### Community Resources
-
 - Vue School: Scalable Nuxt 3 Monorepos with PNPM Workspaces
 - Dev.to: Nuxt Server Routes and Full-Stack Development
 - GitHub: serkodev/nuxt-monorepo (template)
 - GitHub: supabase-community/nuxt3-quickstarter
 
 ### Project-Specific
-
 - universo-platformo-react: Reference implementation
 - .specify/memory/constitution.md: Project governance
 - .specify/reports/architectural-analysis-2025-11-17.md: React analysis

@@ -1,5 +1,4 @@
 # Architectural Analysis: React vs Nuxt Implementation
-
 **Date**: 2025-11-17  
 **Purpose**: Compare universo-platformo-react patterns with universo-platformo-nuxt plans  
 **Source**: Deep analysis of [universo-platformo-react](https://github.com/teknokomo/universo-platformo-react)
@@ -9,7 +8,6 @@
 After thorough analysis of the React repository, the following gaps have been identified in the current Nuxt project plans:
 
 ### Critical Gaps (Must Address)
-
 1. **Package naming inconsistencies** - Some packages use wrong prefixes
 2. **Missing utility packages** - Several critical shared packages not planned
 3. **Incomplete Guards pattern documentation** - Factory functions not detailed
@@ -17,7 +15,6 @@ After thorough analysis of the React repository, the following gaps have been id
 5. **Build system specifics** - tsdown details missing
 
 ### Architectural Patterns Already Covered ✅
-
 - Repository Pattern (TypeORM)
 - Universal Role System
 - i18n Architecture
@@ -32,7 +29,6 @@ After thorough analysis of the React repository, the following gaps have been id
 ### React Repository Packages (35 packages total)
 
 **Feature Packages** (with -frt/-srv suffixes):
-
 - analytics-frt
 - auth-frt, auth-srv
 - clusters-frt, clusters-srv
@@ -45,7 +41,6 @@ After thorough analysis of the React repository, the following gaps have been id
 - uniks-frt, uniks-srv
 
 **Utility Packages** (no suffix):
-
 - universo-api-client
 - universo-i18n
 - universo-rest-docs
@@ -54,12 +49,10 @@ After thorough analysis of the React repository, the following gaps have been id
 - universo-utils
 
 **Template Packages** (no suffix):
-
 - template-mmoomm
 - template-quiz
 
 **Legacy Flowise Packages** (to be phased out in Nuxt):
-
 - flowise-chatmessage
 - flowise-components
 - flowise-server
@@ -68,7 +61,6 @@ After thorough analysis of the React repository, the following gaps have been id
 - flowise-template-mui (renamed to universo-template-mui)
 
 **Special Packages**:
-
 - updl (UPDL node system)
 - multiplayer-colyseus-srv (Colyseus multiplayer)
 
@@ -93,23 +85,18 @@ After thorough analysis of the React repository, the following gaps have been id
 ## Architectural Patterns Comparison
 
 ### 1. Repository Pattern ✅ COVERED
-
-**React Implementation**:
-
+**React Implementation**: 
 - All database operations via TypeORM
 - `getDataSource().getRepository(Entity)`
 - No direct SQL queries
 
 **Nuxt Documentation**:
-
 - Constitution Principle VIII: Repository Pattern Enforcement
 - Architectural Patterns: Detailed coverage
 - ✅ Well documented
 
 ### 2. Guards Pattern ⚠️ PARTIAL
-
 **React Implementation**:
-
 ```typescript
 const guards = createAccessGuards({
   entityType: 'metaverse',
@@ -119,120 +106,93 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {});
 ```
 
 **Nuxt Documentation**:
-
 - Constitution Principle IX: Universal Role System
 - Architectural Patterns: Guards Pattern example
 - ⚠️ Factory function `createAccessGuards()` needs more detail
 - ⚠️ Need to clarify Nuxt middleware equivalent
 
 ### 3. Factory Functions for Actions ✅ COVERED
-
 **React Implementation**:
-
 - `createEntityActions<TEntity, TFormData>` - 91% code reduction
 - `createMemberActions<TMember>` - consistent CRUD operations
 
 **Nuxt Documentation**:
-
 - Architectural Patterns: Factory Functions section
 - ✅ Well documented with examples
 
 ### 4. i18n Architecture ✅ COVERED
-
 **React Implementation**:
-
 - Centralized `@universo/i18n` package
 - `registerNamespace()` pattern
 - Singleton getInstance()
 
 **Nuxt Documentation**:
-
 - Constitution Principle VII (mentions i18n)
 - Architectural Patterns: Detailed i18n section
 - ✅ Need to adapt for Vue I18n/Nuxt i18n module
 
 ### 5. Universal Role System ✅ COVERED
-
 **React Implementation**:
-
 - Hierarchy: owner (4) > admin (3) > editor (2) > member (1) > guest (0)
 - Utilities: hasRequiredRole(), canManageRole()
 
 **Nuxt Documentation**:
-
 - Constitution Principle IX: Complete hierarchy
 - Architectural Patterns: Role system utilities
 - ✅ Fully covered
 
 ### 6. RLS Integration Pattern ✅ COVERED
-
 **React Implementation**:
-
 - Application-level validation (primary)
 - Database RLS policies (fallback)
 - Request-level caching
 
 **Nuxt Documentation**:
-
 - Architectural Patterns: RLS Integration Pattern
 - ✅ Three-layer security model documented
 
 ### 7. Data Isolation Pattern ✅ COVERED
-
 **React Implementation**:
-
 - Three-tier: Cluster → Domain → Resource
 - Junction tables with CASCADE delete
 - Cluster-scoped APIs
 
 **Nuxt Documentation**:
-
 - Constitution Principle VI: Three-entity pattern
 - Architectural Patterns: Data Isolation Pattern
 - ✅ Well documented
 
 ### 8. TanStack Query Pattern ✅ COVERED
-
 **React Implementation**:
-
 - Query key factories
 - Declarative `useQuery()` vs imperative `fetchQuery()`
 
 **Nuxt Documentation**:
-
 - Architectural Patterns: TanStack Query section
 - ✅ Noted to use Vue Query or Nuxt composables
 
 ### 9. Testing Environment ✅ COVERED
-
 **React Implementation**:
-
 - Vitest with happy-dom (4-9x faster)
 - Mock heavy dependencies
 
 **Nuxt Documentation**:
-
 - Constitution: Vitest with happy-dom
 - Architectural Patterns: Testing Environment Pattern
 - ✅ Performance benefits documented
 
 ### 10. Source-Only Package Pattern ✅ COVERED
-
 **React Implementation**:
-
 - Source packages use peerDependencies
 - No dist/ folder, Vite imports directly
 
 **Nuxt Documentation**:
-
 - Constitution: Source-Only Packages section
 - Architectural Patterns: Source-Only Package Pattern
 - ✅ Detection commands included
 
 ### 11. Rate Limiting Architecture ❌ MISSING
-
 **React Implementation**:
-
 - Redis-based distributed rate limiting
 - `@universo/utils/rate-limiting` package
 - express-rate-limit + rate-limit-redis
@@ -240,88 +200,73 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {});
 - Multi-instance support (Docker/K8s)
 
 **Nuxt Documentation**:
-
 - ❌ Not mentioned in constitution
 - ❌ Not in architectural patterns
 - ⚠️ CRITICAL for production deployment
 
 ### 12. Build System Details ⚠️ PARTIAL
-
 **React Implementation**:
-
 - tsdown v0.15.7 (Rolldown + Oxc)
 - Dual format (ESM + CJS)
 - 100% package coverage
 - Platform neutral/node
 
 **Nuxt Documentation**:
-
 - Constitution: "tsdown, Nuxt's build system, or Vite"
 - Architectural Patterns: Dual Build System section
 - ⚠️ Need specific guidance on when to use what
 
 ### 13. Migration Naming Convention ✅ COVERED
-
 **React Implementation**:
-
 - Format: `AddEntityNameAndLinked`, `CreateSchemaName`
 - No legacy "Flowise" references
 
 **Nuxt Documentation**:
-
 - Constitution: Migration naming convention
 - Architectural Patterns: Migration Naming section
 - ✅ Clear examples provided
 
 ### 14. Event-Driven Data Loading ✅ COVERED
-
 **React Implementation**:
-
 - Socket.io events trigger query invalidation
 - Real-time collaboration
 
 **Nuxt Documentation**:
-
 - Architectural Patterns: Event-Driven Data Loading
 - ✅ Pattern documented with examples
 
 ## Critical Gaps to Address
 
 ### 1. Rate Limiting Architecture (CRITICAL)
-
 **Impact**: Production deployments without rate limiting are vulnerable to DoS attacks.
 
 **Required Documentation**:
-
 - Add to Constitution: Technology Stack section
 - Add to Architectural Patterns: Rate Limiting section
 - Include in initial setup plan Phase 0 or Phase 1
 
 **Implementation Details**:
-
 ```typescript
 // Pattern for Nuxt
-import { defineEventHandler } from 'h3';
-import { createRateLimiter } from '@universo/utils/rate-limiting';
+import { defineEventHandler } from 'h3'
+import { createRateLimiter } from '@universo/utils/rate-limiting'
 
 const limiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  redisUrl: process.env.REDIS_URL,
-});
+  redisUrl: process.env.REDIS_URL
+})
 
 export default defineEventHandler(async (event) => {
-  await limiter(event);
+  await limiter(event)
   // ... route logic
-});
+})
 ```
 
 ### 2. Build System Guidance (IMPORTANT)
-
 **Impact**: Confusion about which build tool to use for which package type.
 
 **Required Documentation**:
-
 - Add to Constitution: Build System Standards (clarify)
 - Provide decision matrix:
   - Nuxt packages → Nuxt build system
@@ -330,22 +275,18 @@ export default defineEventHandler(async (event) => {
   - Template packages → Source-only (no build)
 
 ### 3. Package Scope Consistency (MEDIUM)
-
 **Impact**: Package naming confusion between `@universo/` and no scope.
 
 **Required Documentation**:
-
 - Clarify in Constitution Principle I:
   - Feature packages: `{domain}-frt`, `{domain}-srv` (no scope)
   - Utility packages: `@universo/{name}` (with scope)
   - Template packages: `template-{name}` (no scope)
 
 ### 4. REST Documentation Package (OPTIONAL)
-
 **Impact**: API documentation generation not planned.
 
 **Consideration**:
-
 - React has `universo-rest-docs` package
 - Nuxt could use similar approach
 - Not critical for initial setup, but good for future

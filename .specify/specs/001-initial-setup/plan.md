@@ -116,7 +116,6 @@ packages/@universo/      # Shared utility packages (with scope)
 This feature establishes a **fullstack monorepo** structure using PNPM workspaces based on industry best practices from research (see `research.md`). The root directory contains configuration files and bilingual documentation. The `packages/` directory is created but empty initially - it will house future feature packages following the `-frt` (frontend) and `-srv` (server) naming convention. Each package will have a `base/` folder to support future multiple implementations (as per Principle I of the constitution).
 
 **Key Research Findings Applied**:
-
 - **.npmrc with shamefully-hoist=true**: Required for Nuxt's auto-import system to work correctly with PNPM
 - **Vuetify 3**: Vue-native Material Design library (not React's Material UI)
 - **@nuxtjs/supabase module**: Official Nuxt integration for Supabase with composables

@@ -17,14 +17,12 @@
 ## Быстрая Справка
 
 **Типы пакетов:**
-
 - **Feature Frontend**: `packages/{domain}-frt/base/`
 - **Feature Backend**: `packages/{domain}-srv/base/`
 - **Utility Package**: `packages/@universo/{name}/base/`
 - **Template Package**: `packages/template-{name}/base/`
 
 **Обязательные файлы:**
-
 - `package.json` - Конфигурация пакета
 - `README.md` - Документация на английском
 - `README-RU.md` - Документация на русском
@@ -47,7 +45,6 @@
 4. **Публичный API**: Что другие пакеты будут импортировать из него?
 
 **Пример**: Создание функционала "Clusters"
-
 - Frontend пакет: `clusters-frt`
 - Backend пакет: `clusters-srv`
 - Зависимости: `@universo/types`, `@universo/utils`
@@ -219,7 +216,7 @@ export type { ClusterDTO, CreateClusterDTO } from './types';
 
 **Файл**: `packages/clusters-frt/base/README.md`
 
-````markdown
+```markdown
 # Clusters Frontend Package
 
 Frontend package for Clusters functionality in Universo Platformo Nuxt.
@@ -245,7 +242,6 @@ This package is part of the Universo Platformo Nuxt monorepo and uses workspace 
 ```bash
 pnpm install
 ```
-````
 
 ## Usage
 
@@ -308,8 +304,7 @@ src/
 ## License
 
 Omsk Open License
-
-````
+```
 
 **Файл**: `packages/clusters-frt/base/README-RU.md`
 
@@ -338,7 +333,7 @@ Omsk Open License
 
 ```bash
 pnpm install
-````
+```
 
 ## Использование
 
@@ -401,8 +396,7 @@ src/
 ## Лицензия
 
 Omsk Open License
-
-````
+```
 
 ### Шаг 8: Обновите Конфигурацию Workspace
 
@@ -413,7 +407,7 @@ Omsk Open License
 ```yaml
 packages:
   - 'packages/**/base'
-````
+```
 
 ### Шаг 9: Установите Зависимости
 
@@ -756,7 +750,6 @@ pnpm lint
 ## Заключение
 
 Следование этому процессу гарантирует:
-
 - ✅ Соответствие модульной архитектуре
 - ✅ Готовность к извлечению пакетов в будущем
 - ✅ Согласованную структуру между пакетами

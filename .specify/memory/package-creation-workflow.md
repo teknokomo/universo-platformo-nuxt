@@ -17,14 +17,12 @@ This document provides a complete workflow for creating new packages in the mono
 ## Quick Reference
 
 **Package Types:**
-
 - **Feature Frontend**: `packages/{domain}-frt/base/`
 - **Feature Backend**: `packages/{domain}-srv/base/`
 - **Utility Package**: `packages/@universo/{name}/base/`
 - **Template Package**: `packages/template-{name}/base/`
 
 **Required Files:**
-
 - `package.json` - Package configuration
 - `README.md` - English documentation
 - `README-RU.md` - Russian documentation
@@ -47,7 +45,6 @@ Before creating packages, determine:
 4. **Public API**: What will other packages import from it?
 
 **Example**: Creating a "Clusters" feature
-
 - Frontend package: `clusters-frt`
 - Backend package: `clusters-srv`
 - Dependencies: `@universo/types`, `@universo/utils`
@@ -219,7 +216,7 @@ export type { ClusterDTO, CreateClusterDTO } from './types';
 
 **File**: `packages/clusters-frt/base/README.md`
 
-````markdown
+```markdown
 # Clusters Frontend Package
 
 Frontend package for Clusters functionality in Universo Platformo Nuxt.
@@ -245,7 +242,6 @@ This package is part of the Universo Platformo Nuxt monorepo and uses workspace 
 ```bash
 pnpm install
 ```
-````
 
 ## Usage
 
@@ -308,8 +304,7 @@ src/
 ## License
 
 Omsk Open License
-
-````
+```
 
 **File**: `packages/clusters-frt/base/README-RU.md`
 
@@ -338,7 +333,7 @@ Omsk Open License
 
 ```bash
 pnpm install
-````
+```
 
 ## Использование
 
@@ -401,8 +396,7 @@ src/
 ## Лицензия
 
 Omsk Open License
-
-````
+```
 
 ### Step 8: Update Workspace Configuration
 
@@ -413,7 +407,7 @@ Verify it includes:
 ```yaml
 packages:
   - 'packages/**/base'
-````
+```
 
 ### Step 9: Install Dependencies
 
@@ -756,7 +750,6 @@ After creating packages:
 ## Conclusion
 
 Following this workflow ensures:
-
 - ✅ Modular architecture compliance
 - ✅ Future package extraction readiness
 - ✅ Consistent structure across packages

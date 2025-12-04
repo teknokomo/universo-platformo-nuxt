@@ -46,7 +46,6 @@ Previous Version (1.0.0):
 **FORBIDDEN**: Implementing ANY feature functionality outside of the `packages/` directory structure is **STRICTLY PROHIBITED**.
 
 The following are **EXPLICITLY FORBIDDEN**:
-
 - ❌ Creating feature code in project root directories (e.g., `src/`, `components/`, `pages/`, `server/`)
 - ❌ Implementing business logic outside of packages
 - ❌ Creating non-modular monolithic implementations
@@ -54,7 +53,6 @@ The following are **EXPLICITLY FORBIDDEN**:
 - ❌ Bypassing package structure "for convenience" or "rapid prototyping"
 
 **ALLOWED** root-level files (exceptions to package requirement):
-
 - ✅ Configuration files only: `nuxt.config.ts`, `tsconfig.json`, `.eslintrc.js`, etc.
 - ✅ Workspace management: `package.json`, `pnpm-workspace.yaml`
 - ✅ Documentation: `README.md`, `README-RU.md`
@@ -83,7 +81,6 @@ The following are **EXPLICITLY FORBIDDEN**:
 - **Template Packages**: Reusable component templates (`template-*` - NO scope prefix)
 
 **Package Naming Convention**:
-
 - Feature packages: `{domain}-frt` / `{domain}-srv` (e.g., `clusters-frt`, `clusters-srv`)
 - Utility packages: `@universo/{function}` (e.g., `@universo/types`, `@universo/utils`)
 - Template packages: `template-{name}` (e.g., `template-mmoomm`, `template-quiz`)
@@ -91,21 +88,18 @@ The following are **EXPLICITLY FORBIDDEN**:
 **Future Repository Separation Strategy**:
 
 This monorepo is designed as a **temporary unified workspace**. As the project matures:
-
 1. Individual packages will be **extracted to separate repositories**
 2. Only essential launcher/bootstrapping packages will remain in this repository
 3. Each extracted package must be independently deployable and maintainable
 4. Package dependencies will be managed through proper versioning and npm/git references
 
 **Enforcement**:
-
 - Code reviews MUST reject any implementation outside `packages/` directory
 - Implementation plans MUST explicitly state which package(s) will contain the feature
 - Pull requests MUST include verification that all code is properly packaged
 - Automated checks SHOULD be implemented to prevent non-package code commits
 
 **Rationale**: Modular architecture is **NON-NEGOTIABLE** for this project. The monorepo is a workspace strategy, not a destination. Each package must be self-contained and extractable to enable:
-
 - Independent deployment and scaling
 - Clear ownership boundaries
 - Technology stack evolution per package
@@ -318,22 +312,21 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {
 
 ```typescript
 // Server middleware: server/middleware/rate-limit.ts
-import { defineEventHandler } from 'h3';
-import { createRateLimiter } from '@universo/utils/rate-limiting';
+import { defineEventHandler } from 'h3'
+import { createRateLimiter } from '@universo/utils/rate-limiting'
 
 const limiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  redisUrl: process.env.REDIS_URL, // Falls back to memory store if not set
-});
+  redisUrl: process.env.REDIS_URL // Falls back to memory store if not set
+})
 
 export default defineEventHandler(async (event) => {
-  await limiter(event);
-});
+  await limiter(event)
+})
 ```
 
 **Production Setup**:
-
 ```bash
 # Environment variables
 REDIS_URL=redis://:password@redis.example.com:6379  # Basic auth
@@ -412,7 +405,6 @@ Examples:
 - **Tree-Shaking**: Build configuration SHOULD support tree-shaking for optimal bundle size
 
 **Build Tool Decision Matrix**:
-
 ```
 Package Type          → Build Tool
 ─────────────────────────────────────
