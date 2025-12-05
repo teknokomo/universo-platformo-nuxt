@@ -246,7 +246,7 @@ packages/
 
 ### English Documentation (Primary)
 
-- [ ] T001 [P] [US1] Create `/README.md` with project overview section
+- [x] T001 [P] [US1] Create `/README.md` with project overview section
   - Project name: Universo Platformo Nuxt
   - Brief description: Fullstack platform built on Nuxt.js and TypeScript
   - Statement: "This is a Nuxt.js implementation of Universo Platformo concept"
