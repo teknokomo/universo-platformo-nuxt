@@ -277,26 +277,26 @@ packages/
   - Explain `base/` folder requirement
   - Include directory tree diagram
 
-- [ ] T006 [P] [US1] Add "Three-Entity Pattern" section in `/README.md`
+- [x] T006 [P] [US1] Add "Three-Entity Pattern" section in `/README.md`
   - Explain base pattern: Clusters/Domains/Resources
   - Show pattern replication: Metaverses/Sections/Entities
   - Explain as core architectural concept
   - Note: Pattern repeats across all features
 
-- [ ] T007 [P] [US1] Add "Getting Started" section in `/README.md`
+- [x] T007 [P] [US1] Add "Getting Started" section in `/README.md`
   - Prerequisites: Node.js 18.x+, PNPM 8.x+
   - Installation: Clone, `pnpm install`
   - Development commands: dev, build, typecheck, lint, format
   - Quality check: `pnpm quality`
 
-- [ ] T008 [P] [US1] Add "Creating a New Package" section in `/README.md`
+- [x] T008 [P] [US1] Add "Creating a New Package" section in `/README.md`
   - Step 1: Create directory structure with base/ folder
   - Step 2: Create package.json
   - Step 3: Create bilingual README files
   - Step 4: Run `pnpm install`
   - Estimated time: < 10 minutes
 
-- [ ] T009 [P] [US1] Add "Future Roadmap & Package Structure" section in `/README.md`
+- [x] T009 [P] [US1] Add "Future Roadmap & Package Structure" section in `/README.md`
   - Overview: Explain modular package approach inspired by universo-platformo-react
   - Phase 1: Foundation (current - repository setup, documentation, tooling)
   - Phase 2: Authentication (`auth-frt` + `auth-srv` packages)
@@ -312,7 +312,7 @@ packages/
   - Include: Link to reference React packages structure
   - Note: Monitor universo-platformo-react for feature updates and improvements
 
-- [ ] T010 [P] [US1] Add "Documentation & Governance" section in `/README.md`
+- [x] T010 [P] [US1] Add "Documentation & Governance" section in `/README.md`
   - Link to constitution: `.specify/memory/constitution.md`
   - Link to architectural patterns (English & Russian)
   - Link to specifications: `.specify/specs/`
@@ -335,14 +335,14 @@ packages/
 
 ### Russian Translation
 
-- [ ] T012 [US1] Create `/README-RU.md` translating `/README.md`
+- [x] T012 [US1] Create `/README-RU.md` translating `/README.md`
   - Translate all text content to Russian
   - Keep technical terms in English where appropriate
   - Maintain identical section structure
   - Keep code blocks untranslated
   - Preserve all links and URLs
 
-- [ ] T013 [US1] Verify `/README-RU.md` line count matches `/README.md` ±2 lines
+- [x] T013 [US1] Verify `/README-RU.md` line count matches `/README.md` ±2 lines
   - Count lines: `wc -l README.md README-RU.md`
   - If difference > 2, adjust formatting
   - Document counts in commit message
