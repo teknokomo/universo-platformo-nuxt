@@ -252,7 +252,7 @@ packages/
   - Statement: "This is a Nuxt.js implementation of Universo Platformo concept"
   - Badges for License, PNPM, TypeScript, Nuxt
 
-- [ ] T002 [P] [US1] Add "Relationship to universo-platformo-react" section in `/README.md`
+- [x] T002 [P] [US1] Add "Relationship to universo-platformo-react" section in `/README.md`
   - Explain: React version as conceptual reference
   - Explain: Nuxt version uses same concepts, different implementation
   - Explain: No code copying, Nuxt best practices applied
