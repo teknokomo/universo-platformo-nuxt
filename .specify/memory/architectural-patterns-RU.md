@@ -48,21 +48,22 @@ app.vue                         # ❌ Только минимальная заг
 
 **Матрица Решений для Размещения Кода**:
 
-| Тип Кода                         | Размещение                          | Разрешено в Корне? |
-|----------------------------------|-------------------------------------|--------------------|
-| UI компоненты функционала        | `packages/{domain}-frt/base/src/`  | ❌ НЕТ            |
-| API роуты функционала            | `packages/{domain}-srv/base/src/`  | ❌ НЕТ            |
-| Бизнес-логика функционала        | `packages/{domain}-srv/base/src/`  | ❌ НЕТ            |
-| Общие типы                       | `packages/@universo/types/base/`   | ❌ НЕТ            |
-| Общие утилиты                    | `packages/@universo/utils/base/`   | ❌ НЕТ            |
-| Конфигурационные файлы           | Корневая директория                 | ✅ ДА             |
-| Минимальная загрузка приложения  | Корневой `app.vue` (загружает пакеты) | ✅ ДА (минимально)|
-| Скрипты сборки/развертывания     | Корневая директория                 | ✅ ДА             |
-| Документация                     | Корневой `README.md`                | ✅ ДА             |
+| Тип Кода                        | Размещение                            | Разрешено в Корне? |
+| ------------------------------- | ------------------------------------- | ------------------ |
+| UI компоненты функционала       | `packages/{domain}-frt/base/src/`     | ❌ НЕТ             |
+| API роуты функционала           | `packages/{domain}-srv/base/src/`     | ❌ НЕТ             |
+| Бизнес-логика функционала       | `packages/{domain}-srv/base/src/`     | ❌ НЕТ             |
+| Общие типы                      | `packages/@universo/types/base/`      | ❌ НЕТ             |
+| Общие утилиты                   | `packages/@universo/utils/base/`      | ❌ НЕТ             |
+| Конфигурационные файлы          | Корневая директория                   | ✅ ДА              |
+| Минимальная загрузка приложения | Корневой `app.vue` (загружает пакеты) | ✅ ДА (минимально) |
+| Скрипты сборки/развертывания    | Корневая директория                   | ✅ ДА              |
+| Документация                    | Корневой `README.md`                  | ✅ ДА              |
 
 **Контрольный Список Готовности к Извлечению Пакета**:
 
 Для того чтобы пакет был готов к извлечению:
+
 - [ ] Все зависимости явно указаны в package.json
 - [ ] Нет импортов извне пакета (кроме workspace deps)
 - [ ] Независимые скрипты сборки и тестирования
@@ -682,16 +683,14 @@ export default defineNuxtConfig({
   // Конфигурация слоя
   components: true,
   composables: {
-    dirs: ['composables']
-  }
-})
+    dirs: ['composables'],
+  },
+});
 
 // Корневой nuxt.config.ts расширяет слой
 export default defineNuxtConfig({
-  extends: [
-    './packages/clusters-frt/base'
-  ]
-})
+  extends: ['./packages/clusters-frt/base'],
+});
 ```
 
 **Подход Явного Export** (для утилитных пакетов):
@@ -712,6 +711,7 @@ import { UserEntity } from '@universo/types/entities'
 ```
 
 **Преимущества**:
+
 - Hot Module Replacement (HMR) для изменений пакетов
 - Автоимпорт из пакетов
 - Типобезопасность между пакетами
@@ -763,37 +763,38 @@ packages/clusters-srv/base/
 
 ```typescript
 // packages/clusters-srv/base/server/api/clusters/index.get.ts
-import { defineEventHandler, getQuery } from 'h3'
-import { z } from 'zod'
+import { defineEventHandler, getQuery } from 'h3';
+import { z } from 'zod';
 
 const querySchema = z.object({
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(10),
-  search: z.string().optional()
-})
+  search: z.string().optional(),
+});
 
 export default defineEventHandler(async (event) => {
   // Валидация параметров запроса
-  const query = querySchema.parse(getQuery(event))
-  
+  const query = querySchema.parse(getQuery(event));
+
   // Получить пользователя из middleware аутентификации
-  const user = event.context.user
-  
+  const user = event.context.user;
+
   // Получить данные используя паттерн репозитория
-  const clusters = await getClustersRepository().findPaginated(query, user.id)
-  
+  const clusters = await getClustersRepository().findPaginated(query, user.id);
+
   return {
     data: clusters,
     pagination: {
       page: query.page,
       limit: query.limit,
-      total: clusters.length
-    }
-  }
-})
+      total: clusters.length,
+    },
+  };
+});
 ```
 
 **Преимущества**:
+
 - Понятная структура API
 - Файловая маршрутизация
 - Типобезопасные запрос/ответ
@@ -820,82 +821,81 @@ packages/clusters-frt/base/composables/
 
 ```typescript
 // packages/clusters-frt/base/composables/useClusters.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import type { Cluster, ClusterCreateInput } from '@universo/types'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
+import type { Cluster, ClusterCreateInput } from '@universo/types';
 
 export const useClusters = () => {
-  const queryClient = useQueryClient()
-  
+  const queryClient = useQueryClient();
+
   // Получить список
   const { data: clusters, isLoading } = useQuery({
     queryKey: ['clusters'],
-    queryFn: () => $fetch<Cluster[]>('/api/clusters')
-  })
-  
+    queryFn: () => $fetch<Cluster[]>('/api/clusters'),
+  });
+
   // Мутация создания
   const createCluster = useMutation({
-    mutationFn: (data: ClusterCreateInput) => 
+    mutationFn: (data: ClusterCreateInput) =>
       $fetch('/api/clusters', { method: 'POST', body: data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clusters'] })
-    }
-  })
-  
+      queryClient.invalidateQueries({ queryKey: ['clusters'] });
+    },
+  });
+
   return {
     clusters,
     isLoading,
-    createCluster
-  }
-}
+    createCluster,
+  };
+};
 ```
 
 **Composable Формы**:
 
 ```typescript
 // packages/clusters-frt/base/composables/useClusterForm.ts
-import { ref, computed } from 'vue'
-import { z } from 'zod'
+import { ref, computed } from 'vue';
+import { z } from 'zod';
 
 const clusterSchema = z.object({
   name: z.string().min(1).max(100),
-  description: z.string().max(500).optional()
-})
+  description: z.string().max(500).optional(),
+});
 
 export const useClusterForm = (initialData?: Partial<Cluster>) => {
   const formData = ref({
     name: initialData?.name ?? '',
-    description: initialData?.description ?? ''
-  })
-  
-  const errors = ref<Record<string, string>>({})
-  
+    description: initialData?.description ?? '',
+  });
+
+  const errors = ref<Record<string, string>>({});
+
   const validate = () => {
     try {
-      clusterSchema.parse(formData.value)
-      errors.value = {}
-      return true
+      clusterSchema.parse(formData.value);
+      errors.value = {};
+      return true;
     } catch (err) {
       if (err instanceof z.ZodError) {
-        errors.value = Object.fromEntries(
-          err.errors.map(e => [e.path[0], e.message])
-        )
+        errors.value = Object.fromEntries(err.errors.map((e) => [e.path[0], e.message]));
       }
-      return false
+      return false;
     }
-  }
-  
-  const isValid = computed(() => Object.keys(errors.value).length === 0)
-  
+  };
+
+  const isValid = computed(() => Object.keys(errors.value).length === 0);
+
   return {
     formData,
     errors,
     validate,
-    isValid
-  }
-}
+    isValid,
+  };
+};
 ```
 
 **Преимущества**:
+
 - Переиспользуемость между компонентами
 - Типобезопасность
 - Тестируемость в изоляции
@@ -912,77 +912,78 @@ export const useClusterForm = (initialData?: Partial<Cluster>) => {
 
 ```typescript
 // packages/@universo/types/base/src/api/clusters.ts
-import { z } from 'zod'
+import { z } from 'zod';
 
 // Схемы запросов
 export const clusterCreateSchema = z.object({
   name: z.string().min(1).max(100),
-  description: z.string().max(500).optional()
-})
+  description: z.string().max(500).optional(),
+});
 
-export const clusterUpdateSchema = clusterCreateSchema.partial()
+export const clusterUpdateSchema = clusterCreateSchema.partial();
 
 // Типы ответов
 export interface Cluster {
-  id: string
-  name: string
-  description?: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PaginatedResponse<T> {
-  data: T[]
+  data: T[];
   pagination: {
-    page: number
-    limit: number
-    total: number
-  }
+    page: number;
+    limit: number;
+    total: number;
+  };
 }
 
 // Вывод типов
-export type ClusterCreateInput = z.infer<typeof clusterCreateSchema>
-export type ClusterUpdateInput = z.infer<typeof clusterUpdateSchema>
+export type ClusterCreateInput = z.infer<typeof clusterCreateSchema>;
+export type ClusterUpdateInput = z.infer<typeof clusterUpdateSchema>;
 ```
 
 **Использование на Backend**:
 
 ```typescript
 // packages/clusters-srv/base/server/api/clusters/index.post.ts
-import { clusterCreateSchema, type Cluster } from '@universo/types/api/clusters'
+import { clusterCreateSchema, type Cluster } from '@universo/types/api/clusters';
 
 export default defineEventHandler(async (event): Promise<Cluster> => {
-  const body = await readBody(event)
-  
+  const body = await readBody(event);
+
   // Валидация с общей схемой
-  const data = clusterCreateSchema.parse(body)
-  
+  const data = clusterCreateSchema.parse(body);
+
   // Создание используя репозиторий
-  const cluster = await getClustersRepository().create(data)
-  
-  return cluster
-})
+  const cluster = await getClustersRepository().create(data);
+
+  return cluster;
+});
 ```
 
 **Использование на Frontend**:
 
 ```typescript
 // packages/clusters-frt/base/composables/useClusters.ts
-import type { Cluster, ClusterCreateInput } from '@universo/types/api/clusters'
+import type { Cluster, ClusterCreateInput } from '@universo/types/api/clusters';
 
 export const useClusters = () => {
   const createCluster = async (data: ClusterCreateInput): Promise<Cluster> => {
     return $fetch('/api/clusters', {
       method: 'POST',
-      body: data
-    })
-  }
-  
-  return { createCluster }
-}
+      body: data,
+    });
+  };
+
+  return { createCluster };
+};
 ```
 
 **Преимущества**:
+
 - Единый источник истины для типов
 - Проверка типов на этапе компиляции
 - Валидация во время выполнения с Zod
@@ -999,34 +1000,38 @@ export const useClusters = () => {
 
 ```typescript
 // packages/clusters-frt/base/composables/useLocalStorage.ts
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue';
 
 export const useLocalStorage = <T>(key: string, defaultValue: T) => {
-  const data = ref<T>(defaultValue)
-  const isReady = ref(false)
-  
+  const data = ref<T>(defaultValue);
+  const isReady = ref(false);
+
   // Доступ к localStorage только на клиенте
   onMounted(() => {
-    const stored = localStorage.getItem(key)
+    const stored = localStorage.getItem(key);
     if (stored) {
       try {
-        data.value = JSON.parse(stored)
+        data.value = JSON.parse(stored);
       } catch (e) {
-        console.error('Не удалось разобрать localStorage:', e)
+        console.error('Не удалось разобрать localStorage:', e);
       }
     }
-    isReady.value = true
-  })
-  
+    isReady.value = true;
+  });
+
   // Отслеживать изменения (только на клиенте)
   if (process.client) {
-    watch(data, (newValue) => {
-      localStorage.setItem(key, JSON.stringify(newValue))
-    }, { deep: true })
+    watch(
+      data,
+      (newValue) => {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      },
+      { deep: true }
+    );
   }
-  
-  return { data, isReady }
-}
+
+  return { data, isReady };
+};
 ```
 
 **API Вызовы с SSR**:
@@ -1042,18 +1047,19 @@ export const useClusterDetail = (id: string) => {
       // Кэширование на 5 минут
       getCachedData: (key) => useNuxtApp().payload.data[key],
     }
-  )
-  
+  );
+
   return {
     cluster: data,
     loading: pending,
     error,
-    refresh
-  }
-}
+    refresh,
+  };
+};
 ```
 
 **Преимущества**:
+
 - Отсутствие несоответствий гидратации
 - Правильная загрузка данных SSR
 - Изоляция кода только для клиента
@@ -1069,39 +1075,39 @@ export const useClusterDetail = (id: string) => {
 
 ```typescript
 // packages/auth-srv/base/server/middleware/auth.ts
-import { defineEventHandler, createError } from 'h3'
-import { verifyToken } from '../utils/jwt'
+import { defineEventHandler, createError } from 'h3';
+import { verifyToken } from '../utils/jwt';
 
 export default defineEventHandler(async (event) => {
   // Пропустить аутентификацию для публичных маршрутов
   if (event.path.startsWith('/api/public')) {
-    return
+    return;
   }
-  
+
   // Получить токен из заголовка
-  const authHeader = getHeader(event, 'authorization')
+  const authHeader = getHeader(event, 'authorization');
   if (!authHeader?.startsWith('Bearer ')) {
     throw createError({
       statusCode: 401,
-      message: 'Отсутствует токен аутентификации'
-    })
+      message: 'Отсутствует токен аутентификации',
+    });
   }
-  
-  const token = authHeader.substring(7)
-  
+
+  const token = authHeader.substring(7);
+
   try {
     // Проверить и декодировать токен
-    const user = await verifyToken(token)
-    
+    const user = await verifyToken(token);
+
     // Прикрепить пользователя к контексту события
-    event.context.user = user
+    event.context.user = user;
   } catch (error) {
     throw createError({
       statusCode: 401,
-      message: 'Недействительный токен аутентификации'
-    })
+      message: 'Недействительный токен аутентификации',
+    });
   }
-})
+});
 ```
 
 **Route Middleware** (для страниц):
@@ -1109,15 +1115,15 @@ export default defineEventHandler(async (event) => {
 ```typescript
 // packages/clusters-frt/base/middleware/cluster-access.ts
 export default defineNuxtRouteMiddleware(async (to) => {
-  const clusterId = to.params.id
-  
+  const clusterId = to.params.id;
+
   // Проверить, есть ли у пользователя доступ к кластеру
-  const hasAccess = await $fetch(`/api/clusters/${clusterId}/check-access`)
-  
+  const hasAccess = await $fetch(`/api/clusters/${clusterId}/check-access`);
+
   if (!hasAccess) {
-    return navigateTo('/unauthorized')
+    return navigateTo('/unauthorized');
   }
-})
+});
 ```
 
 **Использование на Странице**:
@@ -1126,12 +1132,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
 <!-- packages/clusters-frt/base/pages/clusters/[id].vue -->
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth', 'cluster-access']
-})
+  middleware: ['auth', 'cluster-access'],
+});
 </script>
 ```
 
 **Преимущества**:
+
 - Централизованная логика аутентификации
 - Типобезопасная защита маршрутов
 - Совместимость с SSR
@@ -1153,21 +1160,21 @@ export default defineNuxtConfig({
     {
       path: '~/components',
       pathPrefix: false,
-    }
+    },
   ],
-  
+
   // Автоимпорт composables
   imports: {
-    dirs: ['composables']
+    dirs: ['composables'],
   },
-  
+
   // Специфичная для слоя конфигурация
   runtimeConfig: {
     public: {
-      clustersApiBase: '/api/clusters'
-    }
-  }
-})
+      clustersApiBase: '/api/clusters',
+    },
+  },
+});
 ```
 
 **Интеграция с Корневым Приложением**:
@@ -1179,19 +1186,20 @@ export default defineNuxtConfig({
     // Включить все слои фронтенд пакетов
     './packages/clusters-frt/base',
     './packages/auth-frt/base',
-    './packages/@universo/ui/base'
+    './packages/@universo/ui/base',
   ],
-  
+
   // Переопределить/расширить конфигурацию слоя при необходимости
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'http://localhost:3000'
-    }
-  }
-})
+      apiBase: process.env.API_BASE || 'http://localhost:3000',
+    },
+  },
+});
 ```
 
 **Преимущества**:
+
 - Совместное использование компонентов между приложениями
 - Автоимпорт из пакетов
 - Специфичная для слоя конфигурация
@@ -1255,17 +1263,13 @@ export default defineNuxtConfig({
     // Включить пакеты workspace для проверки типов
     includeWorkspace: true,
     // Поднять общие типы
-    hoist: [
-      '@nuxt/schema',
-      'nuxt',
-      'vue',
-      'vue-router'
-    ]
-  }
-})
+    hoist: ['@nuxt/schema', 'nuxt', 'vue', 'vue-router'],
+  },
+});
 ```
 
 **Преимущества**:
+
 - Быстрые инкрементальные сборки
 - Лучшая поддержка IDE
 - Ошибки типов в пакетах
