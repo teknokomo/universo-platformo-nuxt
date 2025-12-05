@@ -242,7 +242,7 @@ packages/
   - Architecture differences (file-based routing vs React Router)
   - Implementation philosophy differences
 
-- [ ] T004 [P] [US1] Add "Technology Stack" section in `/README.md`
+- [X] T004 [P] [US1] Add "Technology Stack" section in `/README.md`
   - Core: Nuxt 3.x, TypeScript 5.x (strict), PNPM 8.x+
   - Database: Supabase with abstraction layer
   - Auth: Passport.js with Supabase connector
