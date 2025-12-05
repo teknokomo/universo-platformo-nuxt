@@ -1,4 +1,5 @@
 # Архитектурный Анализ: React vs Nuxt Реализация
+
 **Дата**: 2025-11-17  
 **Цель**: Сравнить паттерны universo-platformo-react с планами universo-platformo-nuxt  
 **Источник**: Глубокий анализ [universo-platformo-react](https://github.com/teknokomo/universo-platformo-react)
@@ -8,6 +9,7 @@
 После тщательного анализа репозитория React были выявлены следующие пробелы в текущих планах проекта Nuxt:
 
 ### Критические Пробелы (Необходимо Устранить)
+
 1. **Несоответствия в именовании пакетов** - Некоторые пакеты используют неправильные префиксы
 2. **Отсутствующие утилитарные пакеты** - Несколько критических общих пакетов не запланированы
 3. **Неполная документация паттерна Guards** - Фабричные функции не детализированы
@@ -15,6 +17,7 @@
 5. **Специфика системы сборки** - Детали tsdown отсутствуют
 
 ### Уже Покрытые Архитектурные Паттерны ✅
+
 - Паттерн Repository (TypeORM)
 - Универсальная Система Ролей
 - Архитектура i18n
@@ -29,6 +32,7 @@
 ### Пакеты Репозитория React (35 пакетов всего)
 
 **Пакеты Функционала** (с суффиксами -frt/-srv):
+
 - analytics-frt
 - auth-frt, auth-srv
 - clusters-frt, clusters-srv
@@ -41,6 +45,7 @@
 - uniks-frt, uniks-srv
 
 **Утилитарные Пакеты** (без суффикса):
+
 - universo-api-client
 - universo-i18n
 - universo-rest-docs
@@ -49,10 +54,12 @@
 - universo-utils
 
 **Пакеты Шаблонов** (без суффикса):
+
 - template-mmoomm
 - template-quiz
 
 **Устаревшие Пакеты Flowise** (будут выведены из эксплуатации в Nuxt):
+
 - flowise-chatmessage
 - flowise-components
 - flowise-server
@@ -61,6 +68,7 @@
 - flowise-template-mui (переименован в universo-template-mui)
 
 **Специальные Пакеты**:
+
 - updl (система узлов UPDL)
 - multiplayer-colyseus-srv (мультиплеер Colyseus)
 
@@ -85,18 +93,23 @@
 ## Сравнение Архитектурных Паттернов
 
 ### 1. Паттерн Repository ✅ ПОКРЫТО
-**Реализация React**: 
+
+**Реализация React**:
+
 - Все операции с базой данных через TypeORM
 - `getDataSource().getRepository(Entity)`
 - Никаких прямых SQL-запросов
 
 **Документация Nuxt**:
+
 - Конституция Принцип VIII: Применение Паттерна Repository
 - Архитектурные Паттерны: Детальное покрытие
 - ✅ Хорошо задокументировано
 
 ### 2. Паттерн Guards ⚠️ ЧАСТИЧНО
+
 **Реализация React**:
+
 ```typescript
 const guards = createAccessGuards({
   entityType: 'metaverse',
@@ -106,22 +119,28 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {});
 ```
 
 **Документация Nuxt**:
+
 - Конституция Принцип IX: Универсальная Система Ролей
 - Архитектурные Паттерны: Пример паттерна Guards
 - ⚠️ Фабричная функция `createAccessGuards()` требует больше деталей
 - ⚠️ Необходимо уточнить эквивалент Nuxt middleware
 
 ### 3. Фабричные Функции для Actions ✅ ПОКРЫТО
+
 **Реализация React**:
+
 - `createEntityActions<TEntity, TFormData>` - сокращение кода на 91%
 - `createMemberActions<TMember>` - согласованные CRUD операции
 
 **Документация Nuxt**:
+
 - Архитектурные Паттерны: Раздел Фабричные Функции
 - ✅ Хорошо задокументировано с примерами
 
 ### 11. Архитектура Ограничения Скорости ❌ ОТСУТСТВУЕТ
+
 **Реализация React**:
+
 - Распределённое ограничение скорости на основе Redis
 - Пакет `@universo/utils/rate-limiting`
 - express-rate-limit + rate-limit-redis
@@ -129,6 +148,7 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {});
 - Поддержка нескольких инстансов (Docker/K8s)
 
 **Документация Nuxt**:
+
 - ❌ Не упоминается в конституции
 - ❌ Не в архитектурных паттернах
 - ⚠️ КРИТИЧНО для продакшн развертывания
@@ -136,35 +156,40 @@ router.patch('/:id', guards.ensureAccess(['editor']), async (req, res) => {});
 ## Критические Пробелы для Устранения
 
 ### 1. Архитектура Ограничения Скорости (КРИТИЧНО)
+
 **Влияние**: Продакшн развертывания без ограничения скорости уязвимы для DoS-атак.
 
 **Требуемая Документация**:
+
 - Добавить в Конституцию: раздел Технологический Стек
 - Добавить в Архитектурные Паттерны: раздел Ограничение Скорости
 - Включить в план начальной настройки Фаза 0 или Фаза 1
 
 **Детали Реализации**:
+
 ```typescript
 // Паттерн для Nuxt
-import { defineEventHandler } from 'h3'
-import { createRateLimiter } from '@universo/utils/rate-limiting'
+import { defineEventHandler } from 'h3';
+import { createRateLimiter } from '@universo/utils/rate-limiting';
 
 const limiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  redisUrl: process.env.REDIS_URL
-})
+  redisUrl: process.env.REDIS_URL,
+});
 
 export default defineEventHandler(async (event) => {
-  await limiter(event)
+  await limiter(event);
   // ... логика маршрута
-})
+});
 ```
 
 ### 2. Руководство по Системе Сборки (ВАЖНО)
+
 **Влияние**: Путаница относительно того, какой инструмент сборки использовать для какого типа пакета.
 
 **Требуемая Документация**:
+
 - Добавить в Конституцию: Стандарты Системы Сборки (уточнить)
 - Предоставить матрицу принятия решений:
   - Пакеты Nuxt → Система сборки Nuxt

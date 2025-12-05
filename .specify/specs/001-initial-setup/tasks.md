@@ -7,7 +7,7 @@
 
 **Organization**: Tasks grouped by user story (US1-US5) to enable independent implementation and testing. Priority order: P1 → P2 → P3.
 
-**Updated**: 2025-11-25 - Enhanced with comprehensive package structure aligned with universo-platformo-react (added missing packages: projects, storages, analytics, multiplayer; expanded node-components with detailed node categories; added flowise-* legacy migration note)
+**Updated**: 2025-11-25 - Enhanced with comprehensive package structure aligned with universo-platformo-react (added missing packages: projects, storages, analytics, multiplayer; expanded node-components with detailed node categories; added flowise-\* legacy migration note)
 
 ## Format: `- [ ] [TaskID] [P?] [Story?] Description with file path`
 
@@ -18,12 +18,14 @@
 ## Path Conventions
 
 Repository root structure for initial setup:
+
 - Configuration: `/package.json`, `/tsconfig.json`, `/.eslintrc.cjs`, etc.
 - Documentation: `/README.md`, `/README-RU.md`
 - Workspace: `/packages/` (initially empty with `.gitkeep`)
 - Specifications: `/.specify/specs/001-initial-setup/`
 
 **Future Package Structure** (documented for context, not implemented in this feature):
+
 ```
 packages/
 ├── auth-frt/base/              # Authentication UI components
@@ -77,6 +79,7 @@ packages/
 ### Package Categories
 
 **Core Feature Packages** (frontend + backend pairs):
+
 - `auth-frt` + `auth-srv`: Authentication pages and session management
 - `clusters-frt` + `clusters-srv`: Clusters/Domains/Resources (Three-entity pattern foundation)
 - `metaverses-frt` + `metaverses-srv`: Metaverses/Sections/Entities (Three-entity pattern)
@@ -90,9 +93,11 @@ packages/
 - `analytics-frt`: Analytics dashboard and metrics visualization
 
 **Multiplayer & Real-time Packages**:
+
 - `multiplayer-srv/base`: Real-time multiplayer server (Colyseus-based)
 
 **Node System Packages**:
+
 - `updl/base`: UPDL node definitions (Entity, Component, Action, Event, Data, Space, Universo)
 - `node-components/base`: Comprehensive node library including:
   - **LLM Nodes**: ChatOpenAI, ChatAnthropic, ChatGoogle, local models
@@ -110,6 +115,7 @@ packages/
   - **Data Processing Nodes**: Transform, Filter, Aggregate
 
 **Shared Utility Packages** (scoped with `@universo/`):
+
 - `@universo/types`: Shared TypeScript interfaces and types
 - `@universo/utils`: Shared utility functions and helpers
 - `@universo/api-client`: Type-safe API client for backend services
@@ -118,11 +124,13 @@ packages/
 - `@universo/rest-docs`: REST API documentation generator
 
 **Template Packages**:
+
 - `template-mmoomm/base`: PlayCanvas MMO space template
 - `template-quiz/base`: AR.js quiz template
 - `template-{future}/base`: Additional templates as needed
 
 **Note on Legacy Flowise Packages**: The React repository contains `flowise-*` prefixed packages (flowise-components, flowise-server, flowise-ui, etc.) which are legacy packages from the original Flowise project. In this Nuxt implementation, we DO NOT create flowise-prefixed packages. Instead:
+
 - `flowise-components` functionality → absorbed into `node-components/base` and `spaces-frt` + `spaces-srv`
 - `flowise-server` functionality → absorbed into `spaces-srv` and feature-specific `-srv` packages
 - `flowise-ui` functionality → absorbed into `spaces-frt` and `@universo/template-vuetify`
@@ -131,12 +139,14 @@ packages/
 ### Implementation Roadmap (Post-Initial Setup)
 
 **Phase 1: Foundation** (Feature 001 - This feature)
+
 - Repository structure and documentation
 - PNPM workspace configuration
 - TypeScript strict mode setup
 - Base tooling and quality checks
 
 **Phase 2: Shared Foundation & Authentication** (Feature 002)
+
 - `@universo/types`: Shared TypeScript interfaces (required by all features)
 - `@universo/utils`: Common utility functions
 - `auth-frt`: Login/register pages, session guards
@@ -144,20 +154,24 @@ packages/
 - Session management and middleware
 
 **Phase 3: Three-Entity Pattern Foundation** (Feature 003)
+
 - `clusters-frt` + `clusters-srv`: First implementation of Clusters/Domains/Resources pattern
 - Establishes pattern that will be replicated in Metaverses and other features
 - `@universo/api-client`: Type-safe API client (foundation for all API calls)
 
 **Phase 4: Workspace & Project Management** (Feature 004)
+
 - `uniks-frt` + `uniks-srv`: Workspace creation and management (equivalent to React's organizations)
 - `projects-frt` + `projects-srv`: Project management within workspaces
 - Multi-user collaboration preparation
 
 **Phase 5: Metaverses** (Feature 005)
+
 - `metaverses-frt` + `metaverses-srv`: Second implementation of three-entity pattern
 - Demonstrates pattern reusability
 
 **Phase 6: Spaces & Node System** (Feature 006)
+
 - `spaces-frt` + `spaces-srv`: Visual flow editor (Spaces/Canvases)
 - `updl/base`: UPDL node definitions (Entity, Component, Action, Event, Data, Space, Universo)
 - `node-components/base`: Initial node library with core LangChain nodes:
@@ -167,6 +181,7 @@ packages/
   - Basic Tool Nodes (Calculator, Custom API)
 
 **Phase 7: Node Library Expansion** (Feature 007)
+
 - Expand `node-components/base` with full LangChain integration:
   - Agent Nodes (OpenAI Functions, ReAct, Plan-and-Execute)
   - Vector Store Nodes (Pinecone, Supabase, Chroma, FAISS)
@@ -179,21 +194,25 @@ packages/
 - Add data processing and integration nodes
 
 **Phase 8: AI Space Builder** (Feature 008)
+
 - `space-builder-frt` + `space-builder-srv`: Prompt-to-flow AI generation
 - LLM integration for automated space creation
 
 **Phase 9: Publishing & Storage System** (Feature 009)
+
 - `publish-frt` + `publish-srv`: Export and publication functionality
 - `storages-frt` + `storages-srv`: File storage and asset management
 - `template-mmoomm/base`: PlayCanvas MMO template
 - `template-quiz/base`: AR.js quiz template
 
 **Phase 10: Profiles & Analytics** (Feature 010)
+
 - `profile-frt` + `profile-srv`: User profile management
 - `analytics-frt`: Analytics dashboard and metrics visualization
 - `@universo/rest-docs`: REST API documentation generator
 
 **Phase 11: Multiplayer & Advanced Features** (Feature 011+)
+
 - `multiplayer-srv/base`: Real-time multiplayer server (Colyseus-based)
 - Additional templates and integrations
 - `@universo/template-vuetify` enhancements
@@ -203,12 +222,14 @@ packages/
 ### Reference Monitoring
 
 **Active monitoring of universo-platformo-react**:
+
 - Track new features for implementation in Nuxt version
 - Identify improved patterns and architectural decisions
 - Avoid copying legacy code or unfinished features
 - Adapt concepts to Nuxt.js best practices
 
 **Key React packages to reference**:
+
 - [flowise-components](https://github.com/teknokomo/universo-platformo-react/tree/main/packages/flowise-components) - Node library structure
 - [updl/base](https://github.com/teknokomo/universo-platformo-react/tree/main/packages/updl/base) - UPDL node definitions
 - All `-frt`/`-srv` package pairs - Frontend/backend separation patterns
@@ -237,19 +258,19 @@ packages/
   - Explain: No code copying, Nuxt best practices applied
   - Link: https://github.com/teknokomo/universo-platformo-react
 
-- [ ] T003 [P] [US1] Add "Key Differences" section with comparison table in `/README.md`
+- [x] T003 [P] [US1] Add "Key Differences" section with comparison table in `/README.md`
   - Technology stack comparison (Nuxt vs React, integrated vs separate backend)
   - Architecture differences (file-based routing vs React Router)
   - Implementation philosophy differences
 
-- [X] T004 [P] [US1] Add "Technology Stack" section in `/README.md`
+- [x] T004 [P] [US1] Add "Technology Stack" section in `/README.md`
   - Core: Nuxt 3.x, TypeScript 5.x (strict), PNPM 8.x+
   - Database: Supabase with abstraction layer
   - Auth: Passport.js with Supabase connector
   - UI: Vuetify 3 (Material Design for Vue)
   - Quality: ESLint, Prettier, Vitest
 
-- [X] T005 [P] [US1] Add "Repository Structure" section in `/README.md`
+- [x] T005 [P] [US1] Add "Repository Structure" section in `/README.md`
   - Explain monorepo organization with PNPM workspaces
   - Document `packages/` directory purpose
   - Explain `-frt` (frontend) and `-srv` (backend) naming
@@ -881,6 +902,7 @@ Phase 6: Final Validation & Completion
 ### Critical Path
 
 **Sequential (minimum time)**:
+
 1. Phase 1: Foundation (4-6 hours)
 2. Phase 2: Monorepo (3-4 hours)
 3. Phase 6: Validation (2-3 hours)
@@ -890,6 +912,7 @@ Phase 6: Final Validation & Completion
 ### Parallel Opportunities
 
 **After Phase 1 completes** (with 4 developers):
+
 - Developer A: Phase 2 (Monorepo) - 3-4 hours
 - Developer B: Phase 3 (TypeScript) - 3-4 hours
 - Developer C: Phase 4 (GitHub Labels) - 2-3 hours
@@ -902,6 +925,7 @@ Phase 6: Final Validation & Completion
 ### Within-Phase Parallelism
 
 Tasks marked `[P]` can run simultaneously:
+
 - Phase 1: 10 parallel tasks (T001-T010)
 - Phase 2: 3 parallel tasks
 - Phase 3: 9 parallel tasks (T040-T048)
@@ -967,6 +991,7 @@ Each milestone is independently valuable and deployable.
 ## Estimated Effort
 
 ### By Phase
+
 - Phase 1 (US1): 4-6 hours (documentation, configuration)
 - Phase 2 (US2): 3-4 hours (monorepo setup, workspace)
 - Phase 3 (US4): 3-4 hours (TypeScript, linting, formatting)
@@ -975,11 +1000,13 @@ Each milestone is independently valuable and deployable.
 - Phase 6: 2-3 hours (final validation, issue/PR)
 
 ### Total
+
 - **Sequential**: 16-23 hours
 - **With 4 developers**: 10-11 hours
 - **MVP only** (Phases 1-3, 6): 11-16 hours
 
 ### Task Count
+
 - **Total tasks**: 87
 - **Parallelizable**: 34 tasks marked [P]
 - **Per user story**:
