@@ -319,7 +319,7 @@ packages/
   - Link to GitHub instructions: `.github/instructions/`
   - Explain bilingual documentation requirement
 
-- [ ] T010A [P] [US1] Add "Package Categories & Node System" section in `/README.md`
+- [x] T010A [P] [US1] Add "Package Categories & Node System" section in `/README.md`
   - Core Feature Packages: List main `-frt` + `-srv` pairs (auth, clusters, metaverses, uniks, spaces, space-builder, publish, profile)
   - Node System: Explain UPDL nodes and node-components library
   - Node Types: LangChain nodes (LLMs, chains, agents, tools), Custom AI nodes, Data processing, Integration nodes
