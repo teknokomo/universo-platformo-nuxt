@@ -136,6 +136,108 @@ packages/clusters-srv/base/   # Backend: Cluster API and business logic
 packages/@universo/types/base/  # Shared: TypeScript type definitions
 ```
 
+## 📦 Package Categories & Node System
+
+This monorepo organizes functionality into distinct package categories, each serving a specific purpose in the Universo Platformo ecosystem.
+
+### Core Feature Packages
+
+Core features follow a consistent **frontend + backend** separation pattern with `-frt` (frontend) and `-srv` (server/backend) suffixes:
+
+- **`auth-frt` + `auth-srv`**: Authentication system with login, registration, and session management
+- **`clusters-frt` + `clusters-srv`**: Clusters/Domains/Resources management (three-entity pattern foundation)
+- **`metaverses-frt` + `metaverses-srv`**: Metaverses/Sections/Entities management (three-entity pattern replication)
+- **`uniks-frt` + `uniks-srv`**: Workspace management (conceptual equivalent to organizations)
+- **`spaces-frt` + `spaces-srv`**: Visual flow editor for Spaces/Canvases with node-based composition
+- **`space-builder-frt` + `space-builder-srv`**: AI-powered space builder using LLM integration for prompt-to-flow generation
+- **`publish-frt` + `publish-srv`**: Application publishing and export system
+- **`profile-frt` + `profile-srv`**: User profile management and settings
+- **`projects-frt` + `projects-srv`**: Project management within workspaces
+- **`storages-frt` + `storages-srv`**: File storage and asset management
+
+### Node System
+
+Universo Platformo features a powerful **node-based composition system** for building interactive spaces and AI-powered workflows:
+
+#### UPDL Nodes (`updl/base`)
+
+The **Universal Platform Description Language (UPDL)** defines core node types:
+
+- **Entity Nodes**: Represent objects and actors in the system
+- **Component Nodes**: Modular behaviors and properties attachable to entities
+- **Action Nodes**: Executable operations and transformations
+- **Event Nodes**: Reactive triggers and event handlers
+- **Data Nodes**: Data sources and storage connectors
+- **Space Nodes**: Spatial relationships and hierarchies
+- **Universo Nodes**: Cross-space and meta-level operations
+
+#### Node Components Library (`node-components/base`)
+
+A comprehensive library of pre-built nodes for rapid development:
+
+**LangChain Integration Nodes:**
+
+- **LLM Nodes**: ChatOpenAI, ChatAnthropic, ChatGoogle, local model support
+- **Chain Nodes**: LLMChain, SequentialChain, ConversationChain for complex workflows
+- **Agent Nodes**: OpenAI Functions Agent, ReAct Agent, Plan-and-Execute Agent
+- **Tool Nodes**: Calculator, WebBrowser, Custom API integrations, SerpAPI, Wikipedia
+- **Memory Nodes**: BufferMemory, ConversationSummary, Redis, PostgreSQL persistence
+- **Vector Store Nodes**: Pinecone, Supabase Vector, Chroma, FAISS for semantic search
+- **Embeddings Nodes**: OpenAI Embeddings, HuggingFace, Cohere for text vectorization
+- **Document Loader Nodes**: PDF, CSV, JSON, Web Scraper, Notion API integration
+- **Text Splitter Nodes**: Character-based, Recursive, Token-based splitting strategies
+- **Cache Nodes**: InMemory, Redis, Upstash for performance optimization
+- **Output Parser Nodes**: Structured output, List parsing, DateTime formatting
+
+**Custom AI Nodes:**
+
+- Universo-specific AI integrations
+- Domain-adapted language models
+- Custom prompt templates and chains
+
+**Data Processing Nodes:**
+
+- Transform, Filter, Aggregate operations
+- Data validation and sanitization
+- ETL pipelines
+
+**Integration Nodes:**
+
+- External API connectors
+- Database query nodes
+- Real-time data streams
+
+### Shared Utilities
+
+Centralized utility packages with `@universo/` scope provide reusable functionality across all features:
+
+- **`@universo/types`**: Shared TypeScript interfaces, types, and type guards
+- **`@universo/utils`**: Common utility functions, helpers, and algorithms
+- **`@universo/api-client`**: Type-safe API client library for backend service communication
+- **`@universo/i18n`**: Centralized internationalization (English + Russian) with namespace management
+- **`@universo/template-vuetify`**: Vuetify 3 component library, themes, and Material Design extensions
+- **`@universo/rest-docs`**: REST API documentation generator
+
+### Template Packages
+
+Ready-to-use templates for creating specialized spaces and applications:
+
+- **`template-mmoomm/base`**: PlayCanvas-based MMO template for multiplayer 3D spaces
+- **`template-quiz/base`**: AR.js-based quiz template for augmented reality experiences
+- **Future templates**: Additional templates will be added based on community needs and use cases
+
+Each template provides a complete starting point with pre-configured nodes, UI components, and backend logic.
+
+### Package Organization Principles
+
+All packages follow consistent principles:
+
+1. **Separation of Concerns**: Frontend and backend are always separate packages when both are needed
+2. **Base Folder Convention**: Every package contains a `/base/` directory for future multi-implementation support
+3. **Independence**: Packages should be extractable to separate repositories with minimal changes
+4. **Dependency Management**: Shared code lives in `@universo/*` utility packages, not duplicated
+5. **Naming Consistency**: Clear, descriptive names with `-frt`/`-srv` suffixes or `@universo/` scope
+
 ## 🏗 Three-Entity Pattern
 
 Universo Platformo is built around a flexible **three-entity pattern** that repeats across different functional domains:
