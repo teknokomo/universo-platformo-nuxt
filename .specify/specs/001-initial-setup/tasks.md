@@ -349,7 +349,7 @@ packages/
 
 ### Base Configuration Files
 
-- [ ] T014 [P] [US1] Ensure `/package.json` has complete workspace configuration
+- [x] T014 [P] [US1] Ensure `/package.json` has complete workspace configuration
   - Package name: `universo-platformo-nuxt`
   - Version: `0.1.0`
   - Private: true
@@ -357,7 +357,7 @@ packages/
   - DevDependencies: (already exist - verify complete)
   - Engines: Node >=18.0.0, PNPM >=8.0.0
 
-- [ ] T015 [P] [US1] Verify `/.gitignore` comprehensiveness
+- [x] T015 [P] [US1] Verify `/.gitignore` comprehensiveness
   - Ignores: `node_modules/`, `.nuxt/`, `.output/`, `dist/`
   - Ignores: `.env`, `.env.*` (but not `.env.example`)
   - Ignores: IDE files (`.vscode/`, `.idea/`, `*.swp`)
@@ -372,13 +372,13 @@ packages/
   - Time the understanding process (should be < 5 minutes)
   - Document feedback
 
-- [ ] T017 [US1] Verify configuration files exist (SC-005)
+- [x] T017 [US1] Verify configuration files exist (SC-005)
   - Check: README.md, README-RU.md exist
   - Check: package.json, tsconfig.json exist
   - Check: .gitignore, .eslintrc.cjs, .prettierrc exist
   - Check: pnpm-workspace.yaml exists
 
-- [ ] T018 [US1] Validate bilingual line counts (SC-004)
+- [x] T018 [US1] Validate bilingual line counts (SC-004)
   - Run: `wc -l README.md README-RU.md`
   - Verify: Difference ≤ 2 lines
   - Document: Actual counts
