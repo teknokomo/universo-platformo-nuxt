@@ -366,7 +366,7 @@ packages/
 
 ### Validation
 
-- [ ] T016 [US1] Run fresh clone test (SC-001)
+- [x] T016 [US1] Run fresh clone test (SC-001)
   - Clone repository to temporary location
   - Read README.md
   - Time the understanding process (should be < 5 minutes)
