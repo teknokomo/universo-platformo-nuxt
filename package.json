@@ -9,6 +9,8 @@
     "install:all": "pnpm install",
     "clean": "pnpm -r clean && rm -rf node_modules",
     "clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules",
+    "dev:all": "pnpm -r --parallel dev",
+    "build:all": "pnpm -r build",
     "typecheck": "nuxi typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
