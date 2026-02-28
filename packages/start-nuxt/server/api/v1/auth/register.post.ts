@@ -2,7 +2,8 @@
  * POST /api/v1/auth/register
  *
  * Register a new user with email and password via Supabase.
- * Uses the admin client to create the user account.
+ * All Supabase communication happens server-side only.
+ * Uses the admin client to create the user account with confirmed email.
  */
 
 import type { H3Event } from 'h3'
@@ -11,6 +12,9 @@ interface RegisterBody {
     email: string
     password: string
 }
+
+/** Basic email format check (RFC 5321 simplified) */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default defineEventHandler(async (event: H3Event) => {
     const body = await readBody<RegisterBody>(event)
@@ -22,6 +26,13 @@ export default defineEventHandler(async (event: H3Event) => {
         })
     }
 
+    if (!EMAIL_REGEX.test(body.email)) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Invalid email format'
+        })
+    }
+
     if (body.password.length < 6) {
         throw createError({
             statusCode: 400,
@@ -29,6 +40,7 @@ export default defineEventHandler(async (event: H3Event) => {
         })
     }
 
+    // Use admin client — creating a user is a privileged operation
     const supabase = createSupabaseAdminClient()
 
     const { data, error } = await supabase.auth.admin.createUser({

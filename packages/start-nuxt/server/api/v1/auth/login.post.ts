@@ -2,6 +2,7 @@
  * POST /api/v1/auth/login
  *
  * Authenticate user with email and password via Supabase.
+ * All Supabase communication happens server-side only.
  * Sets HTTP-only cookies for access and refresh tokens.
  */
 
@@ -15,6 +16,9 @@ interface LoginBody {
 /** 30-day refresh token lifetime in seconds */
 const REFRESH_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24 * 30
 
+/** Basic email format check (RFC 5321 simplified) */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default defineEventHandler(async (event: H3Event) => {
     const body = await readBody<LoginBody>(event)
 
@@ -25,7 +29,15 @@ export default defineEventHandler(async (event: H3Event) => {
         })
     }
 
-    const supabase = createSupabaseAdminClient()
+    if (!EMAIL_REGEX.test(body.email)) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Invalid email format'
+        })
+    }
+
+    // Use the public auth client — signInWithPassword does not require admin privileges
+    const supabase = createSupabaseAuthClient()
 
     const { data, error } = await supabase.auth.signInWithPassword({
         email: body.email,

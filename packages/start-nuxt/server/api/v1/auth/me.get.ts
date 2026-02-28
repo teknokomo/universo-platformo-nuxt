@@ -2,6 +2,7 @@
  * GET /api/v1/auth/me
  *
  * Get the current authenticated user.
+ * All Supabase communication happens server-side only.
  * Reads the access token from HTTP-only cookie.
  * Attempts token refresh if access token is expired.
  */
@@ -37,8 +38,8 @@ export default defineEventHandler(async (event: H3Event) => {
 
     // Access token invalid/expired - try to refresh using refresh token
     if (refreshToken) {
-        const adminSupabase = createSupabaseAdminClient()
-        const { data, error } = await adminSupabase.auth.refreshSession({
+        const authSupabase = createSupabaseAuthClient()
+        const { data, error } = await authSupabase.auth.refreshSession({
             refresh_token: refreshToken
         })
 

@@ -10,17 +10,18 @@ export default defineNuxtConfig({
         typeCheck: false
     },
 
-    // Runtime config - server-side secrets and public config
+    // Runtime config - all Supabase credentials are server-only.
+    // The frontend never communicates with Supabase directly;
+    // all Supabase access goes through Nuxt server API routes.
     runtimeConfig: {
-        // Private (server-only) - access via useRuntimeConfig() on server
+        // Private (server-only) - never sent to the client browser
+        supabaseUrl: process.env.SUPABASE_URL || '',
+        supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
         supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
         jwtSecret: process.env.JWT_SECRET || '',
 
-        // Public (exposed to client) - access via useRuntimeConfig().public
-        public: {
-            supabaseUrl: process.env.SUPABASE_URL || '',
-            supabaseAnonKey: process.env.SUPABASE_ANON_KEY || ''
-        }
+        // Public (exposed to client) - intentionally empty for Supabase
+        public: {}
     },
 
     // Modules
