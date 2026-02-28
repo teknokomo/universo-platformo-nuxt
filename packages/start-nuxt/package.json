@@ -1,0 +1,26 @@
+{
+  "name": "@universo/start-nuxt",
+  "version": "0.1.0",
+  "description": "Universo Platformo - Nuxt 3 start page with Supabase authentication",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "generate": "nuxt generate",
+    "typecheck": "nuxt typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.0",
+    "@nuxtjs/i18n": "^9.1.0"
+  },
+  "devDependencies": {
+    "nuxt": "^3.16.1",
+    "typescript": "^5.3.3",
+    "vue": "^3.4.0",
+    "vue-router": "^4.3.0"
+  }
+}

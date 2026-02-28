@@ -1,0 +1,110 @@
+{
+    "appbar": {
+        "login": "Sign In",
+        "logout": "Sign Out"
+    },
+    "landing": {
+        "hero": {
+            "titlePrefix": "Gateway to",
+            "titleHighlight": "all worlds",
+            "description": "Universo Platformo is a unified management system for creating, scaling, and connecting digital worlds. Join us and discover a new universe of possibilities.",
+            "button": "To the future"
+        },
+        "testimonials": {
+            "kompendio": {
+                "title": "Kompendio",
+                "description": "Intelligent knowledge management system for structuring and finding information across all your projects."
+            },
+            "platformo": {
+                "title": "Platformo",
+                "description": "Abstract management layer that unifies workflows, teams, and resources across multiple platforms."
+            },
+            "kiberplano": {
+                "title": "Kiberplano",
+                "description": "Advanced planning and execution system for strategic goal management and roadmap visualization."
+            },
+            "grandaringo": {
+                "title": "Grandaringo",
+                "description": "Creative and media tools suite for content creation, storytelling, and multimedia project management."
+            }
+        },
+        "footer": {
+            "owner": "diverslaboristo (Telegram)",
+            "email": "support{'@'}universo-platformo.com",
+            "termsOfService": "Terms of Service",
+            "privacyPolicy": "Privacy Policy"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Welcome back",
+            "subtitle": "Sign in to your Universo account",
+            "button": "Sign In",
+            "link": "Sign Up",
+            "noAccount": "Don't have an account?"
+        },
+        "register": {
+            "title": "Create account",
+            "subtitle": "Join Universo Platformo today",
+            "button": "Create Account",
+            "link": "Sign In",
+            "hasAccount": "Already have an account?"
+        },
+        "fields": {
+            "email": "Email address",
+            "emailPlaceholder": "you{'@'}example.com",
+            "password": "Password",
+            "passwordPlaceholder": "Enter your password",
+            "confirmPassword": "Confirm Password",
+            "confirmPasswordPlaceholder": "Repeat your password"
+        },
+        "errors": {
+            "fieldsRequired": "Please fill in all required fields.",
+            "passwordMismatch": "Passwords do not match.",
+            "passwordTooShort": "Password must be at least 6 characters.",
+            "genericError": "An error occurred. Please try again."
+        }
+    },
+    "onboarding": {
+        "steps": {
+            "welcome": "Welcome",
+            "projects": "Goals",
+            "campaigns": "Interests",
+            "clusters": "Features",
+            "completion": "Done"
+        },
+        "welcome": {
+            "title": "Welcome to Universo Platformo!",
+            "description": "We'll help you get started with a few quick steps. You'll select your global goals, personal interests, and platform features.",
+            "hint": "This will only take a minute."
+        },
+        "projects": {
+            "title": "Global Goals",
+            "description": "Select the global goals you want to contribute to. These are large-scale initiatives that shape the direction of the platform.",
+            "empty": "No global goals are available at the moment."
+        },
+        "campaigns": {
+            "title": "Personal Interests",
+            "description": "Choose topics and areas that interest you personally. This helps us tailor your experience.",
+            "empty": "No personal interests are available at the moment."
+        },
+        "clusters": {
+            "title": "Platform Features",
+            "description": "Select the platform features and modules you want access to.",
+            "empty": "No platform features are available at the moment."
+        },
+        "completion": {
+            "title": "You're all set!",
+            "description": "Your preferences have been saved. Welcome to the Universo Platformo community!",
+            "startOver": "Update Preferences"
+        },
+        "nav": {
+            "back": "Back",
+            "next": "Next"
+        },
+        "errors": {
+            "loadFailed": "Failed to load onboarding data. Please try refreshing the page.",
+            "saveFailed": "Failed to save your selections. Please try again."
+        }
+    }
+}
