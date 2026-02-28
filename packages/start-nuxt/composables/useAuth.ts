@@ -73,10 +73,11 @@ export function useAuth() {
             })
             user.value = data
         } catch (err: unknown) {
+            const errorData = (err as { data?: { statusMessage?: string; message?: string } })?.data
             const message =
-                err instanceof Error
-                    ? err.message
-                    : (err as { data?: { message?: string } })?.data?.message || 'Login failed'
+                errorData?.statusMessage ||
+                errorData?.message ||
+                (err instanceof Error ? err.message : 'Login failed')
             error.value = message
             throw err
         } finally {

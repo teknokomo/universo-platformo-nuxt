@@ -127,7 +127,6 @@ cp .env.example .env
 | `SUPABASE_URL`             | ✅          | URL проекта Supabase                     |
 | `SUPABASE_ANON_KEY`        | ✅          | Публичный anon-ключ (здесь — только сервер) |
 | `SUPABASE_SERVICE_ROLE_KEY`| ✅          | Service role ключ (привилегированные операции) |
-| `JWT_SECRET`               | необязательно | Дополнительный секрет для JWT          |
 | `NODE_ENV`                 | необязательно | `development` (по умолчанию) / `production` |
 
 ## 🧩 Разработка

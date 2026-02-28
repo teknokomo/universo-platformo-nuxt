@@ -3,7 +3,8 @@
  *
  * Register a new user with email and password via Supabase.
  * All Supabase communication happens server-side only.
- * Uses the admin client to create the user account with confirmed email.
+ * Uses the anon auth client so Supabase handles email confirmation
+ * according to the project's auth settings.
  */
 
 import type { H3Event } from 'h3'
@@ -38,19 +39,26 @@ export default defineEventHandler(async (event: H3Event) => {
         })
     }
 
-    // Use admin client — creating a user is a privileged operation
-    const supabase = createSupabaseAdminClient()
+    // Use the anon auth client for public sign-up.
+    // Supabase handles email confirmation based on project auth settings.
+    const supabase = createSupabaseAuthClient()
 
-    const { data, error } = await supabase.auth.admin.createUser({
+    const { data, error } = await supabase.auth.signUp({
         email: body.email,
-        password: body.password,
-        email_confirm: true
+        password: body.password
     })
 
     if (error) {
         throw createError({
             statusCode: 400,
             statusMessage: error.message
+        })
+    }
+
+    if (!data.user) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Registration failed'
         })
     }
 

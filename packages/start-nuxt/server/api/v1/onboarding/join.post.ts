@@ -1,10 +1,14 @@
 /**
  * POST /api/v1/onboarding/join
  *
- * Join selected onboarding items (Projects, Campaigns, Clusters).
- * Marks the user's onboarding as completed.
+ * Join selected onboarding items (Projects, Campaigns, Clusters) and
+ * return counts of the selected items.
  *
  * Requires authentication via sb-access-token cookie.
+ *
+ * NOTE: This is currently a stub that acknowledges selections without
+ * persisting them. Full implementation will create membership records
+ * and update the user's onboarding status.
  */
 
 import type { H3Event } from 'h3'

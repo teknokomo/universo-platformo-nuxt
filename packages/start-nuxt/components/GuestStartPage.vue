@@ -44,7 +44,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-image: url('/background-image.jpg');
+    background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 30%, #9fa8da 60%, #7986cb 100%);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
