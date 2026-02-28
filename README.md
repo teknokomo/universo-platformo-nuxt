@@ -52,7 +52,7 @@ This project is conceptually based on [universo-platformo-react](https://github.
 | Routing         | React Router                | File-based routing              |
 | Type System     | TypeScript                  | TypeScript (strict mode)        |
 | Package Manager | PNPM                        | PNPM                            |
-| UI Library      | Material UI (React)         | Vuetify 3 (Vue Material Design) |
+| UI Library      | Material UI (React)         | Scoped CSS (Vuetify 3 planned)  |
 
 ### Architecture Approach
 
@@ -69,8 +69,8 @@ This project is conceptually based on [universo-platformo-react](https://github.
 - **Language**: [TypeScript 5.x](https://www.typescriptlang.org/) - Strict mode enabled
 - **Package Manager**: [PNPM 8.x+](https://pnpm.io/) - Fast, disk space efficient
 - **Database**: [Supabase](https://supabase.com/) - PostgreSQL-based with realtime capabilities
-- **Authentication**: [Passport.js](https://www.passportjs.org/) - With Supabase connector
-- **UI Library**: [Vuetify 3](https://vuetifyjs.com/) - Material Design component framework for Vue
+- **Authentication**: [Supabase Auth](https://supabase.com/docs/guides/auth) - Server-side only via HTTP-only cookies
+- **i18n**: [@nuxtjs/i18n](https://i18n.nuxtjs.org/) - English + Russian with namespace management
 
 ### Code Quality
 
@@ -238,6 +238,19 @@ All packages follow consistent principles:
 4. **Dependency Management**: Shared code lives in `@universo/*` utility packages, not duplicated
 5. **Naming Consistency**: Clear, descriptive names with `-frt`/`-srv` suffixes or `@universo/` scope
 
+## 📋 Current Packages
+
+The following package is currently implemented and fully functional:
+
+### `packages/start-nuxt` — Start Page
+
+The entry-point Nuxt 3 application for Universo Platformo. See [packages/start-nuxt/README.md](./packages/start-nuxt/README.md).
+
+- Guest start page (`/`) — hero section, product cards, footer for unauthenticated users
+- Auth page (`/auth`) — email/password login and registration with Supabase
+- Authenticated start page — multi-step onboarding wizard (Projects, Campaigns, Clusters)
+- All Supabase access is server-side only; credentials are never sent to the browser
+
 ## 🏗 Three-Entity Pattern
 
 Universo Platformo is built around a flexible **three-entity pattern** that repeats across different functional domains:
@@ -357,6 +370,7 @@ pnpm install
 - ✅ TypeScript configuration with strict mode
 - ✅ Code quality tooling (ESLint, Prettier)
 - ✅ GitHub repository organization
+- ✅ Start page with Supabase authentication (`packages/start-nuxt`)
 
 ### Phase 2: Core Features
 
@@ -371,10 +385,8 @@ pnpm install
 
 ### Phase 3: Authentication & Authorization
 
-- Passport.js integration
-- Supabase authentication connector
+- Supabase Auth via server routes (implemented in `start-nuxt`)
 - Role-based access control
-- Session management
 
 ### Phase 4: Additional Features
 
@@ -461,8 +473,6 @@ Detailed architectural patterns adopted from Universo Platformo React:
 - **Universal List Pattern**: Reusable list components with backend pagination
 - **RLS Integration**: Row Level Security with application-level validation
 - **Data Isolation**: Three-tier isolation with junction tables
-
-6. **Reference Alignment**: Follow React concept, implement with Nuxt best practices
 
 ### Specifications
 

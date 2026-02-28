@@ -1,0 +1,23 @@
+# Nuxt build outputs
+.output
+.nuxt
+.nitro
+.cache
+
+# Dependencies
+node_modules
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+dist
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
