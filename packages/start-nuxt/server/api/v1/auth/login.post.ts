@@ -7,6 +7,7 @@
  */
 
 import type { H3Event } from 'h3'
+import { EMAIL_REGEX } from '~/server/utils/validation'
 
 interface LoginBody {
     email: string
@@ -15,9 +16,6 @@ interface LoginBody {
 
 /** 30-day refresh token lifetime in seconds */
 const REFRESH_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24 * 30
-
-/** Basic email format check (RFC 5321 simplified) */
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default defineEventHandler(async (event: H3Event) => {
     const body = await readBody<LoginBody>(event)

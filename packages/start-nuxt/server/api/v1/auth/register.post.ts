@@ -7,14 +7,12 @@
  */
 
 import type { H3Event } from 'h3'
+import { EMAIL_REGEX } from '~/server/utils/validation'
 
 interface RegisterBody {
     email: string
     password: string
 }
-
-/** Basic email format check (RFC 5321 simplified) */
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default defineEventHandler(async (event: H3Event) => {
     const body = await readBody<RegisterBody>(event)
