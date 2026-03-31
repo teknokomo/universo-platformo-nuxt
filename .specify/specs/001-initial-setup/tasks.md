@@ -349,7 +349,7 @@ packages/
 
 ### Base Configuration Files
 
-- [ ] T014 [P] [US1] Ensure `/package.json` has complete workspace configuration
+- [x] T014 [P] [US1] Ensure `/package.json` has complete workspace configuration
   - Package name: `universo-platformo-nuxt`
   - Version: `0.1.0`
   - Private: true
@@ -357,7 +357,7 @@ packages/
   - DevDependencies: (already exist - verify complete)
   - Engines: Node >=18.0.0, PNPM >=8.0.0
 
-- [ ] T015 [P] [US1] Verify `/.gitignore` comprehensiveness
+- [x] T015 [P] [US1] Verify `/.gitignore` comprehensiveness
   - Ignores: `node_modules/`, `.nuxt/`, `.output/`, `dist/`
   - Ignores: `.env`, `.env.*` (but not `.env.example`)
   - Ignores: IDE files (`.vscode/`, `.idea/`, `*.swp`)
@@ -366,19 +366,19 @@ packages/
 
 ### Validation
 
-- [ ] T016 [US1] Run fresh clone test (SC-001)
+- [x] T016 [US1] Run fresh clone test (SC-001)
   - Clone repository to temporary location
   - Read README.md
   - Time the understanding process (should be < 5 minutes)
   - Document feedback
 
-- [ ] T017 [US1] Verify configuration files exist (SC-005)
+- [x] T017 [US1] Verify configuration files exist (SC-005)
   - Check: README.md, README-RU.md exist
   - Check: package.json, tsconfig.json exist
   - Check: .gitignore, .eslintrc.cjs, .prettierrc exist
   - Check: pnpm-workspace.yaml exists
 
-- [ ] T018 [US1] Validate bilingual line counts (SC-004)
+- [x] T018 [US1] Validate bilingual line counts (SC-004)
   - Run: `wc -l README.md README-RU.md`
   - Verify: Difference ≤ 2 lines
   - Document: Actual counts
@@ -397,45 +397,45 @@ packages/
 
 ### Workspace Configuration
 
-- [ ] T020 [US2] Verify `/pnpm-workspace.yaml` configuration
+- [x] T020 [US2] Verify `/pnpm-workspace.yaml` configuration
   - Pattern: `packages/*` defined
   - Add comments explaining workspace structure
   - Verify syntax is correct
 
-- [ ] T021 [US2] Verify `/.npmrc` has Nuxt-compatible settings
+- [x] T021 [US2] Verify `/.npmrc` has Nuxt-compatible settings
   - Setting: `shamefully-hoist=true` (required for Nuxt)
   - Setting: `strict-peer-dependencies=true`
   - Add comment explaining why shamefully-hoist is needed
 
-- [ ] T022 [US2] Update workspace scripts in `/package.json`
+- [x] T022 [US2] Update workspace scripts in `/package.json`
   - Verify: `install:all`, `clean`, `clean:all` scripts
   - Add: `dev:all` for running all package dev servers
   - Add: `build:all` for building all packages
 
 ### Package Directory
 
-- [ ] T023 [US2] Ensure `/packages/` directory exists
+- [x] T023 [US2] Ensure `/packages/` directory exists
   - Create if doesn't exist: `mkdir -p packages`
   - Purpose: Houses all feature packages
 
-- [ ] T024 [US2] Create `/packages/.gitkeep` file
+- [x] T024 [US2] Create `/packages/.gitkeep` file
   - Empty file to preserve empty directory in Git
   - Add comment: "Preserves packages directory structure"
 
 ### Documentation Updates
 
-- [ ] T025 [US2] Verify "Package Structure Conventions" in README.md
+- [x] T025 [US2] Verify "Package Structure Conventions" in README.md
   - Document: Domain naming with `-frt`/`-srv` suffixes
   - Document: All packages require `base/` folder
   - Examples: `packages/clusters-frt/base/`, `packages/clusters-srv/base/`
   - Document: Utility packages use `@universo/` scope
 
-- [ ] T026 [US2] Verify "Creating a New Package" guide in README.md
+- [x] T026 [US2] Verify "Creating a New Package" guide in README.md
   - Complete step-by-step instructions
   - Estimated time documented (< 10 minutes)
   - Include package.json template example
 
-- [ ] T027 [US2] Update Russian README with package documentation
+- [x] T027 [US2] Update Russian README with package documentation
   - Translate new package sections
   - Verify line count still matches ±2
 
